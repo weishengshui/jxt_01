@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<package name="struts2" extends="convention-default">
+		<interceptors>
+			<interceptor name="sessionout"
+				class="com.ssh.interceptor.SessionInterceptor" />
+			<interceptor-stack name="mydefault">
+				<interceptor-ref name="sessionout" />
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="mydefault"/>
+		<global-results>
+			<result name="login">index.jsp</result>
+		</global-results>
+	</package>
+	<package name="ajax" extends="json-default">
+		<interceptors>
+			<interceptor name="sessionout"
+				class="com.ssh.interceptor.SessionInterceptor" />
+			<interceptor-stack name="mydefault">
+				<interceptor-ref name="sessionout" />
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="mydefault"/>
+		<global-results>
+			<result name="login">index.jsp</result>
+		</global-results>
+	</package>
+</struts>
+
+
