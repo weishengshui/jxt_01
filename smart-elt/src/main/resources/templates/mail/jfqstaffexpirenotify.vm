@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>积分券到期提醒</title>
+</head>
+<body>
+<p> 
+尊敬的$name：<br>
+我们公司通过IRewards给你发放的福利券即将到期，请尽快<a href="http://www.irewards.cn/">前往</a>使用，详情如下：<br>
+<ul>
+	#foreach($item in $expiryList) 
+		<li>“$item.name” 有效期至$fmt.format($item.expireDate)，尚有$item.quantity张未使用</li>	      
+	#end
+</ul>
+</p>
+感谢您对IRewards一如既往的支持！
+</body>
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>IRewards体验账号获取</title>
+</head>
+<body>
+<p>
+尊敬的$name：<br>
+您在IRewards申请的$company的企业体验账号已生成，请登录<a href="http://www.irewards.cn">www.irewards.cn</a>。
+</p><br>
+登录账号和密码如下：<br>
+体验账号：$loginAccount<br>
+登录密码：$loginPassword<br><br>
+如果您有任何需求，请联系我们，联系邮箱：client@irewards.cn
+</body>
+</html>

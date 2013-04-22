@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" 
+	xmlns="http://java.sun.com/xml/ns/javaee" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+ 
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+	
+	<session-config>
+         <session-timeout>300</session-timeout>
+    </session-config>
+  
+  <mime-mapping>
+  	<extension>xls</extension>
+  	<mime-type>application/msexcel</mime-type>
+  </mime-mapping>
+  
+  <!-- AppInfoServer for displaying application version, name... -->
+	<servlet>
+		<servlet-name>appinfo</servlet-name>
+		<servlet-class>com.chinarewards.common.web.appinfo.AppInfoServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+  <!-- 任务框架quartz配置信息 -->
+  	<servlet>
+		<servlet-name>QuartzInitializer</servlet-name>
+		<display-name>Quartz Initializer Servlet</display-name>
+		<servlet-class>org.quartz.ee.servlet.QuartzInitializerServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet>
+		<servlet-name>TriggerServer</servlet-name>
+		<display-name>Trigger Server</display-name>
+		<servlet-class>jxt.elt.common.TriggerServer</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	
+	<!-- AppInfo -->
+	<servlet-mapping>
+		<servlet-name>appinfo</servlet-name>
+		<url-pattern>/appinfo.html</url-pattern>
+	</servlet-mapping>
+	
+	
+	 <!-- 验证码 -->
+    <servlet>
+    	<servlet-name>image</servlet-name>
+        <servlet-class>jxt.elt.common.ImageServlet</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>image</servlet-name>
+        <url-pattern>/image.jpg</url-pattern>
+    </servlet-mapping>
+  
+</web-app>

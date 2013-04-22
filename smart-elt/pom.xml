@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	 
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.chinarewards</groupId>
+  <artifactId>elt</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>war</packaging>
+  <name>elt</name>
+
+	<issueManagement>
+		<system>Bugzilla</system>
+		<url>http://bugs.dev.china-rewards.com</url>
+	</issueManagement>
+	
+	<repositories>
+        <repository>
+            <id>spring-maven-release</id>
+            <name>Spring Maven Release Repository</name>
+            <url>http://maven.springframework.org/release</url>
+        </repository>
+        <repository>
+            <id>spring-maven-milestone</id>
+            <name>Spring Maven Milestone Repository</name>
+            <url>http://maven.springframework.org/milestone</url>
+        </repository>
+        <repository>
+            <id>spring-roo-repository</id>
+            <name>Spring Roo Repository</name>
+            <url>http://spring-roo-repository.springsource.org/release</url>
+        </repository>
+    </repositories>	
+
+  <dependencies>
+  
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    
+    <dependency>
+	  <groupId>dom4j</groupId>
+	  <artifactId>dom4j</artifactId>
+	  <version>1.6.1</version>
+	</dependency>
+	
+	<dependency>
+	  <groupId>commons-httpclient</groupId>
+	  <artifactId>commons-httpclient</artifactId>
+	  <version>3.0.1</version>
+	</dependency>
+	
+	<!-- version  -->
+	<dependency>
+	  <groupId>org.quartz-scheduler</groupId>
+	  <artifactId>quartz</artifactId>
+	  <version>2.1.6</version>
+	</dependency>
+	
+	<dependency>
+	  <groupId>javax.mail</groupId>
+	  <artifactId>mail</artifactId>
+	  <version>1.4.5</version>
+	</dependency>
+	
+	<dependency>
+	  <groupId>org.apache.poi</groupId>
+	  <artifactId>poi</artifactId>
+	  <version>3.8</version>
+	</dependency>
+	
+	<dependency>
+	  <groupId>com.mchange</groupId>
+	  <artifactId>c3p0</artifactId>
+	  <version>0.9.2-pre4</version>
+	</dependency>
+	
+	<dependency>
+	  <groupId>org.apache.poi</groupId>
+	  <artifactId>poi-ooxml</artifactId>
+	  <version>3.8-beta2</version>
+	</dependency>
+	
+	<dependency>
+	  <groupId>mysql</groupId>
+	  <artifactId>mysql-connector-java</artifactId>
+	  <version>5.1.21</version>
+	</dependency>
+	
+	<dependency>
+	  <groupId>org.apache.poi</groupId>
+	  <artifactId>poi-ooxml-schemas</artifactId>
+	  <version>3.8-beta2</version>
+	</dependency>
+
+	<dependency>
+	  <groupId>tomcat</groupId>
+	  <artifactId>servlet</artifactId>
+	  <version>4.1.36</version>
+	 <scope>provided</scope>	
+	</dependency>
+	
+	<dependency>
+    	<groupId>com.easyimage</groupId>
+    	<artifactId>easyimage</artifactId>
+    	<version>1.0</version>
+    </dependency>
+    
+	<dependency>
+		<groupId>commons-fileupload</groupId>
+		<artifactId>commons-fileupload</artifactId>
+		<version>1.2.1</version>
+	</dependency>
+	
+	<dependency>
+	  	<groupId>net.coobird</groupId>
+	  	<artifactId>thumbnailator</artifactId>
+	  	<version>0.4.2</version>
+	</dependency>
+
+	<dependency>
+		<groupId>org.apache.velocity</groupId>
+	    <artifactId>velocity</artifactId>
+	    <version>1.6.2</version>
+	</dependency>
+	
+	<dependency>
+		<groupId>com.chinarewards</groupId>
+		<artifactId>common-web</artifactId>
+		<version>2.3.0</version>
+	</dependency>
+	
+	<dependency>
+	  <groupId>org.jdom</groupId>
+	  <artifactId>jdom</artifactId>
+	  <version>1.1</version>
+	</dependency>
+	
+	<dependency>
+	  <groupId>org.mybatis</groupId>
+	  <artifactId>mybatis-guice</artifactId>
+	  <version>3.3</version>
+	</dependency>
+		
+	<dependency>
+	  <groupId>junit</groupId>
+	  <artifactId>junit</artifactId>
+	  <version>4.9</version>
+	</dependency>
+  </dependencies>
+  
+  <build>
+  		
+        <plugins>
+        	<plugin>
+				<groupId>com.chinarewards.maven.plugins</groupId>
+				<artifactId>maven-appinfo-plugin</artifactId>
+				<version>0.1.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>appinfo</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>			
+        	<plugin>
+	            <artifactId>maven-compiler-plugin</artifactId>
+	            <version>2.3.2</version>
+	            <configuration>
+	                <target>1.6</target>
+	                <source>1.6</source>
+	                <encoding>UTF-8</encoding>
+	            </configuration>
+	        </plugin>
+	        
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<webResources>
+				      <resource>
+				       <directory>src/main/resources</directory>
+				       <excludes>
+				        <exclude>sqlscript/**</exclude>
+				       </excludes>
+				      </resource>
+				   </webResources>
+					<packagingExcludes>spimg/**,hdimg/**</packagingExcludes> 
+				</configuration>
+				 
+			</plugin>
+			
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>tomcat-maven-plugin</artifactId>
+				<version>1.1</version>
+			</plugin>
+			
+		</plugins>
+    </build>
+  
+</project>
