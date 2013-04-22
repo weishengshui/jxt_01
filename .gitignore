@@ -37,6 +37,7 @@
 #smart-elt
 /smart-elt/.git
 /smart-elt/.gitignore
+/smart-elt/bin/
 
 #springmvc_demo00001
 /springmvc_demo00001/.git
