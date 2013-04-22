@@ -30,6 +30,9 @@
 #metro
 /metro/.git
 /metro/.gitignore
+/metro/brand/
+/metro/coupon/
+/metro/merchandise/
 
 #smart-elt
 /smart-elt/.git
