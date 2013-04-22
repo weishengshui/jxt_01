@@ -1,4 +1,4 @@
-.metadata/[D[D[D[D[D[D[D[D[D[D[D[D[D/.[2~meta[2~[2~data
+.metadata/
 /Servers
 /_metro-models
 /_metro-posclient
@@ -8,66 +8,41 @@
 /.metadata/
 
 #_metro_demo
-/_metro_demo/classpath
 /_metro_demo/.git
 /_metro_demo/.gitignore
-/_metro_demo/.project
-/_metro_demo/.settings
-/_metro_demo/target
 
 #eltcustom
-/eltcustom/classpath
 /eltcustom/.git
 /eltcustom/.gitignore
-/eltcustom/.project
-/eltcustom/.settings
-/eltcustom/target
 
 #metro-models
-/metro-models/classpath
 /metro-models/.git
 /metro-models/.gitignore
-/metro-models/.project
-/metro-models/.setting
-/metro-models/target
 
 #metro-posclient
-/metro-posclient/classpath
 /metro-posclient/.git
 /metro-posclient/.gitignore
-/metro-posclient/.project
-/metro-posclient/.setting
-/metro-posclient/target
 
 #metro-webservice-client
-/metro-webservice-client/classpath
 /metro-webservice-client/.git
 /metro-webservice-client/.gitignore
-/metro-webservice-client/.project
-/metro-webservice-client/.setting
-/metro-webservice-client/target
 
 #metro
-/metro/classpath
 /metro/.git
 /metro/.gitignore
-/metro/.project
-/metro/.setting
-/metro/target
 
 #smart-elt
-/smart-elt/classpath
 /smart-elt/.git
 /smart-elt/.gitignore
-/smart-elt/.project
-/smart-elt/.setting
-/smart-elt/target
 
 #springmvc_demo00001
-/springmvc_demo00001/classpath
 /springmvc_demo00001/.git
 /springmvc_demo00001/.gitignore
-/springmvc_demo00001/.project
-/springmvc_demo00001/.setting
-/springmvc_demo00001/target
+
 CVS
+.classpath
+.cvsignore
+.project
+.settings
+target
+
