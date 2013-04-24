@@ -20,10 +20,9 @@ import org.mybatis.guice.datasource.helper.JdbcHelper;
 
 import com.chinarewards.oauth.module.LoggerModule;
 import com.chinarewards.oauth.module.ResourcesModule;
+import com.chinarewards.oauth.module.ServiceModule;
 import com.chinarewards.oauth.reg.mapper.RegistrationMapper;
 import com.chinarewards.oauth.reg.mapper.UserMapper;
-import com.chinarewards.oauth.service.AppRegisterService;
-import com.chinarewards.oauth.service.AppRegisterServiceImpl;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 
@@ -32,13 +31,16 @@ public class Application {
 	public final static String TEST_DATABASE_PROPERTIES = "test.database.properties";
 	public final static String PRODUCTION_DATABASE_PROPERTIES = "production.database.properties";
 	
-	// just for test
 	public Injector setupMyBatisGuice(final String propertiesFileName) throws Exception {
 		// bindings
 		Injector injector = createInjector(new Module[] { new MyBatisModule() {
 			@Override
 			protected void initialize() {
-				install(JdbcHelper.HSQLDB_IN_MEMORY_NAMED);
+				if(propertiesFileName.equals(TEST_DATABASE_PROPERTIES)){
+					install(JdbcHelper.HSQLDB_Embedded);
+				} else {
+					install(JdbcHelper.MySQL);
+				}
 				bindDataSourceProviderType(PooledDataSourceProvider.class);
 				bindTransactionFactoryType(JdbcTransactionFactory.class);
 
@@ -46,9 +48,8 @@ public class Application {
 				addMapperClass(UserMapper.class);
 
 				bindProperties(binder(), createDatabaseProperties(propertiesFileName));
-				bind(AppRegisterService.class).to(AppRegisterServiceImpl.class);
 			}
-		}, new ResourcesModule(), new LoggerModule() });
+		}, new ResourcesModule(), new LoggerModule(), new ServiceModule() });
 		// prepare the test db
 		Environment environment = injector.getInstance(SqlSessionFactory.class)
 				.getConfiguration().getEnvironment();
@@ -57,6 +58,7 @@ public class Application {
 		runner.setAutoCommit(true);
 		runner.setStopOnError(true);
 		runner.runScript(getResourceAsReader("db/database-schema.sql"));
+		runner.runScript(getResourceAsReader("db/database-test-data.sql"));
 		runner.closeConnection();
 
 		return injector;

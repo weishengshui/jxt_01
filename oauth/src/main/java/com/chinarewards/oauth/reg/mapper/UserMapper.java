@@ -15,6 +15,9 @@
  */
 package com.chinarewards.oauth.reg.mapper;
 
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+
 import com.chinarewards.oauth.domain.User;
 
 
@@ -24,7 +27,9 @@ import com.chinarewards.oauth.domain.User;
  * @version $Id: UserMapper.java,v 1.1 2013-04-24 03:19:03 qingminzou Exp $
  */
 public interface UserMapper {
-
-    User getUser(String userId);
+	final String SELECT_BY_ID = "SELECT * FROM users WHRER id = #{userId}";
+	
+//	@Select(SELECT_BY_ID)
+    User getUser(/*@Param("userId")*/ String userId);
 
 }
