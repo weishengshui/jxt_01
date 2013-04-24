@@ -101,8 +101,9 @@ public class MemberControl {
 	@ResponseBody
 	public void updateMember(HttpServletResponse response, Member member)
 			throws Exception {
+		int i = 0;
 		try{
-			memberService.updateMember(member);
+			i = memberService.updateMember(member);
 			sysLogService.addSysLog("会员信息维护", member.getSurname()+member.getName(), OperationEvent.EVENT_UPDATE.getName(), "成功");
 		}catch(Exception e){
 			sysLogService.addSysLog("会员信息维护", member.getSurname()+member.getName(), OperationEvent.EVENT_UPDATE.getName(), "失败"+e.getMessage());
@@ -110,7 +111,11 @@ public class MemberControl {
 		}
 		response.setContentType("text/html; charset=utf-8");
 		PrintWriter out = response.getWriter();
-		out.println(CommonUtil.toJson(new AjaxResponseCommonVo("保存成功")));
+		if(i==1){
+			out.println(CommonUtil.toJson(new AjaxResponseCommonVo("1")));
+		}else{
+			out.println(CommonUtil.toJson(new AjaxResponseCommonVo("保存成功")));
+		}
 		out.flush();
 	}
 

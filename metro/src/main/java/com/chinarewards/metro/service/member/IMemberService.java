@@ -54,7 +54,7 @@ public interface IMemberService {
 	 * 
 	 * @param member
 	 */
-	public void updateMember(Member member);
+	public Integer updateMember(Member member);
 
 	/**
 	 * 查询会员信息

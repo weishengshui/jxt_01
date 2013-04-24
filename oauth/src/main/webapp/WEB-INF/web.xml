@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" 
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" 
+    id="WebApp_ID" version="2.5">
+    
+  <display-name>Archetype Created Web Application</display-name>
+
+<!-- 	<servlet> -->
+<!-- 		<servlet-name>RestletServlet</servlet-name> -->
+<!-- 		<servlet-class>com.noelios.restlet.ext.servlet.ServerServlet</servlet-class> -->
+<!-- 	</servlet> -->
+<!-- 	<servlet> -->
+<!-- 		<servlet-name>Jersey Web Application</servlet-name> -->
+<!-- 		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class> -->
+<!-- 		<init-param> -->
+<!-- 			<param-name>com.sun.jersey.config.property.packages</param-name> -->
+<!-- 			<param-value>com.chinarewards.oauth.resources</param-value> -->
+<!-- 		</init-param> -->
+<!-- 	</servlet> -->
+	
+	<!-- -->
+	<filter>
+	    <filter-name>guiceFilter</filter-name>
+	    <filter-class>com.google.inject.servlet.GuiceFilter</filter-class>
+	</filter>
+	<filter-mapping>
+	    <filter-name>guiceFilter</filter-name>
+	    <url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<!-- Catch all requests -->
+<!-- 	<servlet-mapping> -->
+<!-- 		<servlet-name>Jersey Web Application</servlet-name> -->
+<!-- 		<url-pattern>/ws/*</url-pattern> -->
+<!-- 	</servlet-mapping> -->
+<!-- 	<servlet-mapping> -->
+<!-- 		<servlet-name>RestletServlet</servlet-name> -->
+<!-- 		<url-pattern></url-pattern> -->
+<!-- 	</servlet-mapping> -->
+	
+	<listener>
+		<listener-class>com.chinarewards.oauth.listener.GuiceListener</listener-class>
+	</listener>
+	
+<!-- 	<listener> -->
+<!-- 	    <listener-class>com.chinarewards.oauth.MyGuiceServletContextListener</listener-class> -->
+<!-- 	</listener> -->
+
+</web-app>

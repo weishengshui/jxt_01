@@ -17,15 +17,22 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Vector;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 public class MapTests {
+	
+	public AtomicInteger integer; // 原子类
 
 	@Before
 	public void setUp() throws Exception {
+		integer = new AtomicInteger();
+		integer.set(1);
+		integer.addAndGet(1);
 	}
 
 	@After

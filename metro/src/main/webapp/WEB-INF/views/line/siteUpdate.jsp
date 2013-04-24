@@ -206,6 +206,12 @@
 		addStar("star0");
 		addStar("star1");
 	})
+	function resetShop(){
+		searchForms.reset();
+		$("#province").combobox('clear');
+    	$("#city").combobox('clear');
+    	$("#area").combobox('clear');
+	}
 </script>
 </head>
 <body style="padding:10px;">
@@ -340,12 +346,12 @@
 				门店中文名：<input type="text" style="width:100px;" name="name"/>
 				联系人：<input type="text" style="width:100px;" name="linkman"/>
 				<a id="btn" href="javascript:void(0)" onclick="searchss()" class="easyui-linkbutton" data-options="iconCls:'icon-search'">搜索</a>
-				<a id="btn" href="javascript:void(0)" onclick="searchForms.reset()" class="easyui-linkbutton" data-options="iconCls:'icon-redo'">重置</a>
+				<a id="btn" href="javascript:void(0)" onclick="resetShop()" class="easyui-linkbutton" data-options="iconCls:'icon-redo'">重置</a>
 				<a id="btn" href="javascript:void(0)" onclick="selectShop()" class="easyui-linkbutton" data-options="iconCls:'icon-ok'">确定</a>
 				<div style="margin-top: 7px;margin-left:12px;">
-					省：<select name="province"></select>
-					市：<select name="city"></select>
-					区：<select name="area"></select>
+					省：<select id="province" name="province"></select>
+					市：<select id="city" name="city"></select>
+					区：<select id="area" name="area"></select>
 				</div>
 			</form>
 			</div>

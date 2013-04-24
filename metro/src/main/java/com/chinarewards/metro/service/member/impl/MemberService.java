@@ -204,10 +204,18 @@ public class MemberService implements IMemberService {
 	}
 
 	@Override
-	public void updateMember(Member member) {
+	public Integer updateMember(Member member) {
+		int i = 0;
+		if(!member.getCardNumber().equals(member.getPhone())){
+			i = 1;
+			sendActivationCode(member.getId(),member.getPhone());
+			String hql = "UPDATE Member SET  activePhone = '',status = ? WHERE id = ?";
+			hbDaoSupport.executeHQL(hql, Dictionary.MEMBER_STATE_NOACTIVATE, member.getId());
+		}
 		member.setUpdateDate(new Date());
 		member.setUpdateUser(UserContext.getUserName());
 		hbDaoSupport.update(member);
+		return i;
 	}
 
 	@Override
@@ -481,16 +489,16 @@ public class MemberService implements IMemberService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("status", statusCode);
 		map.put("ids", Integer.parseInt(ids));
+		Member m = hbDaoSupport.findTById(Member.class, Integer.parseInt(ids));
 		hbDaoSupport.executeHQL(hql, map);
+		updateActivePhone(Integer.parseInt(ids),m.getPhone());
 		if(statusCode == Dictionary.MEMBER_STATE_ACTIVATE){
-			Member m = hbDaoSupport.findTById(Member.class, Integer.parseInt(ids));
 			if(StringUtils.isEmpty(m.getPassword())){
 				Long l = Math.round(Math.random() * 899999 + 190000);
 				String c = "初始密码: " +  l.toString() ;
 				communicationService.queueSMS(null, m.getId().toString(), m.getPhone(), c, 5,null);
 				String hql1 = "UPDATE Member SET password = ? WHERE id = ?";
 				hbDaoSupport.executeHQL(hql1, MD5.MD5Encoder(l.toString()), m.getId());
-				updateActivePhone(Integer.parseInt(ids),m.getPhone());
 			}
 		}
 	}
@@ -1268,6 +1276,8 @@ public class MemberService implements IMemberService {
 					memberModifyRes.setId(id);
 
 					Member member2 = findMemberByPhone(phone);
+					Integer mailExists = (null != mail) ? findMemberByEmail(mail,
+							id) : null;
 					if (member.getStatus().equals(
 							Dictionary.MEMBER_STATE_LOGOUT)) {
 						memberModifyRes.setFailureReasons("该会员已注销，不能进行操作");
@@ -1279,6 +1289,8 @@ public class MemberService implements IMemberService {
 					} else if (null != member2
 							&& !member2.getId().equals(member.getId())) {
 						memberModifyRes.setFailureReasons("手机号已存在");
+					} else if(null != mailExists && mailExists.equals(new Integer(1))){
+						memberModifyRes.setFailureReasons("邮箱已存在");
 					} else {
 						StringBuffer hql = new StringBuffer("UPDATE Member SET ");
 						Map<String, Object> params = new HashMap<String, Object>();

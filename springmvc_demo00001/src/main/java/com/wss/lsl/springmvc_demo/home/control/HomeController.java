@@ -25,17 +25,15 @@ public class HomeController {
 		if(logger.isInfoEnabled()){
 			System.out.println("logger.isInfoEnabled");
 		}
-		logger.info("entrance home 10000000000");
+		logger.info("entrance home");
 		logger.debug("ssssssssssssss debug");
 		model.addAttribute("username", loginForm.getUsername());
-		System.out.println("HomeController: Passing through...85552sadadsa低速复苏的地方");
-		System.out.println("HomeController: Passing through...85552sadadsa低速复苏的地方2");
 		return "home";
 	}
 
 	@RequestMapping(value = "/compare", method = RequestMethod.GET)
 	public String compare(String p1, String p2, Model model) {
-		logger.info("entrance compare的撒旦撒旦22222222");
+		logger.info("entrance compare");
 		int result = comparator.compare(p1, p2);
 		String isEnglish = (result < 0)?"less than ":(result > 0?"greater than":"equal to");
 		String output = "According to our Comparator, '"+p1 +"' is "+isEnglish+ " '"+p2+"'";

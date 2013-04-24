@@ -79,60 +79,16 @@ public class MemberBaseModifyThreadTests extends Thread {
 
 		ExecutorService pool = Executors.newFixedThreadPool(200);
 		//4.235
-		/*for (int i = 0; i < 200; i++) {
+		for (int i = 0; i < 200; i++) {
 			// 将线程放入池中进行执行
 			MemberBaseModifyThreadTests t = new MemberBaseModifyThreadTests(
-					1001 + i, 13485632021l + i + "", "657620636@qq.com",
-					13495632021l + i + "", dateFormat.parse("2012-12-12 12:15:13"), 1);
-			if (!pool.isShutdown()) {
-				pool.execute(t);
-			}
-			 System.out.println("add member====>"+(i+1));
-		}*/
-		
-		for (int i = 200; i < 400; i++) {
-			// 将线程放入池中进行执行
-			MemberBaseModifyThreadTests t = new MemberBaseModifyThreadTests(
-					3001 + i, 13515632021l + i + "", "657620636@qq.com",
-					13525632021l + i + "", dateFormat.parse("2012-12-12 12:15:13"), 1);
+					380 + i, 13485632021l + i + "", "657620636@qq.com",
+					13605632021l + i + "", dateFormat.parse("2012-12-12 12:15:13"), 1);
 			if (!pool.isShutdown()) {
 				pool.execute(t);
 			}
 			 System.out.println("add member====>"+(i+1));
 		}
-		
-		for (int i = 400; i < 600; i++) {
-			// 将线程放入池中进行执行
-			MemberBaseModifyThreadTests t = new MemberBaseModifyThreadTests(
-					3001 + i, 13535632021l + i + "", "657620636@qq.com",
-					13545632021l + i + "", dateFormat.parse("2012-12-12 12:15:13"), 1);
-			if (!pool.isShutdown()) {
-				pool.execute(t);
-			}
-			 System.out.println("add member====>"+(i+1));
-		}
-		
-		/*for (int i = 600; i < 800; i++) {
-			// 将线程放入池中进行执行
-			MemberBaseModifyThreadTests t = new MemberBaseModifyThreadTests(
-					3001 + i, 13555632021l + i + "", "657620636@qq.com",
-					13565632021l + i + "", dateFormat.parse("2012-12-12 12:15:13"), 3);
-			if (!pool.isShutdown()) {
-				pool.execute(t);
-			}
-			 System.out.println("add member====>"+(i+1));
-		}
-		
-		for (int i = 800; i < 1000; i++) {
-			// 将线程放入池中进行执行
-			MemberBaseModifyThreadTests t = new MemberBaseModifyThreadTests(
-					3001 + i, 13575632021l + i + "", "657620636@qq.com",
-					13585632021l + i + "", dateFormat.parse("2012-12-12 12:15:13"), 3);
-			if (!pool.isShutdown()) {
-				pool.execute(t);
-			}
-			 System.out.println("add member====>"+(i+1));
-		}*/
 		
 		// 4.91
 		/*for (int i = 0; i < 200; i++) {

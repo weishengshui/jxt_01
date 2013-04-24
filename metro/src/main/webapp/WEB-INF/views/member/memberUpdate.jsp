@@ -135,11 +135,20 @@
 		if(flag) return;
 		$('#memberForm').form('submit', {
 		    success:function(data){ 
-		    	$.messager.show({  
-                    title:'提示',  
-                    msg:eval('('+data+')').msg,  
-                    showType:'show'  
-                });
+		    	if(eval('('+data+')').msg==1){
+		    		$.messager.show({  
+	                    title:'提示',  
+	                    msg:"保存成功",  
+	                    showType:'show'  
+	                });
+		    		setTimeout(reloads,1000);
+		    	}else{
+		    		$.messager.show({  
+	                    title:'提示',  
+	                    msg:eval('('+data+')').msg,  
+	                    showType:'show'  
+	                });
+		    	}
 		    	c = false;
 		    },
 		    error:function(data){
@@ -147,7 +156,9 @@
 			}
 		});	
 	}
-
+	function reloads(){
+		window.location.reload()
+	}
 	function resetPassword(){
 		$.messager.confirm('确认框','您确定要重置密码吗?',function(r){  
 			if(r){
@@ -262,6 +273,7 @@
 	        <form id="memberForm" method="post" action="updateMember">
 			  <input type="hidden" name="id" id="id" value="${member.id }"/>
 			  <input type="hidden" name="card.id" value="${card.id }"/>
+			  <input type="hidden" name="cardNumber" value="${member.phone }"/>
 			  <fieldset style="font-size:14px;">
 			  	<legend style="color: blue;">基本信息</legend>
 			  	<table>

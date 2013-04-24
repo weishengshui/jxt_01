@@ -65,10 +65,7 @@
     	};
     }
     function getAddress(v,o,i){
-    	return o.province==null?'':o.province + 
-    		   o.city==null?'':o.city +
-    		   o.area==null?'':o.area + 
-    		   o.address == null?'':o.address;
+    	return (o.province==null?'':o.province) + (o.city==null?'':o.city) + (o.area==null?'':o.area) + (o.address == null?'':o.address);
     }
     function getName(v,o,i){
         return (o.surname==null?'':o.surname)+(o.name==null?'':o.name);

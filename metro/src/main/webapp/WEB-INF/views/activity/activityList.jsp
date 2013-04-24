@@ -17,6 +17,7 @@
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/common.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery/jquery.cookie.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery/changeEasyuiTheme.js"></script>
+<% response.setHeader("Cache-Control","no-store");%>
 <script type="text/javascript">
 	function operates(i, o){
 		var v ;
@@ -54,7 +55,7 @@
 	}
 	
 	$(document).ready(function(){
-		var originalWidth  = document.documentElement.clientWidth;
+		/* var originalWidth  = document.documentElement.clientWidth;
 
 		window.onresize = function(){
 			var changeWidth  = document.documentElement.clientWidth;
@@ -64,15 +65,16 @@
 		    }else{
 		    	$('#table1').datagrid({width:changeWidth-18});
 		    }
-		} 
+		}  */
+		
 		
 		$('#updateAct').show();
 		$('#cancerAct').show();
 		$('#deleteAct').show();
 		$('#searchbtn').click(function(){
 			var actStatus = $('#actStatus').combobox('getValue');
-			$('#table1').datagrid({singleSelect:(actStatus=='0')});
 			$('#table1').datagrid('load',getForms("searchForm"));
+			$('#table1').datagrid({singleSelect:(actStatus=='0')});
 		});
 		
 		$('#updateAct').click(function(){

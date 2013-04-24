@@ -22,7 +22,7 @@ import com.chinarewards.metro.core.common.DateTimeSerializer;
 import com.chinarewards.metro.core.common.Page;
 
 @Entity
-@JsonIgnoreProperties (value={"hibernateLazyInitializer","card"})
+//@JsonIgnoreProperties (value={"hibernateLazyInitializer","card"})
 public class Member implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
@@ -81,7 +81,7 @@ public class Member implements Serializable{
 	@Column(updatable = false)
 	private String password;
 	
-	@OneToOne(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+	@OneToOne(cascade=CascadeType.ALL/*, fetch=FetchType.LAZY*/)
 	@JoinColumn(name = "card_id")
 	private MemberCard card;
 	

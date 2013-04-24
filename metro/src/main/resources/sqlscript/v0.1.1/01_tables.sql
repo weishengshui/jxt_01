@@ -753,7 +753,7 @@ CREATE TABLE `SysLog` (
   `name` varchar(255) DEFAULT NULL,
   `object` varchar(255) DEFAULT NULL,
   `operator` varchar(255) DEFAULT NULL,
-  `other` varchar(255) DEFAULT NULL,
+  `other` varchar(1000) DEFAULT NULL,
   `time` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=104 DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci;

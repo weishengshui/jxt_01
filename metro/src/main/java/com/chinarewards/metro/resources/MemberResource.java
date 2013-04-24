@@ -651,12 +651,12 @@ public class MemberResource {
 					reg.setResult("注册失败,邮箱输入不正确");
 					return reg;
 				}
-//				
-//				if(r.getEmail().length() > 20){
-//					ExternalMemberReg reg = new ExternalMemberReg();
-//					reg.setResult("注册失败,邮箱长度不能超过20");
-//					return reg;
-//				}
+						
+				if(memberService.findMemberByEmail(r.getEmail(), null) == 1){
+					ExternalMemberReg reg = new ExternalMemberReg();
+					reg.setResult("注册失败,邮箱已存在");
+					return reg;
+				}
 			}
 			if(r.getSource() == null){
 				ExternalMemberReg reg = new ExternalMemberReg();

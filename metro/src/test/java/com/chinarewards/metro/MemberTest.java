@@ -151,9 +151,9 @@
 //		}
 //		
 //		//int cardNumber = (int)(Math.random()*100000000);
-//		long phoneNumber = 13495632021l;
+//		long phoneNumber = 13585632021l;
 //		List<Member> list = new ArrayList<Member>();
-//		for(int i = 0; i < 1000; i++){
+//		for(int i = 0; i < 200; i++){
 //			MemberCard card = new MemberCard();
 //			card.setCardNumber(UUIDUtil.generate());
 //
@@ -190,7 +190,7 @@
 //			list.add(member);
 //		}
 //		
-//		for(int i = 0; i < 1000; i++){
+//		for(int i = 0; i < 200; i++){
 //			AccountrPay accountPay = new AccountrPay();
 //			Date d = SystemTimeProvider.getCurrentTime();
 //			
