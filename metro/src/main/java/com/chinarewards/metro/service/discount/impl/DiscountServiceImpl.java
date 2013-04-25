@@ -1301,7 +1301,7 @@ public class DiscountServiceImpl implements IDiscountService {
 		log.trace(sql);
 		long d1=System.currentTimeMillis();
 		RowMapper rowMapper = getRowDiscountMapper();
-		mlist = jdbcDaoSupport.findTsBySQL(rowMapper, sql.toString(),args.toArray());
+		mlist = jdbcDaoSupport.findTsBySQL(DiscountNumberReport.class, sql.toString(),args.toArray());
 		
 		long d2=System.currentTimeMillis();
 		log.trace("sql======"+(d2-d1)/1000);

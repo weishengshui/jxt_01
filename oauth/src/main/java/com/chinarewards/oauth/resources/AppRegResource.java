@@ -8,15 +8,18 @@ import javax.ws.rs.core.MediaType;
 
 import org.slf4j.Logger;
 
-import com.chinarewards.oauth.ServiceLocator;
 import com.chinarewards.oauth.log.InjectLogger;
 import com.chinarewards.oauth.service.AppRegisterService;
+import com.google.inject.Inject;
 
 @Path("/application")
 public class AppRegResource {
 	
 	@InjectLogger
 	private Logger logger;
+	
+	@Inject
+	private AppRegisterService appRegisterService;
 	
 	@Path("/test")
 	@GET
@@ -28,10 +31,8 @@ public class AppRegResource {
 	@GET
 	public String authenticate(@QueryParam("appId") String appId,
 			@QueryParam("macAddress") String macAddress) throws Exception {
-		AppRegisterService service = ServiceLocator.getInstance()
-				.getAppRegisterService();
 
-		return service.authenticate(appId, macAddress);
+		return appRegisterService.authenticate(appId, macAddress);
 	}
 
 	@Path("/register")
@@ -39,9 +40,8 @@ public class AppRegResource {
 	public String register(@QueryParam("appId") String appId,
 			@QueryParam("regCode") String regCode,
 			@QueryParam("macAddress") String macAddress) throws Exception {
-		AppRegisterService service = ServiceLocator.getInstance()
-				.getAppRegisterService();
-		return service.register(appId, regCode, macAddress);
+
+		return appRegisterService.register(appId, regCode, macAddress);
 	}
 	
 	@Path("/")

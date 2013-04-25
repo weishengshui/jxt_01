@@ -14,31 +14,35 @@ public class UserService implements IUserService {
 	private Logger logger;
 	
 	@Inject
-	private UserMapper userManager;
+	private UserMapper mapper;
 	
 	@Override
-	public User createUser(User user) {
-		// TODO Auto-generated method stub
-		return null;
+	public void createUser(User user) {
+		
+		mapper.createUser(user);
 	}
 
 	@Override
-	public User updateUser(User user) {
-		// TODO Auto-generated method stub
-		return null;
+	public void updateUser(User user) {
+		
+		mapper.updateUser(user);
 	}
 
 	@Transactional
 	@Override
-	public User findUserById(String id) {
+	public User findUserById(Integer id) {
 		logger.info("id={}", id);
-		return userManager.getUser(id);
+		return mapper.getUser(id);
 	}
 
 	@Override
 	public void deleteUser(User user) {
-		// TODO Auto-generated method stub
+		
+	}
 
+	@Override
+	public void deleteAll() {
+		mapper.deleteAll();
 	}
 
 }

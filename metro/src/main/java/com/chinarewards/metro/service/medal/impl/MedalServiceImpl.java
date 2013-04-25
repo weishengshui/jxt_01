@@ -159,6 +159,7 @@ public class MedalServiceImpl implements IMedalService {
 	@Override
 	public MedalRule insertMedalRule(String rule) {
 		MedalRule medalRule = new MedalRule();
+		medalRule.setId(1);
 		medalRule.setRule(rule);
 		return hbDaoSupport.save(medalRule);
 	}

@@ -15,21 +15,21 @@
  */
 package com.chinarewards.oauth.reg.mapper;
 
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-
 import com.chinarewards.oauth.domain.User;
 
 
 /**
  * A org.mybatis.guice sample mapper.
  *
- * @version $Id: UserMapper.java,v 1.1 2013-04-24 03:19:03 qingminzou Exp $
+ * @version $Id: UserMapper.java,v 1.3 2013-04-25 04:25:13 weishengshui Exp $
  */
 public interface UserMapper {
-	final String SELECT_BY_ID = "SELECT * FROM users WHRER id = #{userId}";
 	
-//	@Select(SELECT_BY_ID)
-    User getUser(/*@Param("userId")*/ String userId);
-
+    User getUser(Integer userId);
+    
+    void updateUser(User user);
+    
+    void createUser(User user);
+    
+    void deleteAll();
 }

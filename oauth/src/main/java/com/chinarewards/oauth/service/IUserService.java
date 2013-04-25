@@ -4,11 +4,13 @@ import com.chinarewards.oauth.domain.User;
 
 public interface IUserService {
 	
-	User createUser(User user);
+	void createUser(User user);
 	
-	User updateUser(User user);
+	void updateUser(User user);
 	
-	User findUserById(String id);
+	User findUserById(Integer id);
 	
 	void deleteUser(User user);
+	
+	void deleteAll();
 }

@@ -18,23 +18,23 @@ package com.chinarewards.oauth.domain;
 /**
  * A simple bean that holds User info.
  *
- * @version $Id: User.java,v 1.1 2013-04-24 03:19:03 qingminzou Exp $
+ * @version $Id: User.java,v 1.2 2013-04-25 04:25:13 weishengshui Exp $
  */
 public class User {
 
-    private String id;
+    private Integer id;
 
     private String name;
 
-    public String getId() {
-        return this.id;
-    }
+    public Integer getId() {
+		return id;
+	}
 
-    public void setId(String id) {
-        this.id = id;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public String getName() {
+	public String getName() {
         return this.name;
     }
 

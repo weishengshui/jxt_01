@@ -36,11 +36,11 @@ public class Application {
 		Injector injector = createInjector(new Module[] { new MyBatisModule() {
 			@Override
 			protected void initialize() {
-				if(propertiesFileName.equals(TEST_DATABASE_PROPERTIES)){
-					install(JdbcHelper.HSQLDB_Embedded);
-				} else {
-					install(JdbcHelper.MySQL);
-				}
+//				if(propertiesFileName.equals(TEST_DATABASE_PROPERTIES)){
+//					install(JdbcHelper.HSQLDB_IN_MEMORY_NAMED);
+//				} else {
+//				}
+				install(JdbcHelper.MySQL);
 				bindDataSourceProviderType(PooledDataSourceProvider.class);
 				bindTransactionFactoryType(JdbcTransactionFactory.class);
 
@@ -58,7 +58,9 @@ public class Application {
 		runner.setAutoCommit(true);
 		runner.setStopOnError(true);
 		runner.runScript(getResourceAsReader("db/database-schema.sql"));
-		runner.runScript(getResourceAsReader("db/database-test-data.sql"));
+		if(propertiesFileName.equals(TEST_DATABASE_PROPERTIES)){
+			runner.runScript(getResourceAsReader("db/database-test-data.sql"));
+		}
 		runner.closeConnection();
 
 		return injector;

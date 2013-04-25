@@ -8,6 +8,7 @@ import com.chinarewards.oauth.Application;
 import com.chinarewards.oauth.domain.User;
 import com.chinarewards.oauth.service.AppRegisterService;
 import com.chinarewards.oauth.service.IUserService;
+import com.chinarewards.oauth.service.UserService;
 import com.google.inject.Injector;
 
 public class TestEnv {
@@ -31,11 +32,30 @@ public class TestEnv {
 	}
 	
 	@Test
-	public void getUserById(){
+	public void testUserService(){
+		
 		IUserService userService = injector.getInstance(IUserService.class);
-		User user = userService.findUserById("u1");
+		User user = userService.findUserById(1);
 		assertNotNull(user);
 		assertEquals("Pocoyo", user.getName());
+		
+		user = new User();
+		user.setId(1);
+		user.setName("wss");
+		userService.updateUser(user);
+		
+		user = userService.findUserById(1);
+		assertNotNull(user);
+		assertEquals("wss", user.getName());
+		
+		user = new User();
+		user.setName("lsl");
+		userService.createUser(user);
+		
+		user = new User();
+		user.setName("lsl2");
+		userService.createUser(user);
+		
 	}
 
 }

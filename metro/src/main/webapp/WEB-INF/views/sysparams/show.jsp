@@ -31,6 +31,40 @@
 		$(function(){
 		});
 		function saveParam(){
+			if($('#paramName').val() == 'expresion'){// 优惠码范围参数值校验
+				var str = '参数值不正确, 比如: 1~1000';
+				var nums = $('#paramValue').val().split('~');
+				if(nums){
+					if(nums.length == 2){
+						var num1 = nums[0];
+						var num2 = nums[1];
+						// 去掉数字前的 0
+						num1 = num1.replace(/\b(0+)/gi,"")
+						num2 = num2.replace(/\b(0+)/gi,"")
+						if(num1 == '' || num2 == ''){
+							alert(str);
+							return ;
+						}
+						if(num1 >= num2){
+							alert(str);
+							return ;
+
+						}
+						if(!isNaN(num1) && !isNaN(num2)){
+							$('#paramValue').val(num1+'~'+num2);
+						}else {
+							alert(str);
+							return;
+						}
+					} else {
+						alert(str);
+						return;
+					}
+				} else {
+					alert(str);
+					return;
+				}
+			}
 			$.ajax({
 				url: 'setSystemParam',
 				type: 'post',

@@ -1,5 +1,5 @@
 --drop table if exists registration;
-DROP TABLE registration IF EXISTS; 
+DROP TABLE IF EXISTS registration; 
 create table IF NOT EXISTS registration (
     id varchar(80) not null,
     appId varchar(80) not null,
@@ -11,9 +11,9 @@ create table IF NOT EXISTS registration (
     constraint pk_registration primary key (id)
 );
 
-DROP TABLE users IF EXISTS;
+DROP TABLE IF EXISTS users;
 create table IF NOT EXISTS users (
-    id varchar(255) not null,
+    id int not null auto_increment ,
     name varchar(255),
     constraint pk_users primary key (id)
 );
