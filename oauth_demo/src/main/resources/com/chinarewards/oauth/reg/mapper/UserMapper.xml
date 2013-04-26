@@ -19,7 +19,7 @@
 -->
 
 <!--
-  version: $Id: UserMapper.xml,v 1.5 2013-04-26 09:20:09 weishengshui Exp $
+  version: $Id: UserMapper.xml,v 1.4 2013-04-26 05:35:26 weishengshui Exp $
 -->
 <mapper namespace="com.chinarewards.oauth.reg.mapper.UserMapper">
 
@@ -31,6 +31,13 @@
 		update users set name=#{name} where id = #{id}
 	</update>
 	
+	<delete id="batchDelete" parameterType="java.util.List">
+		delete from users where id in
+		<foreach collection="list" item="item" close=")" open="(" separator=",">
+			#{item}
+		</foreach>
+	</delete>
+		
 	<delete id="deleteAll">
 		delete from users
 	</delete>
@@ -39,4 +46,7 @@
 		select * from users where id=#{value}
 	</select>
 	
+	<select id="findAllUser" resultType="User">
+		select * from users
+	</select>
 </mapper>

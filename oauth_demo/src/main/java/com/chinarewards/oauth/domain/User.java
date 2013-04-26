@@ -18,7 +18,7 @@ package com.chinarewards.oauth.domain;
 /**
  * A simple bean that holds User info.
  * 
- * @version $Id: User.java,v 1.3 2013-04-26 09:20:09 weishengshui Exp $
+ * @version $Id: User.java,v 1.2 2013-04-25 04:25:13 weishengshui Exp $
  */
 public class User {
 
@@ -26,7 +26,7 @@ public class User {
 
 	private String name;
 
-	private boolean valid;
+	private Boolean valid;
 
 	public Integer getId() {
 		return id;
@@ -50,11 +50,11 @@ public class User {
 				.toString();
 	}
 
-	public boolean isValid() {
+	public Boolean getValid() {
 		return valid;
 	}
 
-	public void setValid(boolean valid) {
+	public void setValid(Boolean valid) {
 		this.valid = valid;
 	}
 

@@ -1,9 +1,9 @@
 package com.chinarewards;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -47,6 +47,7 @@ public class TestEnv {
 		user.setId(1);
 		user.setName("王思思");
 		userService.updateUser(user);
+		assertNull(user.getValid());
 		
 		user = userService.findUserById(1);
 		assertNotNull(user);
@@ -57,13 +58,32 @@ public class TestEnv {
 		user.setValid(true);
 		userService.createUser(user);
 		user = userService.findUserById(user.getId());
-		assertTrue(user.isValid());
+		assertTrue(user.getValid());
 		
 		user = new User();
 		user.setName("lsl2");
+		user.setValid(false);
 		userService.createUser(user);
 		user = userService.findUserById(user.getId());
-		assertFalse(user.isValid());
+		assertFalse(user.getValid());
+		
+		List<User> list = userService.findAllUser();
+		assertEquals(6, list.size());
+		
+		List<Integer> list2 = new ArrayList<Integer>();
+		
+		
+		Boolean boolean1 = new Boolean(null);
+		assertFalse(boolean1);
+		boolean1 = new Boolean(false);
+		assertFalse(boolean1);
+		boolean1 = new Boolean(true);
+		assertTrue(boolean1);
+		assertTrue(boolean1 == true);
+		Boolean boolean2 = new Boolean(true);
+//		assertTrue(boolean1 == boolean2);
+		Integer integer = new Integer(1);
+		assertTrue(integer == 1);
 		
 //		ExecutorService  executorService = Executors.newFixedThreadPool(200);
 //		// 高并发插入数据，检测主键自增长是否线程安全

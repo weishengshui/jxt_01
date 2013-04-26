@@ -14,4 +14,4 @@
 
 --    version: $Id$
 
-insert into users(name) VALUES ('Pocoyo'),('Pato'),('Eli'),('Valentina');
+insert into users(id, name) VALUES (1, 'Pocoyo'),(2, 'Pato'),(3, 'Eli'),(4, 'Valentina');
