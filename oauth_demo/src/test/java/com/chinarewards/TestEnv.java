@@ -9,8 +9,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.chinarewards.oauth.Application;
+import com.chinarewards.oauth.domain.Author;
+import com.chinarewards.oauth.domain.Blog;
 import com.chinarewards.oauth.domain.User;
 import com.chinarewards.oauth.service.AppRegisterService;
+import com.chinarewards.oauth.service.IBlogService;
 import com.chinarewards.oauth.service.IUserService;
 import com.google.inject.Injector;
 
@@ -18,11 +21,13 @@ public class TestEnv {
 
 	private Injector injector;
 	private IUserService userService;
+	private IBlogService blogService;
 
 	@Before
 	public void setupMyBatisGuice() throws Exception {
 		injector = new Application().setupMyBatisGuice();
 		userService = injector.getInstance(IUserService.class);
+		blogService = injector.getInstance(IBlogService.class);
 	}
 	
 	
@@ -71,6 +76,12 @@ public class TestEnv {
 		assertEquals(6, list.size());
 		
 		List<Integer> list2 = new ArrayList<Integer>();
+		list2.add(1);
+		list2.add(2);
+		list2.add(3);
+		list2.add(8);
+		int count = userService.batchDelete(list2);
+		assertEquals(3, count);
 		
 		
 		Boolean boolean1 = new Boolean(null);
@@ -92,6 +103,21 @@ public class TestEnv {
 //		}
 //		
 //		executorService.shutdown();
+	}
+	
+	@Test
+	public void testBlogService(){
+		Author author = new Author();
+		author.setAuthor_name("wss");
+		Blog blog = new Blog();
+		blog.setBlog_name("blog123");
+		blog.setAuthor(author);
+		
+		blogService.create(blog);
+		
+		blog = blogService.findById(1);
+		assertNotNull(blog);
+		assertNull(blog.getAuthor());
 	}
 	
 	class AddUserThread extends Thread{

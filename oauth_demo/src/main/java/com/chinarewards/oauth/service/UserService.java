@@ -21,20 +21,20 @@ public class UserService implements IUserService {
 	@Override
 	public void createUser(User user) {
 		
-		userMapper.createUser(user);
+		userMapper.insert(user);
 	}
 
 	@Override
 	public void updateUser(User user) {
 		
-		userMapper.updateUser(user);
+		userMapper.update(user);
 	}
 
 	@Transactional
 	@Override
 	public User findUserById(Integer id) {
 		logger.info("id={}", id);
-		return userMapper.getUser(id);
+		return userMapper.select(id);
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class UserService implements IUserService {
 	@Override
 	public List<User> findAllUser() {
 		
-		return userMapper.findAllUser();
+		return userMapper.selectAll();
 	}
 
 	@Override

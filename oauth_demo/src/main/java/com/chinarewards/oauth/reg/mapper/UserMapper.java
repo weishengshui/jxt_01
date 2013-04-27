@@ -15,8 +15,6 @@
  */
 package com.chinarewards.oauth.reg.mapper;
 
-import java.util.List;
-
 import com.chinarewards.oauth.domain.User;
 
 
@@ -25,17 +23,6 @@ import com.chinarewards.oauth.domain.User;
  *
  * @version $Id: UserMapper.java,v 1.3 2013-04-25 04:25:13 weishengshui Exp $
  */
-public interface UserMapper {
+public interface UserMapper extends CommonMapper<User>{
 	
-    User getUser(Integer userId);
-    
-    void updateUser(User user);
-    
-    void createUser(User user);
-    
-    void deleteAll();
-    
-    List<User> findAllUser();
-    
-    Integer batchDelete(List<Integer> list);
 }

@@ -19,35 +19,34 @@
 -->
 
 <!--
-  version: $Id: UserMapper.xml,v 1.4 2013-04-26 05:35:26 weishengshui Exp $
+  version: $Id: AuthorMapper.xml,v 1.4 2013-04-26 05:35:26 weishengshui Exp $
 -->
-<mapper namespace="com.chinarewards.oauth.reg.mapper.UserMapper">
-
-	<insert id="insert" parameterType="User" keyProperty="id" useGeneratedKeys="true">
-		insert into users(name, valid) values(#{name}, #{valid})
+<mapper namespace="com.chinarewards.oauth.reg.mapper.AuthorMapper">
+	<insert id="insert" parameterType="Author" keyProperty="id" useGeneratedKeys="true">
+		insert into author(author_name) values(#{author_name})
 	</insert>
 	
-	<update id="update" parameterType="User" >
-		update users set name=#{name}, valid=#{valid} where id = #{id}
+	<update id="update" parameterType="Author" >
+		update author set author_name=#{author_name} where id = #{id}
 	</update>
 	
 	<delete id="batchDelete" parameterType="java.util.List">
-		delete from users where id in
+		delete from author where id in
 		<foreach collection="list" item="item" close=")" open="(" separator=",">
 			#{item}
 		</foreach>
 	</delete>
 		
 	<delete id="deleteAll">
-		delete from users
+		delete from author
 	</delete>
 	
-	<select id="select" resultType="User" parameterType="java.lang.Integer">
-		select * from users where id=#{value}
+	<select id="select" resultType="Author" parameterType="java.lang.Integer">
+		select * from author where id=#{value}
 	</select>
 	
-	<select id="selectAll" resultType="User">
-		select * from users
+	<select id="selectAll" resultType="Author">
+		select * from author
 	</select>
 	
 </mapper>

@@ -19,35 +19,39 @@
 -->
 
 <!--
-  version: $Id: UserMapper.xml,v 1.4 2013-04-26 05:35:26 weishengshui Exp $
+  version: $Id: BlogMapper.xml,v 1.4 2013-04-26 05:35:26 weishengshui Exp $
 -->
-<mapper namespace="com.chinarewards.oauth.reg.mapper.UserMapper">
+<mapper namespace="com.chinarewards.oauth.reg.mapper.BlogMapper">
 
-	<insert id="insert" parameterType="User" keyProperty="id" useGeneratedKeys="true">
-		insert into users(name, valid) values(#{name}, #{valid})
+	<resultMap type="Blog" id="blogMap">
+		<association property="author"></association>
+	</resultMap>
+
+	<insert id="insert" parameterType="Blog" keyProperty="id" useGeneratedKeys="true">
+		insert into blog(blog_name, author_id) values(#{blog_name}, #{author.id})
 	</insert>
 	
-	<update id="update" parameterType="User" >
-		update users set name=#{name}, valid=#{valid} where id = #{id}
+	<update id="update" parameterType="Blog" >
+		update blog set blog_name=#{blog_name}, author_id=#{author.id} where id = #{id}
 	</update>
 	
 	<delete id="batchDelete" parameterType="java.util.List">
-		delete from users where id in
+		delete from blog where id in
 		<foreach collection="list" item="item" close=")" open="(" separator=",">
 			#{item}
 		</foreach>
 	</delete>
 		
 	<delete id="deleteAll">
-		delete from users
+		delete from blog
 	</delete>
 	
-	<select id="select" resultType="User" parameterType="java.lang.Integer">
-		select * from users where id=#{value}
+	<select id="select" resultMap="blogMap" parameterType="java.lang.Integer">
+		select * from blog where id=#{value}
 	</select>
 	
-	<select id="selectAll" resultType="User">
-		select * from users
+	<select id="selectAll" resultType="Blog">
+		select * from blog
 	</select>
 	
 </mapper>
