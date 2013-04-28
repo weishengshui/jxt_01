@@ -42,6 +42,8 @@
 /springmvc_demo00001/.git
 /springmvc_demo00001/.gitignore
 
+/oauth/bin/
+
 CVS
 .classpath
 .cvsignore
