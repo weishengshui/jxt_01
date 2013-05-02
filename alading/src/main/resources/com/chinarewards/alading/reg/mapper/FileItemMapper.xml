@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chinarewards.alading.reg.mapper.FileItemMapper">
+	
+	<resultMap type="FileItem" id="fileItemResultMap">
+		<result column="content"  property="content" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler"/>
+	</resultMap>
+	<parameterMap type="FileItem" id="FileItemParameterMap">
+		<parameter property="content" jdbcType="BLOB" resultMap="content" typeHandler="org.apache.ibatis.type.BlobTypeHandler"/>
+	</parameterMap>
+	<insert id="insert" parameterMap="FileItemParameterMap" useGeneratedKeys="true"
+		keyProperty="id">
+		insert into fileitem(description, filesize, mimeType,
+		originalFilename, content) values(#{description}, #{filesize},
+		#{mimeType}, #{originalFilename}, #{content})
+	</insert>
+	
+	<select id="select" resultMap="fileItemResultMap" parameterType="java.lang.Integer">
+		select * from fileitem where id=#{value}
+	</select>
+</mapper>
