@@ -1,11 +1,10 @@
-package com.chinarewards.alading.response;
+package com.chinarewards.alading.domain;
 
 import java.io.Serializable;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.chinarewards.alading.domain.CardDetail;
 
 @XmlRootElement
 public class MemberInfo implements Serializable {

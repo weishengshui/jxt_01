@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chinarewards.alading.reg.mapper.CompanyCardMapper">
+	
+	<select id="selectAllPic" resultType="java.lang.Integer">
+		select fi.id from companyCard cc left join tbl_qy qy on cc.company_Id=qy.nid left join card c on cc.card_Id=c.id, fileitem fi 
+		where c.picUrl=fi.id  
+	</select>
+</mapper>

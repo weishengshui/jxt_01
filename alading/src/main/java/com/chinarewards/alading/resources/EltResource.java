@@ -1,11 +1,14 @@
 package com.chinarewards.alading.resources;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
@@ -20,13 +23,17 @@ import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
+import com.chinarewards.alading.domain.Card;
+import com.chinarewards.alading.domain.CardDetail;
 import com.chinarewards.alading.domain.FileItem;
+import com.chinarewards.alading.domain.MemberInfo;
 import com.chinarewards.alading.log.InjectLogger;
-import com.chinarewards.alading.response.MemberInfo;
 import com.chinarewards.alading.response.PicUrlList;
-import com.chinarewards.alading.service.AppRegisterService;
+import com.chinarewards.alading.service.ICompanyCardService;
 import com.chinarewards.alading.service.IFileItemService;
+import com.chinarewards.alading.service.IMemberService;
 import com.google.inject.Inject;
+import com.oreilly.servlet.MultipartRequest;
 
 @Path("/")
 public class EltResource {
@@ -35,10 +42,11 @@ public class EltResource {
 	private Logger logger;
 
 	@Inject
-	private AppRegisterService appRegisterService;
-	
-	@Inject
 	private IFileItemService fileItemService;
+	@Inject
+	private ICompanyCardService companyCardService;
+	@Inject
+	private IMemberService memberService;
 
 	/**
 	 * 获取图片url列表
@@ -54,10 +62,13 @@ public class EltResource {
 	@Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
 	@Produces({ MediaType.APPLICATION_XML })
 	public PicUrlList obtainPicUrlList(@FormParam("username") String username,
-			@FormParam("password") String password) {
+			@FormParam("password") String password,
+			@Context HttpServletRequest request) {
 
 		logger.info("entrance obtainPicUrlList username={}, password={}",
 				new Object[] { username, password });
+
+		String picPrefix = getPicPrefix(request);
 
 		PicUrlList picUrlList = new PicUrlList();
 
@@ -65,11 +76,12 @@ public class EltResource {
 				&& password.equals("password")) {
 
 			List<String> urlList = new ArrayList<String>();
-			urlList.add("http://www.baidu.com/pic1.jpg");
-			urlList.add("http://www.baidu.com/pic2.jpg");
-			urlList.add("http://www.baidu.com/pic3.jpg");
-
-			// TODO
+			List<Integer> idList = companyCardService.findAllPic();
+			if (null != idList && idList.size() > 0) {
+				for (Integer id : idList) {
+					urlList.add(picPrefix + id);
+				}
+			}
 
 			picUrlList.setPicUrl(urlList);
 		} else {
@@ -78,61 +90,86 @@ public class EltResource {
 
 		return picUrlList;
 	}
-	
+
 	// just for test
 	@POST
 	@Path("putPic")
 	@Consumes({ MediaType.MULTIPART_FORM_DATA })
 	@Produces({ MediaType.TEXT_HTML })
-	public String putPic(@FormParam("pic") byte[] pic) {
+	public String putPic(@Context HttpServletRequest request)
+			throws IOException {
 
-		logger.info("entrance putPic pic={}",
-				new Object[] { pic });
-		
-		FileItem fileItem = new FileItem();
-		fileItem.setContent(pic);
-		fileItemService.save(fileItem);
-			
+		logger.info("entrance putPic");
+
+		MultipartRequest mr = null;
+		int maxSize = 10485760;
+		mr = new MultipartRequest(request, System.getProperty("user.dir"),
+				maxSize);
+		File file = mr.getFile("pic");
+		if (null != file) {
+			String contentType = mr.getContentType("pic");
+			String originalFileName = mr.getOriginalFileName("pic");
+			logger.info("contentType={}, originalFileName={}", new Object[] {
+					contentType, originalFileName });
+			FileInputStream fis = new FileInputStream(file);
+			if (null != fis && fis.available() > 0) {
+				int length = fis.available();
+				byte[] bbuf = new byte[length];
+				for (int i = 0; i < length; i++) {
+					bbuf[i] = (byte) fis.read();
+				}
+				FileItem fileItem = new FileItem();
+				fileItem.setContent(bbuf);
+				fileItem.setMimeType(contentType);
+				fileItem.setOriginalFilename(originalFileName);
+				fileItem.setFilesize(length);
+				fileItemService.save(fileItem);
+			}
+			fis.close();
+			file.delete();
+		}
 		return "成功";
 	}
-	
-	
+
 	@GET
 	@Path("getPic/{id}")
-	@Produces({MediaType.APPLICATION_OCTET_STREAM})
-	public void getPic(@PathParam("id") Integer  id, @Context HttpServletResponse response) {
+	@Produces({ MediaType.APPLICATION_OCTET_STREAM })
+	public void getPic(@PathParam("id") Integer id,
+			@Context HttpServletResponse response) {
 
-		logger.info("entrance getPic picId={}",
-				new Object[] { id });
-		
+		logger.info("entrance getPic picId={}", new Object[] { id });
+
 		FileItem fileItem = fileItemService.findFileItemById(id);
-		logger.info("getPic content={}",
-				new Object[] { fileItem.getContent() });
-		//		HttpRequest request = context.
+		if (null == fileItem) {
+			return;
+		}
+		logger.info("getPic content={}", new Object[] { fileItem.getContent() });
 		byte[] content = fileItem.getContent();
-		if(null != content && content.length > 0){
+		if (null != content && content.length > 0) {
 			try {
-				response.setContentType("image/jpg");
+				ByteArrayInputStream in = new ByteArrayInputStream(content);
+
+				response.setContentType(fileItem.getMimeType());
 				response.setContentLength(content.length);
 				response.setHeader("Content-Disposition", "inline; filename=\""
 						+ "123.jpg" + "\"");
 				byte[] bbuf = new byte[1024];
-				ByteArrayInputStream in = new ByteArrayInputStream(content);
 				int bytes = 0;
-				ServletOutputStream op = response.getOutputStream();
+				BufferedOutputStream bos = new BufferedOutputStream(
+						response.getOutputStream());
 				while ((in != null) && ((bytes = in.read(bbuf)) != -1)) {
-					op.write(bbuf, 0, bytes);
+					logger.info("content={}", new Object[] { bbuf });
+					bos.write(bbuf, 0, bytes);
 				}
+				bos.flush();
+				bos.close();
 				in.close();
-				op.flush();
-				op.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-//		return "success";
 	}
-	
+
 	/**
 	 * 终端机获取session
 	 * 
@@ -183,15 +220,25 @@ public class EltResource {
 	@Produces({ MediaType.APPLICATION_XML })
 	public MemberInfo getMemberInfo(
 			@FormParam("terminalSession") String terminalSession,
-			@FormParam("mobileNo") String mobileNo) {
+			@FormParam("mobileNo") String mobileNo, @Context HttpServletRequest request) {
 
 		logger.info(
 				"entrance memberInfo terminalSession={}, mobileNo={}, password={}",
 				new Object[] { terminalSession, mobileNo });
-
+		
+		String picPrefix = getPicPrefix(request);
 		MemberInfo memberInfo = new MemberInfo();
-
-		// TODO
+		if(!StringUtils.isEmpty(mobileNo)){
+			memberInfo = memberService.findMemberInfoByPhone(mobileNo);
+			if(null != memberInfo){
+				List<CardDetail> list = memberInfo.getCardList();
+				if(null != list && list.size() > 0){
+					for(CardDetail detail : list){
+						detail.setPicUrl(picPrefix+detail.getPicUrl());
+					}
+				}
+			}
+		}
 
 		return memberInfo;
 	}
@@ -228,7 +275,7 @@ public class EltResource {
 	public String redeemApply(
 			@FormParam("terminalSession") String terminalSession,
 			@FormParam("sessionId") String sessionId,
-			@FormParam("accountId") String accountId,
+			@FormParam("accountId") Integer accountId,
 			@FormParam("pointId") String pointId,
 			@FormParam("amount") Integer amount,
 			@FormParam("terminalId") String terminalId,
@@ -243,6 +290,18 @@ public class EltResource {
 						couponNo });
 
 		String response = "100";
+		MemberInfo memberInfo = memberService.findMemberInfoById(accountId);
+		if(null == memberInfo){
+			response = "110";
+		} else {
+			List<CardDetail> cardDetails = memberInfo.getCardList();
+			CardDetail cardDetail = cardDetails.get(0);
+			if(cardDetail.getAccountBalance() < amount){
+				response = "102";
+			} else if(!pointId.equals(cardDetail.getPointId())){
+				response = "103";
+			}
+		}
 		// TODO
 
 		return response;
@@ -333,4 +392,42 @@ public class EltResource {
 		return response;
 	}
 
+	public String getRequestURL(HttpServletRequest req) {
+		StringBuffer url = new StringBuffer();
+		String scheme = req.getScheme();
+		int port = req.getServerPort();
+		String urlPath = req.getRequestURI();
+
+		url.append(scheme); // http, https
+		url.append("://");
+		url.append(req.getServerName());
+		if ((scheme.equals("http") && port != 80)
+				|| (scheme.equals("https") && port != 443)) {
+			url.append(':');
+			url.append(req.getServerPort());
+		}
+
+		url.append(urlPath);
+		return url.toString();
+	}
+	
+	private String getPicPrefix(HttpServletRequest request){
+		StringBuffer url = new StringBuffer();
+		String scheme = request.getScheme();
+		int port = request.getServerPort();
+		String urlPath = request.getRequestURI();
+
+		url.append(scheme); // http, https
+		url.append("://");
+		url.append(request.getServerName());
+		if ((scheme.equals("http") && port != 80)
+				|| (scheme.equals("https") && port != 443)) {
+			url.append(':');
+			url.append(request.getServerPort());
+		}
+		logger.info(urlPath);
+		url.append(urlPath.substring(0, urlPath.indexOf('/', 1))).append("/ishelf/getPic/");
+		
+		return url.toString();
+	}
 }

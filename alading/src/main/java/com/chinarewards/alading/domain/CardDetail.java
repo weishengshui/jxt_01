@@ -2,6 +2,9 @@ package com.chinarewards.alading.domain;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name="cardDetail")
 public class CardDetail implements Serializable{
 
 	/**
