@@ -63,7 +63,7 @@ public class Application {
 	public static Properties createDatabaseProperties(String propertiesFileName){
 		
 		try {
-			InputStream is = Application.class.getClassLoader().getResourceAsStream(propertiesFileName);
+			InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(propertiesFileName);
 			final Properties myBatisProperties = new Properties();
 			myBatisProperties.load(is);
 			

@@ -2,6 +2,7 @@ package com.chinarewards.alading.service;
 
 import org.slf4j.Logger;
 
+import com.chinarewards.alading.domain.Member;
 import com.chinarewards.alading.domain.MemberInfo;
 import com.chinarewards.alading.log.InjectLogger;
 import com.chinarewards.alading.reg.mapper.MemberMapper;
@@ -17,12 +18,17 @@ public class MemberService implements IMemberService {
 	
 	@Override
 	public MemberInfo findMemberInfoByPhone(String phoneNumber) {
-		return memberMapper.selectMemberByPhone(phoneNumber);
+		return memberMapper.selectMemberInfoByPhone(phoneNumber);
 	}
 
 	@Override
 	public MemberInfo findMemberInfoById(Integer id) {
 		return memberMapper.select(id);
+	}
+
+	@Override
+	public Member findMemberById(Integer id) {
+		return memberMapper.selectMemberById(id);
 	}
 
 }

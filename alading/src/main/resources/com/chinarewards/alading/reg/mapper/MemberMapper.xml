@@ -15,8 +15,15 @@
 			<result property="pointRate" column="pointRate"/>
 		</collection>
 	</resultMap>
+	<resultMap type="Member" id="MemberResultMap">
+		<result property="id" column="nid"/>
+		<result property="enterpriseId" column="qy"/>
+		<result property="mobilePhone" column="lxdh"/>
+		<result property="status" column="zt"/>
+	</resultMap>
 	
-	<select id="selectMemberByPhone" resultMap="MemberInfoResultMap" parameterType="java.lang.String">
+	
+	<select id="selectMemberInfoByPhone" resultMap="MemberInfoResultMap" parameterType="java.lang.String">
 		SELECT qyyg.nid AS accountId
 		, c.cardName AS cardName
 		, fi.id AS picUrl
@@ -42,5 +49,9 @@
 		,fileitem fi 
 		, unit u
 		WHERE cc.company_Id=qy.nid AND c.picUrl=fi.id AND qyyg.nid = #{value} AND c.unit_id = u.pointId;
+	</select>
+	
+	<select id="selectMemberById" resultMap="MemberResultMap" parameterType="java.lang.Integer">
+		select * from tbl_qyyg where nid = #{value}
 	</select>
 </mapper>
