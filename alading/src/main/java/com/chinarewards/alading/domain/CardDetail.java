@@ -1,23 +1,16 @@
 package com.chinarewards.alading.domain;
 
-import java.io.Serializable;
-
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name="cardDetail")
-public class CardDetail implements Serializable{
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2311112247598376901L;
-	private String accountId; // 会员账户id
-	private String cardName; // 卡类型名称
-	private String picUrl; // 卡图片URL
-	private String pointId; // 卡积分单位id
-	private String pointName; // 卡积分单位名称
-	private Integer accountBalance; // 卡剩余积分数量
-	private Integer pointRate; // 卡积分兑换抵用券单价
+@XmlRootElement
+public class CardDetail {
+	private String accountId;// 会员帐号
+	private String cardName;// 卡类型名称
+	private String picUrl;// 卡图片URL
+	private String pointId;// 卡积分单位Id
+	private String pointName;// 卡积分单位名称
+	private String pointBalance;// 卡上剩余的积分数量
+	private String pointRate;// 卡积分兑换抵用卷的单价
 
 	public String getAccountId() {
 		return accountId;
@@ -51,28 +44,28 @@ public class CardDetail implements Serializable{
 		this.pointId = pointId;
 	}
 
+	public String getPointBalance() {
+		return pointBalance;
+	}
+
+	public void setPointBalance(String pointBalance) {
+		this.pointBalance = pointBalance;
+	}
+
+	public String getPointRate() {
+		return pointRate;
+	}
+
+	public void setPointRate(String pointRate) {
+		this.pointRate = pointRate;
+	}
+
 	public String getPointName() {
 		return pointName;
 	}
 
 	public void setPointName(String pointName) {
 		this.pointName = pointName;
-	}
-
-	public Integer getAccountBalance() {
-		return accountBalance;
-	}
-
-	public void setAccountBalance(Integer accountBalance) {
-		this.accountBalance = accountBalance;
-	}
-
-	public Integer getPointRate() {
-		return pointRate;
-	}
-
-	public void setPointRate(Integer pointRate) {
-		this.pointRate = pointRate;
 	}
 
 }

@@ -164,8 +164,9 @@ public class DdDaoImpl extends PageDaoImpl implements DdDao{
 
 	public String pageSql(String param) {
 		String sql = "SELECT t.nid,t.ddh,t.state,t.cjrq,DATE_FORMAT(t.jsrq,'%Y.%m.%d %H:%i') jsrq,t.ydh,t.shrq,t.fhrq,t.zjf,t.zje,t.jfqsl," +
-			" t.fhr,t.yg,t.shdz,t.ddbz FROM tbl_ygddzb t" +
-			" WHERE 1=1 "+param+" order by t.jsrq desc";
+			" t.fhr,t.yg,t.shdz,t.ddbz, sp.spbh  FROM tbl_ygddzb t inner join tbl_ygddmx ddmx on t.nid=ddmx.dd, tbl_sp sp " +
+			" WHERE 1=1 "+param+" and sp.nid=ddmx.sp order by t.jsrq desc";
+		logger.info(sql);
 		return sql;
 	}
 	

@@ -26,7 +26,7 @@ public class GuiceListener extends GuiceServletContextListener {
 			DataSource dataSource = environment.getDataSource();
 			ScriptRunner runner = new ScriptRunner(dataSource.getConnection());
 			runner.setAutoCommit(true);
-			runner.setStopOnError(true);
+			runner.setStopOnError(false);
 			runner.runScript(getResourceAsReader("db/database-schema.sql"));
 			runner.closeConnection();
 		} catch (Exception e) {

@@ -98,7 +98,7 @@
 							 }
 							 var jfqsl = '';
 							 if(row.jfqsl!='' && row.jfqsl!=0){
-								jfqsl = '<br />积分券<strong class="bisque">'+row.jfqsl+'</strong>张';
+								jfqsl = '<br />福利券<strong class="bisque">'+row.jfqsl+'</strong>张';
 							 }
 							 var jyzt = '';
 							 var cz = '';
@@ -108,27 +108,46 @@
 									 +'<a class="confirm-sh" onclick="cancel(\''+row.ddh+'\')">取消订单</a>';
 							 }
 							 if(row.state==1){
-								 jyzt = '已支付<br /><span class="blue"><a href="dd!detail.do?crddh='+row.ddh+'">订单详情</a></span>';
+								 jyzt = '已支付';
+								 if(row.spbh != 'CP_001'){
+									 jyzt = jyzt + '<br /><span class="blue"><a href="dd!detail.do?crddh='+row.ddh+'">订单详情</a></span>';
+								 }
 								// cz = '<a class="confirm-sh" onclick="remind(\''+row.ddh+'\')">提醒发货</a>';
 							 } 
 							 if(row.state==11){
-								 jyzt = '已支付<br /><span class="blue"><a href="dd!detail.do?crddh='+row.ddh+'">订单详情</a></span>';
+								 jyzt = '已支付';
+								 if(row.spbh != 'CP_001'){
+									 jyzt = jyzt + '<br /><span class="blue"><a href="dd!detail.do?crddh='+row.ddh+'">订单详情</a></span>';
+								 }
 								// cz = '已提醒发货';
 							 } 
 							 if(row.state==2){
-								 jyzt = '待收货<br /><span class="blue"><a href="dd!detail.do?crddh='+row.ddh+'">订单详情</a></span>';
+								 jyzt = '待收货';
+								 if(row.spbh != 'CP_001'){
+									 jyzt = jyzt + '<br /><span class="blue"><a href="dd!detail.do?crddh='+row.ddh+'">订单详情</a></span>';
+								 }
+
 								 cz = '<a class="confirm-sh" onclick="confirm(\''+row.ddh+'\')">确认收货</a>';
 							 }
 							 if(row.state==3){
-								 jyzt = '待评价<br /><span class="blue"><a href="dd!detail.do?crddh='+row.ddh+'">订单详情</a></span>';
+								 jyzt = '待评价';
+								 if(row.spbh != 'CP_001'){
+									 jyzt = jyzt + '<br /><span class="blue"><a href="dd!detail.do?crddh='+row.ddh+'">订单详情</a></span>';
+								 }
 								 cz = '<a class="confirm-sh" onclick="pingjia(\''+row.ddh+'\')">评价</a>';
 							 }
 							 if(row.state==4){
-								 jyzt = '待评价<br /><span class="blue"><a href="dd!detail.do?crddh='+row.ddh+'">订单详情</a></span>';
+								 jyzt = '待评价';
+								 if(row.spbh != 'CP_001'){
+									 jyzt = jyzt + '<br /><span class="blue"><a href="dd!detail.do?crddh='+row.ddh+'">订单详情</a></span>';
+								 }
 								 cz = '<a class="confirm-sh" onclick="pingjia(\''+row.ddh+'\')">评价</a>';
 							 }
 							 if(row.state==5){
-								 jyzt = '评价成功<br /><span class="blue"><a href="dd!detail.do?crddh='+row.ddh+'">订单详情</a></span>';
+								 jyzt = '评价成功';
+								 if(row.spbh != 'CP_001'){
+									 jyzt = jyzt + '<br /><span class="blue"><a href="dd!detail.do?crddh='+row.ddh+'">订单详情</a></span>';
+								 }
 							 }
 							 if(row.state==9){
 								 jyzt = '已取消';
@@ -167,8 +186,15 @@
 										if(row.jfq!=''&&row.jfq!=0){
 											mxzffs+=row.mc+'<strong class="bisque">'+row.sl+'</strong>张';
 										}
-										tdstr = '<tr><td width="367"><div class="order-states"><img src="'+row.lj+'60x60.jpg" /><p class="blue"><a href="sp!detail.do?sp=' +
-											 row.sp+'">'+row.spmc+'</a></p><span>'+mxzffs+'</span><h2>'+row.sl+'</h2></div></td></tr>';
+										tdstr = '<tr><td width="367"><div class="order-states"><img src="'+row.lj+'60x60.jpg" /><p class="blue">';
+										// <a href="sp!detail.do?sp=' + row.sp+'">'+row.spmc+'</a>
+										// 抵扣券去掉超链接	 
+									    if(row.spbh != 'CP_001'){
+									    	tdstr = tdstr+ '<a href="sp!detail.do?sp=' + row.sp+'">'+row.spmc+'</a>';	
+									    } else {
+									    	tdstr = tdstr + row.spmc;
+									    }
+									    tdstr = tdstr + '</p><span>'+mxzffs+'</span><h2>'+row.sl+'</h2></div></td></tr>';
 										$("#tab"+row.dd).append(tdstr);
 										if(tzdd == ''){
 											tzdd = row.dd;
@@ -233,7 +259,7 @@
 											<option value="182">近半年</option>
 											<option value="365">近一年</option>
 										</select></td>
-										<input id="yg" rule="eq" type="hidden" value='<s:property value="user.nid" />' />
+										<input id="t.yg" rule="eq" type="hidden" value='<s:property value="user.nid" />' />
 										<td><input value=" " onclick="listzb(10,1);" type="button" class="searchbtn2" /></td>
 									  </tr>
 									</table>

@@ -14,8 +14,28 @@
 	    <filter-name>guiceFilter</filter-name>
 	    <url-pattern>/*</url-pattern>
 	</filter-mapping>
+	<filter>
+		<filter-name>sessionFilter</filter-name>
+		<filter-class>com.chinarewards.alading.filter.SessionFilter</filter-class>
+		<!-- 定义要拦截的目录，目录之间用","隔开 -->
+		<init-param>
+			<param-name>include</param-name>
+			<param-value>view</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>sessionFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 
 	<listener>
 		<listener-class>com.chinarewards.alading.listener.GuiceListener</listener-class>
 	</listener>
+	
+	<session-config>
+		<session-timeout>30</session-timeout>
+	</session-config>
+	<welcome-file-list>
+		<welcome-file>login.jsp</welcome-file>
+	</welcome-file-list>
 </web-app>

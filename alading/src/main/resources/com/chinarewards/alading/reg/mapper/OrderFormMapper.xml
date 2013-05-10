@@ -11,4 +11,36 @@
 	<select id="selectByCouponNo" parameterType="java.lang.String" resultType="OrderForm">
 		select * from tbl_orderform where couponNo=#{value} 
 	</select>
+	
+	<update id="exchange" parameterType="map" statementType="CALLABLE">
+		{call proc_exchange_coupon(  
+    		#{_couponNo,mode=IN,jdbcType=VARCHAR},  
+    		#{_accountId,jdbcType=INTEGER,mode=IN},
+    		#{_quantity,jdbcType=INTEGER,mode=IN},	  
+    		#{_terminalId,jdbcType=VARCHAR,mode=IN},
+    		#{_terminalAddress,jdbcType=VARCHAR,mode=IN},
+    		#{_transactionDate,jdbcType=VARCHAR,mode=IN},
+    		#{returnCode,mode=OUT,jdbcType=VARCHAR})
+    	} 	
+	</update>
+
+	<update id="applyCoupon" parameterType="map" statementType="CALLABLE">
+		{call proc_apply_coupon(  
+    		#{_couponNo,mode=IN,jdbcType=VARCHAR},  
+    		#{_terminalId,jdbcType=INTEGER,mode=IN},
+    		#{_merchantName,jdbcType=INTEGER,mode=IN},	  
+    		#{_merchantAddress,jdbcType=VARCHAR,mode=IN},
+    		#{_transactionDate,jdbcType=VARCHAR,mode=IN},
+    		#{_transactionNo,jdbcType=VARCHAR,mode=IN},
+    		#{returnCode,mode=OUT,jdbcType=VARCHAR})
+    	} 	
+	</update>
+	
+	<update id="expireCoupon" parameterType="map" statementType="CALLABLE">
+		{call proc_expire_coupon(  
+    		#{_couponNo,mode=IN,jdbcType=VARCHAR},  
+    		#{returnCode,mode=OUT,jdbcType=VARCHAR})
+    	} 	
+	</update>
+		
 </mapper>

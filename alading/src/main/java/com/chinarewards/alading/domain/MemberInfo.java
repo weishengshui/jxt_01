@@ -1,10 +1,8 @@
 package com.chinarewards.alading.domain;
 
 import java.io.Serializable;
-import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
-
 
 @XmlRootElement
 public class MemberInfo implements Serializable {
@@ -15,7 +13,7 @@ public class MemberInfo implements Serializable {
 	private static final long serialVersionUID = -9012610712591942605L;
 
 	private String memberSession; // 会员的session
-	private List<CardDetail> cardList; // 会员卡列表
+	private CardList cardList; // 会员卡列表
 
 	public String getMemberSession() {
 		return memberSession;
@@ -25,11 +23,11 @@ public class MemberInfo implements Serializable {
 		this.memberSession = memberSession;
 	}
 
-	public List<CardDetail> getCardList() {
+	public CardList getCardList() {
 		return cardList;
 	}
 
-	public void setCardList(List<CardDetail> cardList) {
+	public void setCardList(CardList cardList) {
 		this.cardList = cardList;
 	}
 

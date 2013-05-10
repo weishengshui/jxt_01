@@ -1,3 +1,53 @@
+
+-- DROP TABLE IF EXISTS companyCard;
+-- DROP TABLE IF EXISTS card;
+-- DROP TABLE IF EXISTS unit;
+-- DROP TABLE IF EXISTS `fileitem`;
+
+CREATE TABLE IF NOT EXISTS `fileitem` (
+  `id` int(11) NOT NULL auto_increment,
+  `description` longtext,
+  `filesize` bigint(20) DEFAULT NULL,  
+  `mimeType` varchar(255) DEFAULT NULL,
+  `originalFilename` varchar(255) DEFAULT NULL,    
+  `content` blob(10485760),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+
+-- 积分单位表
+CREATE TABLE IF NOT EXISTS unit
+(
+pointId INT(11) NOT NULL ,
+pointName VARCHAR(255),
+pointRate INT,
+PRIMARY KEY(pointId)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+
+-- 会员卡表
+CREATE TABLE IF NOT EXISTS card
+(
+id INT(11) NOT NULL auto_increment,
+cardName VARCHAR(255),
+picUrl INT ,
+unit_id INT,
+PRIMARY KEY(id),
+CONSTRAINT fk_cardUnit FOREIGN KEY (unit_id) REFERENCES unit(pointId),
+CONSTRAINT fk_picUrl FOREIGN KEY (picUrl) REFERENCES fileitem(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+
+-- 企业会员卡关系表
+CREATE TABLE IF NOT EXISTS companyCard
+(
+id INT(11) NOT NULL auto_increment,
+card_Id INT,
+company_Id INT,
+PRIMARY KEY(id),
+CONSTRAINT fk_card FOREIGN KEY (card_id) REFERENCES card(id),
+CONSTRAINT fk_company FOREIGN KEY (company_Id) REFERENCES tbl_qy(nid)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+
+
+-- DROP TABLE IF EXISTS `tbl_orderform`;
 CREATE TABLE IF NOT EXISTS `tbl_orderform` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `couponNo` varchar(50) NOT NULL,
@@ -16,12 +66,13 @@ CREATE TABLE IF NOT EXISTS `tbl_orderform` (
   `enterpriseId` int(11) DEFAULT NULL COMMENT '企业id',
   `lastUpdatedAt` datetime DEFAULT NULL,
   `expiredTime` datetime DEFAULT NULL COMMENT '过期时间',
+  `transactionNo` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
---DROP TABLE IF EXISTS `tbl_exchangelog`;
+-- DROP TABLE IF EXISTS `tbl_exchangelog`;
 CREATE TABLE IF NOT EXISTS `tbl_exchangelog` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL,
   `terminalId` varchar(50) DEFAULT NULL,
   `merchantName` varchar(255) DEFAULT NULL,
   `merchantAddress` varchar(50) DEFAULT NULL,
@@ -32,5 +83,6 @@ CREATE TABLE IF NOT EXISTS `tbl_exchangelog` (
   `createdAt` datetime NOT NULL,
   `transactionDate` datetime DEFAULT NULL,
   `mobilePhone` varchar(30) DEFAULT NULL,
+  `transactionNo` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;

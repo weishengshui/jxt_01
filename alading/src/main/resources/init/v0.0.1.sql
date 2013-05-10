@@ -1,8 +1,8 @@
 
-DROP TABLE IF EXISTS companyCard;
-DROP TABLE IF EXISTS card;
-DROP TABLE IF EXISTS unit;
-DROP TABLE IF EXISTS `fileitem`;
+-- DROP TABLE IF EXISTS companyCard;
+-- DROP TABLE IF EXISTS card;
+-- DROP TABLE IF EXISTS unit;
+-- DROP TABLE IF EXISTS `fileitem`;
 
 CREATE TABLE IF NOT EXISTS `fileitem` (
   `id` int(11) NOT NULL auto_increment,
@@ -42,13 +42,9 @@ id INT(11) NOT NULL auto_increment,
 card_Id INT,
 company_Id INT,
 PRIMARY KEY(id),
-CONSTRAINT fk_card FOREIGN KEY (card_id) REFERENCES card(id),
+CONSTRAINT fk_card FOREIGN KEY (card_Id) REFERENCES card(id),
 CONSTRAINT fk_company FOREIGN KEY (company_Id) REFERENCES tbl_qy(nid)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
-
--- 60个积分兑换1张5元现金抵用券 
-INSERT INTO unit VALUES(2, '积点', 12);
-INSERT INTO card(cardName, picUrl, unit_id) VALUES('缤分联盟卡', NULL, 2);
 
 
 -- DROP TABLE IF EXISTS `tbl_orderform`;
@@ -91,3 +87,10 @@ CREATE TABLE IF NOT EXISTS `tbl_exchangelog` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
+-- 60个积分兑换1张5元现金抵用券 
+INSERT INTO unit VALUES(2, '积点', 12);
+-- 在http://xxxxx:8080/alading 上传图片，得到一个id为 1 的fileitem
+INSERT INTO card(id, cardName, picUrl, unit_id) VALUES(1, '缤分联盟卡', 1, 2);
+
+-- 将所有企业 初始化为默认的卡， 即“缤纷联盟卡”
+INSERT INTO companyCard(card_Id, company_Id) SELECT 1, nid FROM tbl_qy;

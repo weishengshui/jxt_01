@@ -1,5 +1,7 @@
 package com.chinarewards.alading.service;
 
+import java.util.List;
+
 public interface ICouponService {
 
 	/**
@@ -7,8 +9,8 @@ public interface ICouponService {
 	 * 
 	 * @param couponNo
 	 *            抵用券交易号
-	 * @param employeeMobile
-	 *            企业员工手机号
+	 * @param accountId
+	 *            企业员工nid
 	 * @param quantity
 	 *            兑换数量
 	 * @param terminalId
@@ -26,10 +28,24 @@ public interface ICouponService {
 	 *         <li>104：超出当日使用限额</li>
 	 *         <li>113：系统级异常</li>
 	 *         </ul>
+	 * 
+	 *         tbl_ygddzb -- elt 订单表 （9 取消订单， 3待评价商品） INSERT INTO `tbl_ygddzb`
+	 *         (`nid`, `ddh`, `state`, `cjrq`, `jsrq`, `ydh`, `shrq`, `fhrq`,
+	 *         `zjf`, `zje`, `jfqsl`, `fhr`, `fhrdh`, `yg`, `shdz`, `ddbz`,
+	 *         `shdzxx`, `qsrq`, `gys`) VALUES (85, '20130506140650124', 9,
+	 *         '2013-05-06 14:06:50', '2013-05-06 14:06:54', NULL, NULL, NULL,
+	 *         10, 0.00, 0, NULL, NULL, 124, 20, '10积分换购商品', '<b>收货人：</b>windy
+	 *         <b>电话号码：</b>15896521456<br />
+	 *         <b>地址：</b>广东省 深圳市 南山区 高新一道，TCL,A301 581000 ', NULL, NULL);
+	 * 
+	 *         tbl_ygddmx -- elt 订单明细 INSERT INTO `tbl_ygddmx` (`nid`, `dd`,
+	 *         `sp`, `dhfs`, `sl`, `jf`, `je`, `jfq`, `yg`, `spl`, `jssj`,
+	 *         `ddh`, `state`) VALUES (99, 85, 98, NULL, 1, 10, NULL, NULL, 124,
+	 *         70, '2013-05-06 14:06:54', '20130506140650124', 9);
+	 * 
 	 */
-	public String exchange(String couponNo, String employeeMobile,
-			int quantity, String terminalId, String terminalAddress,
-			String transactionDate);
+	public String exchange(String couponNo, int accountId, int quantity,
+			String terminalId, String terminalAddress, String transactionDate);
 
 	/**
 	 * 使用抵用券消费
@@ -58,7 +74,7 @@ public interface ICouponService {
 	 *         <li>121: 用户帐号锁定</li>
 	 *         </ul>
 	 */
-	public String applyCoupon(String couponNo, String terminalId,
+	public String applyCoupon(List<String> couponNo, String terminalId,
 			String merchantName, String merchantAddress,
 			String transactionDate, String transactionNo);
 
@@ -80,5 +96,5 @@ public interface ICouponService {
 	 *         <li>121:用户被锁定</li>
 	 *         </ul>
 	 */
-	public String expireCoupon(String couponNo);
+	public String expireCoupon(List<String> couponNo);
 }

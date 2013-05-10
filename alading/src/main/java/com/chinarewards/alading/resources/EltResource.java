@@ -1,7 +1,5 @@
 package com.chinarewards.alading.resources;
 
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -9,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -24,11 +21,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
 import com.chinarewards.alading.domain.CardDetail;
+import com.chinarewards.alading.domain.CardList;
 import com.chinarewards.alading.domain.ExchangeLog;
 import com.chinarewards.alading.domain.FileItem;
 import com.chinarewards.alading.domain.MemberInfo;
 import com.chinarewards.alading.log.InjectLogger;
 import com.chinarewards.alading.reg.mapper.ExchangeLogMapper;
+import com.chinarewards.alading.response.ImageModel;
 import com.chinarewards.alading.response.PicUrlList;
 import com.chinarewards.alading.service.ICompanyCardService;
 import com.chinarewards.alading.service.ICouponService;
@@ -75,25 +74,17 @@ public class EltResource {
 		logger.info("entrance obtainPicUrlList username={}, password={}",
 				new Object[] { username, password });
 
-		String picPrefix = getPicPrefix(request);
-
 		PicUrlList picUrlList = new PicUrlList();
 
-		if (null != username && null != password && username.equals("admin")
-				&& password.equals("password")) {
-
-			List<String> urlList = new ArrayList<String>();
-			List<Integer> idList = companyCardService.findAllPic();
-			if (null != idList && idList.size() > 0) {
-				for (Integer id : idList) {
-					urlList.add(picPrefix + id);
-				}
+		List<String> urlList = new ArrayList<String>();
+		List<Integer> idList = companyCardService.findAllPic();
+		if (null != idList && idList.size() > 0) {
+			for (Integer id : idList) {
+				urlList.add("" + id);
 			}
-
-			picUrlList.setPicUrl(urlList);
-		} else {
-			// throw Exceltion ?
 		}
+
+		picUrlList.setPicUrl(urlList);
 
 		return picUrlList;
 	}
@@ -140,41 +131,23 @@ public class EltResource {
 
 	@GET
 	@Path("getPic/{id}")
-	@Produces({ MediaType.APPLICATION_OCTET_STREAM })
-	public void getPic(@PathParam("id") Integer id,
-			@Context HttpServletResponse response) {
+	@Produces({ MediaType.APPLICATION_XML })
+	public ImageModel getPic(@PathParam("id") Integer id) {
 
 		logger.info("entrance getPic picId={}", new Object[] { id });
 
 		FileItem fileItem = fileItemService.findFileItemById(id);
+		ImageModel imageModel = new ImageModel();
 		if (null == fileItem) {
-			return;
+		} else {
+			imageModel.setContentData(fileItem.getContent());
+			imageModel.setContentType(fileItem.getMimeType());
+			imageModel.setTitle("123.jpg");
+			logger.info("getPic content={}",
+					new Object[] { fileItem.getContent() });
 		}
-		logger.info("getPic content={}", new Object[] { fileItem.getContent() });
-		byte[] content = fileItem.getContent();
-		if (null != content && content.length > 0) {
-			try {
-				ByteArrayInputStream in = new ByteArrayInputStream(content);
+		return imageModel;
 
-				response.setContentType(fileItem.getMimeType());
-				response.setContentLength(content.length);
-				response.setHeader("Content-Disposition", "inline; filename=\""
-						+ "123.jpg" + "\"");
-				byte[] bbuf = new byte[1024];
-				int bytes = 0;
-				BufferedOutputStream bos = new BufferedOutputStream(
-						response.getOutputStream());
-				while ((in != null) && ((bytes = in.read(bbuf)) != -1)) {
-					logger.info("content={}", new Object[] { bbuf });
-					bos.write(bbuf, 0, bytes);
-				}
-				bos.flush();
-				bos.close();
-				in.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 
 	/**
@@ -234,17 +207,22 @@ public class EltResource {
 				"entrance memberInfo terminalSession={}, mobileNo={}, password={}",
 				new Object[] { terminalSession, mobileNo });
 
-		String picPrefix = getPicPrefix(request);
+		// String picPrefix = getPicPrefix(request);
 		MemberInfo memberInfo = new MemberInfo();
 		if (!StringUtils.isEmpty(mobileNo)) {
 			memberInfo = memberService.findMemberInfoByPhone(mobileNo);
 			if (null != memberInfo) {
-				List<CardDetail> list = memberInfo.getCardList();
-				if (null != list && list.size() > 0) {
-					for (CardDetail detail : list) {
-						detail.setPicUrl(picPrefix + detail.getPicUrl());
-					}
-				}
+				// CardList cardList = memberInfo.getCardList();
+				// if (null != cardList) {
+				// List<CardDetail> cardDetails = cardList.getCardDetail();
+				// if (null != cardDetails && cardDetails.size() > 0) {
+				// for (CardDetail detail : cardDetails) {
+				// detail.setPicUrl(picPrefix + detail.getPicUrl());
+				// }
+				// }
+				// }
+			} else {
+				memberInfo = new MemberInfo();
 			}
 		}
 
@@ -290,27 +268,14 @@ public class EltResource {
 			@FormParam("terminalAddress") String terminalAddress,
 			@FormParam("transactionDate") String transactionDate,
 			@FormParam("couponNo") String couponNo) {
-
-		logger.info(
+		logger.trace(
 				"entrance redeemApply terminalSession={}, sessionId={}, accountId={}, pointId={}, amount={}, terminalId={}, terminalAddress={}, transactionDate={}, couponNo={}",
 				new Object[] { terminalSession, sessionId, accountId, pointId,
 						amount, terminalId, terminalAddress, transactionDate,
 						couponNo });
 
-		String response = "100";
-		MemberInfo memberInfo = memberService.findMemberInfoById(accountId);
-		if (null == memberInfo) {
-			response = "110";
-		} else {
-			List<CardDetail> cardDetails = memberInfo.getCardList();
-			CardDetail cardDetail = cardDetails.get(0);
-			if (cardDetail.getAccountBalance() < amount) {
-				response = "102";
-			} else if (!pointId.equals(cardDetail.getPointId())) {
-				response = "103";
-			}
-		}
-		// TODO
+		String response = couponService.exchange(couponNo, accountId, amount,
+				terminalId, terminalAddress, transactionDate);
 
 		return response;
 	}
@@ -349,41 +314,36 @@ public class EltResource {
 			@FormParam("merchantAddress") String merchantAddress,
 			@FormParam("transactionDate") String transactionDate,
 			@FormParam("transactionNo") String transactionNo,
-			@FormParam("couponNo") String couponNo) {
+			@FormParam("couponNo") List<String> couponNo) {
 
 		logger.info(
 				"entrance redeemAccept username={}, password={}, terminalId={}, merchantName={}, merchantAddress={}, transactionDate={}, transactionNo={}, couponNo={}",
 				new Object[] { username, password, terminalId, merchantName,
 						merchantAddress, transactionDate, transactionNo,
 						couponNo });
+		// exchangeLog
+		ExchangeLog exchangeLog = new ExchangeLog();
+		exchangeLog.createdAt = SystemTimeProvider.getCurrentTime();
+		exchangeLog.transactionDate = SystemTimeProvider.getCurrentTime();
+		exchangeLog.merchantAddress = merchantAddress;
+		exchangeLog.merchantName = merchantName;
+		exchangeLog.terminalId = terminalId;
+		exchangeLog.operation = "apply";
 
 		String response = "100";
-		if (!StringUtils.isEmpty(username) && !StringUtils.isEmpty(password)
-				&& username.equals("admin") && password.equals("password")) {
-
-			try {
-				response = couponService.applyCoupon(couponNo, terminalId, merchantName, merchantAddress, transactionDate, transactionNo);
-			} catch (Exception e) {
-				response = "113";
-
-				// exchangeLog
-				ExchangeLog exchangeLog = new ExchangeLog();
-				exchangeLog.couponNo = couponNo;
-				exchangeLog.createdAt = SystemTimeProvider.getCurrentTime();
-				exchangeLog.returnCode = response;
-				exchangeLog.transactionDate = SystemTimeProvider
-						.getCurrentTime();
-				exchangeLog.errMessage = e.getMessage();
-				exchangeLog.merchantAddress = merchantAddress;
-				exchangeLog.merchantName = merchantName;
-				exchangeLog.terminalId = terminalId;
-				exchangeLog.operation = "使用抵扣券";
-				exchangeLogMapper.insert(exchangeLog);
-			}
-		} else {
-			response = "110";
+		try {
+			response = couponService.applyCoupon(couponNo, terminalId,
+					merchantName, merchantAddress, transactionDate,
+					transactionNo);
+		} catch (IllegalStateException e1) {
+			response = e1.getMessage();
+			exchangeLog.returnCode = response;
+			logExchange(exchangeLog, couponNo);
+		} catch (Exception e) {
+			response = "113";
+			exchangeLog.returnCode = response;
+			logExchange(exchangeLog, couponNo);
 		}
-
 		return response;
 	}
 
@@ -407,36 +367,29 @@ public class EltResource {
 	@Produces({ MediaType.TEXT_HTML })
 	public String redeemCancel(@FormParam("username") String username,
 			@FormParam("password") String password,
-			@FormParam("couponNo") String couponNo) {
+			@FormParam("couponNo") List<String> couponNumbers) {
 
 		logger.info(
 				"entrance redeemCancel username={}, password={}, couponNo={}",
-				new Object[] { username, password, couponNo });
+				new Object[] { username, password, couponNumbers });
+
+		// exchangeLog
+		ExchangeLog exchangeLog = new ExchangeLog();
+		exchangeLog.createdAt = SystemTimeProvider.getCurrentTime();
+		exchangeLog.operation = "expire";
 
 		String response = "100";
-		if (!StringUtils.isEmpty(username) && !StringUtils.isEmpty(password)
-				&& username.equals("ishelf") && password.equals("ishelf")) {
-
-			try {
-				response = couponService.expireCoupon(couponNo);
-			} catch (Exception e) {
-				response = "113";
-
-				// exchangeLog
-				ExchangeLog exchangeLog = new ExchangeLog();
-				exchangeLog.couponNo = couponNo;
-				exchangeLog.createdAt = SystemTimeProvider.getCurrentTime();
-				exchangeLog.returnCode = response;
-				exchangeLog.transactionDate = SystemTimeProvider
-						.getCurrentTime();
-				exchangeLog.errMessage = e.getMessage();
-				exchangeLog.operation = "失效抵扣券";
-				exchangeLogMapper.insert(exchangeLog);
-			}
-		} else {
-			response = "110";
+		try {
+			response = couponService.expireCoupon(couponNumbers);
+		} catch (IllegalStateException e1) {
+			response = e1.getMessage();
+			exchangeLog.returnCode = response;
+			logExchange(exchangeLog, couponNumbers);
+		} catch (Exception e) {
+			response = "113";
+			exchangeLog.returnCode = response;
+			logExchange(exchangeLog, couponNumbers);
 		}
-
 		return response;
 	}
 
@@ -478,5 +431,14 @@ public class EltResource {
 				"/ishelf/getPic/");
 
 		return url.toString();
+	}
+
+	protected void logExchange(ExchangeLog log, List<String> coupon) {
+		for (String cp : coupon) {
+			if (StringUtils.isNotEmpty(cp)) {
+				log.couponNo = cp;
+				exchangeLogMapper.insert(log);
+			}
+		}
 	}
 }

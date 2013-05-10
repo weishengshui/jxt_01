@@ -6,7 +6,9 @@ import com.chinarewards.alading.service.FileItemService;
 import com.chinarewards.alading.service.ICompanyCardService;
 import com.chinarewards.alading.service.ICouponService;
 import com.chinarewards.alading.service.IFileItemService;
+import com.chinarewards.alading.service.ILoginService;
 import com.chinarewards.alading.service.IMemberService;
+import com.chinarewards.alading.service.LoginService;
 import com.chinarewards.alading.service.MemberService;
 import com.google.inject.Binder;
 import com.google.inject.Module;
@@ -16,10 +18,16 @@ public class ServiceModule implements Module {
 
 	@Override
 	public void configure(Binder binder) {
-		binder.bind(IFileItemService.class).to(FileItemService.class).in(Scopes.SINGLETON);
-		binder.bind(ICompanyCardService.class).to(CompanyCardService.class).in(Scopes.SINGLETON);
-		binder.bind(IMemberService.class).to(MemberService.class).in(Scopes.SINGLETON);
-		binder.bind(ICouponService.class).to(CouponService.class).in(Scopes.SINGLETON);
+		binder.bind(IFileItemService.class).to(FileItemService.class)
+				.in(Scopes.SINGLETON);
+		binder.bind(ICompanyCardService.class).to(CompanyCardService.class)
+				.in(Scopes.SINGLETON);
+		binder.bind(IMemberService.class).to(MemberService.class)
+				.in(Scopes.SINGLETON);
+		binder.bind(ICouponService.class).to(CouponService.class)
+				.in(Scopes.SINGLETON);
+		binder.bind(ILoginService.class).to(LoginService.class)
+				.in(Scopes.SINGLETON);
 	}
 
 }

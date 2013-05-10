@@ -5,15 +5,17 @@
 <mapper namespace="com.chinarewards.alading.reg.mapper.MemberMapper">
 	
 	<resultMap type="MemberInfo" id="MemberInfoResultMap">
-		<collection property="cardList" ofType="CardDetail">
-			<result property="accountId" column="accountId"/>
-			<result property="cardName" column="cardName"/>
-			<result property="picUrl" column="picUrl"/>
-			<result property="pointId" column="pointId"/>
-			<result property="pointName" column="pointName"/>
-			<result property="accountBalance" column="accountBalance"/>
-			<result property="pointRate" column="pointRate"/>
-		</collection>
+		<association property="cardList" javaType="com.chinarewards.alading.domain.CardList">
+			<collection property="cardDetail" ofType="CardDetail">
+				<result property="accountId" column="accountId"/>
+				<result property="cardName" column="cardName"/>
+				<result property="picUrl" column="picUrl"/>
+				<result property="pointId" column="pointId"/>
+				<result property="pointName" column="pointName"/>
+				<result property="pointBalance" column="accountBalance"/>
+				<result property="pointRate" column="pointRate"/>
+			</collection>
+		</association>
 	</resultMap>
 	<resultMap type="Member" id="MemberResultMap">
 		<result property="id" column="nid"/>
@@ -53,5 +55,9 @@
 	
 	<select id="selectMemberById" resultMap="MemberResultMap" parameterType="java.lang.Integer">
 		select * from tbl_qyyg where nid = #{value}
+	</select>
+	
+	<select id="checkUsernamePassword" parameterType="map" resultType="java.lang.Integer">
+		select count(*) from tbl_xtyh where dlm = #{username} and dlmm = #{password}
 	</select>
 </mapper>

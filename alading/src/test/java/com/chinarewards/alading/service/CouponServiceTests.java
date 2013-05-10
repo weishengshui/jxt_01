@@ -2,6 +2,10 @@ package com.chinarewards.alading.service;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,26 +45,34 @@ public class CouponServiceTests extends BaseTests {
 
 		assertNotNull(couponService);
 		// 抵用券不存在
-		assertEquals("101", couponService.expireCoupon("0111"));
+		List<String> couponNos = new ArrayList<String>();
+		couponNos.add("22222011");
+		assertEquals("101", couponService.expireCoupon(couponNos));
 
 		String couponNo = "001"; // 抵用券可用
-		assertEquals("100", couponService.expireCoupon(couponNo));
-		assertEquals("103", couponService.expireCoupon(couponNo));
+		couponNos.set(0, couponNo);
+		assertEquals("100", couponService.expireCoupon(couponNos));
+		assertEquals("103", couponService.expireCoupon(couponNos));
 
 		couponNo = "002"; // 抵用券已过期
-		assertEquals("102", couponService.expireCoupon(couponNo));
+		couponNos.set(0, couponNo);
+		assertEquals("102", couponService.expireCoupon(couponNos));
 
 		couponNo = "003"; // 抵用券已使用
-		assertEquals("104", couponService.expireCoupon(couponNo));
+		couponNos.set(0, couponNo);
+		assertEquals("104", couponService.expireCoupon(couponNos));
 
 		couponNo = "004"; // 抵用券已取消
-		assertEquals("103", couponService.expireCoupon(couponNo));
+		couponNos.set(0, couponNo);
+		assertEquals("103", couponService.expireCoupon(couponNos));
 
 		couponNo = "005"; // 抵用券错误状态
-		assertEquals("104", couponService.expireCoupon(couponNo));
+		couponNos.set(0, couponNo);
+		assertEquals("104", couponService.expireCoupon(couponNos));
 
 		couponNo = "006"; // 用户已锁定
-		assertEquals("121", couponService.expireCoupon(couponNo));
+		couponNos.set(0, couponNo);
+		assertEquals("121", couponService.expireCoupon(couponNos));
 
 	}
 
@@ -83,28 +95,28 @@ public class CouponServiceTests extends BaseTests {
 
 		assertNotNull(couponService);
 		// 抵用券不存在
-		assertEquals("101", couponService.applyCoupon("11211", "ter", "merchantName", "merchantAddress", "2012-05-06 14:12:25", "transationNo"));
+		assertEquals("101", couponService.applyCoupon(Arrays.asList(new String[]{"11211"}), "ter", "merchantName", "merchantAddress", "2012-05-06 14:12:25", "transationNo"));
 		// 传入的日期格式错误
-		assertEquals("114", couponService.applyCoupon("001", "ter", "merchantName", "merchantAddress", "2012-05-06 14:12:", "transationNo"));
+		assertEquals("114", couponService.applyCoupon(Arrays.asList(new String[]{"001"}), "ter", "merchantName", "merchantAddress", "2012-05-06 14:12:", "transationNo"));
 
 		String couponNo = "001"; // 抵用券可用
-		assertEquals("100", couponService.applyCoupon(couponNo, "ter", "merchantName", "merchantAddress", "2012-05-06 14:12:25", "transationNo"));
-		assertEquals("103", couponService.applyCoupon(couponNo, "ter", "merchantName", "merchantAddress", "2012-05-06 14:12:25", "transationNo"));
+		assertEquals("100", couponService.applyCoupon(Arrays.asList(new String[]{couponNo}), "ter", "merchantName", "merchantAddress", "2012-05-06 14:12:25", "transationNo"));
+		assertEquals("103", couponService.applyCoupon(Arrays.asList(new String[]{couponNo}), "ter", "merchantName", "merchantAddress", "2012-05-06 14:12:25", "transationNo"));
 
 		couponNo = "002"; // 抵用券已过期
-		assertEquals("102", couponService.applyCoupon(couponNo, "ter", "merchantName", "merchantAddress", "2012-05-06 14:12:25", "transationNo"));
+		assertEquals("102", couponService.applyCoupon(Arrays.asList(new String[]{couponNo}), "ter", "merchantName", "merchantAddress", "2012-05-06 14:12:25", "transationNo"));
 
 		couponNo = "003"; // 抵用券已使用
-		assertEquals("103", couponService.applyCoupon(couponNo, "ter", "merchantName", "merchantAddress", "2012-05-06 14:12:25", "transationNo"));
+		assertEquals("103", couponService.applyCoupon(Arrays.asList(new String[]{couponNo}), "ter", "merchantName", "merchantAddress", "2012-05-06 14:12:25", "transationNo"));
 
 		couponNo = "004"; // 抵用券已取消
-		assertEquals("103", couponService.applyCoupon(couponNo, "ter", "merchantName", "merchantAddress", "2012-05-06 14:12:25", "transationNo"));
+		assertEquals("103", couponService.applyCoupon(Arrays.asList(new String[]{couponNo}), "ter", "merchantName", "merchantAddress", "2012-05-06 14:12:25", "transationNo"));
 
 		couponNo = "005"; // 抵用券错误状态
-		assertEquals("103", couponService.applyCoupon(couponNo, "ter", "merchantName", "merchantAddress", "2012-05-06 14:12:25", "transationNo"));
+		assertEquals("103", couponService.applyCoupon(Arrays.asList(new String[]{couponNo}), "ter", "merchantName", "merchantAddress", "2012-05-06 14:12:25", "transationNo"));
 
 		couponNo = "006"; // 用户已锁定
-		assertEquals("121", couponService.applyCoupon(couponNo, "ter", "merchantName", "merchantAddress", "2012-05-06 14:12:25", "transationNo"));
+		assertEquals("121", couponService.applyCoupon(Arrays.asList(new String[]{couponNo}), "ter", "merchantName", "merchantAddress", "2012-05-06 14:12:25", "transationNo"));
 
 	}
 

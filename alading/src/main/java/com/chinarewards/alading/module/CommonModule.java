@@ -40,6 +40,8 @@ public class CommonModule implements Module {
 		
 		// add service module
 		binder.install(new ServiceModule());
+		
+		binder.install(new ServletsModule());
 	}
 
 }
