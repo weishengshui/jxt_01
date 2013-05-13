@@ -17,7 +17,27 @@
 		#{mimeType}, #{originalFilename}, #{content})
 	</insert>
 	
+	<select id="selectFileItems" parameterType="map" resultType="FileItem">
+		select id, description, filesize, mimeType, originalFilename from fileitem 
+		<where> 
+			<if test="description != null and description != ''">
+				description like '%${description}%'
+			</if>
+		</where>
+		order by id desc limit #{startIndex}, #{pageSize}
+	</select>
+	
+	<select id="countFileItems" parameterType="map" resultType="java.lang.Integer">
+		select count(*) from fileitem 
+		<where> 
+			<if test="description != null and description != ''">
+				description like '%${description}%'
+			</if>
+		</where>
+	</select>
+		
 	<select id="select" resultMap="fileItemResultMap" parameterType="java.lang.Integer">
 		select * from fileitem where id=#{value}
 	</select>
+	
 </mapper>

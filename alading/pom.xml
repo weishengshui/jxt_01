@@ -213,10 +213,18 @@
 			<artifactId>jersey-client</artifactId>
 			<version>1.1.5</version>
 		</dependency>
+		
+		<!--  json -->
+		<dependency>  
+		    <groupId>net.sf.json-lib</groupId>  
+		    <artifactId>json-lib</artifactId>  
+		    <version>2.4</version>  
+		    <classifier>jdk15</classifier>  
+		</dependency> 
 
 	</dependencies>
 	<build>
-		<finalName>oauth</finalName>
+		<finalName>alading</finalName>
 		<plugins>
 			<!-- Do not submit it just for test in local . -->
 			<plugin>

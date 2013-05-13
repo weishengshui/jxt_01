@@ -41,9 +41,9 @@ public class LoginServlet extends HttpServlet {
 				&& StringUtils.isNotEmpty(password)
 				&& loginService.checkUsernamePassword(username, password)) {
 			request.getSession().setAttribute("username", username);
-			response.sendRedirect(request.getContextPath() + "/view/index.jsp");
+			response.sendRedirect(request.getContextPath() + "/view/main.jsp");
 		} else {
-			response.sendRedirect(request.getContextPath() + "/login.jsp");
+			response.sendRedirect(request.getContextPath() + "/login.jsp?error=true");
 		}
 	}
 

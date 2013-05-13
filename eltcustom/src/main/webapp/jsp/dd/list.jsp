@@ -147,6 +147,8 @@
 								 jyzt = '评价成功';
 								 if(row.spbh != 'CP_001'){
 									 jyzt = jyzt + '<br /><span class="blue"><a href="dd!detail.do?crddh='+row.ddh+'">订单详情</a></span>';
+								 } else {
+									 jyzt = '已完成';
 								 }
 							 }
 							 if(row.state==9){
@@ -249,7 +251,7 @@
 									<table width="100%" border="0" cellspacing="0" cellpadding="0">
 									  <tr>
 										<td width="52"><label>订单号：</label></td>
-										<td width="140"><input id="ddh" rule="like" type="text" maxlength="40" class="ordercxbox" /></td>
+										<td width="140"><input id="t.ddh" rule="like" type="text" maxlength="40" class="ordercxbox" /></td>
 										<td width="38"><label>时间：</label></td>
 										<td width="168"><select id="cjrq"  rule="daylimit" style="width:120px">								
 											<option value="">-请选择-</option>
@@ -272,7 +274,7 @@
 										<th width="47">数量</th>
 										<th width="120">合计</th>
 										<th width="115">
-										  <select id="state" onchange="listzb(10,1);" rule="in" style="width:100px">
+										  <select id="t.state" onchange="listzb(10,1);" rule="in" style="width:100px">
 										    <option value="">交易状态</option>
 										    <option value="0">待支付</option>
 										    <option value="1,11">已支付</option>
