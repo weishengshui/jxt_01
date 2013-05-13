@@ -126,7 +126,7 @@ public class EltResource {
 			fis.close();
 			file.delete();
 		}
-		return "成功";
+		return "success";
 	}
 
 	@GET
