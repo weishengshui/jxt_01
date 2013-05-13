@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 
+import com.chinarewards.alading.domain.Card;
 import com.chinarewards.alading.domain.FileItem;
 import com.chinarewards.alading.log.InjectLogger;
 import com.chinarewards.alading.reg.mapper.FileItemMapper;
@@ -49,6 +50,27 @@ public class FileItemService implements IFileItemService {
 		params.put("description", fileItem.getDescription());
 
 		return fileItemMapper.countFileItems(params);
+	}
+
+	@Override
+	public int deleteFileItemById(Integer id) {
+		return fileItemMapper.delete(id);
+	}
+
+	@Override
+	public Integer updateDescContent(FileItem fileItem) {
+
+		return fileItemMapper.updateDescContent(fileItem);
+	}
+
+	@Override
+	public Boolean checkDeleteFileItemById(Integer id) {
+		
+		List<Card> list = fileItemMapper.selectCardByImageId(id);
+		if(null != list && list.size() > 0){
+			return false;
+		}
+		return true;
 	}
 
 }

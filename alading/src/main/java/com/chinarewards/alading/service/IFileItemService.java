@@ -13,4 +13,10 @@ public interface IFileItemService {
 	List<FileItem> searchFileItems(Integer page, Integer rows, FileItem fileItem);
 
 	Integer countFileItems(Integer page, Integer rows, FileItem fileItem);
+
+	int deleteFileItemById(Integer id);
+
+	Integer updateDescContent(FileItem fileItem);
+
+	Boolean checkDeleteFileItemById(Integer id);
 }	

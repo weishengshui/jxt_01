@@ -20,12 +20,13 @@
 </style>
 
 <script type="text/javascript">
+	var baseURL = '<%=request.getContextPath()%>';
 	
 	$(document).ready(function(){
 		$('#tt').datagrid({
 			onDblClickRow: function(rowIndex,rowData){
-					var titile = "维护"+rowData.name + '的信息' ;
-					parent.addTab(titile,'<%=request.getContextPath()%>/brand/edit?id='+ rowData.id);			
+					var titile = '维护卡图片信息' ;
+					parent.addTab(titile,'updateCardImage.jsp?id='+ rowData.id+'&description='+rowData.description);			
 			}
 		});	  
 	});
@@ -43,41 +44,32 @@
 	    });  
 	}
 	function del(){
-		var rows = $('#tt').datagrid('getSelections');
-		if(rows){
-			if(rows.length == 0){
-				alert("请先选择要删除的品牌");
-				return;
-			}
-			var data = '';
-			for(var i=0,length=rows.length; i < length; i++){
-				var row = rows[i];
-				data += 'ids='+row.id+'&';
-			}	
-			data = data.substring(0, data.length -1);
-			if(!confirm("确认删除？")){
-				return;
-			}
-			$.ajax({
-				url:'delete',
-				type:'post',
-				data:data,
-				success: function(data){
-					if(data.success){ //删除成功
-						$('#tt').datagrid('reload');
-					}
-					$.messager.show({
-						title:'提示信息',
-						msg:data.msg,
-						timeout:5000,
-						showType:'slide'
-					});
-					//alert(data.msg);
-				}
-			}); 
-		}else{
-			alert("请先选择要删除的品牌");			
+		var row = $('#tt').datagrid('getSelected');
+		if(row == null){
+			alert("请选择要修改的卡图片");
+			return;
 		}
+		var data = 'id='+row.id;
+		if(!confirm("确认删除？")){
+			return;
+		}
+		$.ajax({
+			url:'cardImageUpdate',
+			type:'delete',
+			data:data,
+			success: function(data){
+				if(data.success){ //删除成功
+					$('#tt').datagrid('reload');
+				}
+				$.messager.show({
+					title:'提示信息',
+					msg:data.msg,
+					timeout:5000,
+					showType:'slide'
+				});
+				//alert(data.msg);
+			}
+		}); 
 	}
 	
 	function update(v, r, i){
@@ -93,16 +85,26 @@
 	function edit(){
 		var row = $('#tt').datagrid('getSelected');
 		if(row == null){
-			alert("请选择要编辑的数据");
+			alert("请选择要修改的卡图片");
 			return;
 		}
-		parent.addTab('维护'+row.name+'的信息','brand/edit?id='+row.id);
+		var titile = '维护卡图片信息' ;
+		parent.addTab(titile,'updateCardImage.jsp?id='+ row.id+'&description='+row.description);
 	}
 	function clearForm(){
 		$('#fm').form('clear');
 	}
 	function previewImage(v, r, i){
-		
+		var url = baseURL + "/view/cardImageGet/"+r.id;
+		return '<a href=javascript:show(\''+url+'\',\''+500+'\',\''+300+'\')>预览</a>';
+	}
+	
+	function show(url,width,height){
+        width = (width> 500 ? 500: width);
+        width = (width < 100 ? 100: width);
+        height = (height> 700 ? 500: height);
+        height = (height < 100 ? 100: height);
+        parent.parent.dialog("预览图片",url,width,height);
 	}
 </script>
 
@@ -127,7 +129,7 @@
 	   </div>
 	   <!-- 显示列表Table -->
 		<table id="tt" class="easyui-datagrid" data-options="url:'cardImageList',fitColumns:true,striped:true,loadMsg:'正在载入...',pagination:true,toolbar: '#toolbar',
-			rownumbers:true,pageList:pageList,singleSelect:false">
+			rownumbers:true,pageList:pageList,singleSelect:true">
 		    <thead>  
 		        <tr>  
                		<th data-options="field:'description',width:50">描述</th>

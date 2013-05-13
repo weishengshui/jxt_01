@@ -31,6 +31,11 @@
 			height = (height> 700 ? 500: height);
 			parent.parent.dialog("预览图片",url,width,height);
 		}
+		
+		$(document).ready(function(){
+			
+		});
+		
 		function doSubmit(){
 			var pic = document.getElementById('pic');
 			if(pic.value == ''){

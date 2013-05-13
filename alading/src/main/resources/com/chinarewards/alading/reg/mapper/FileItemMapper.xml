@@ -10,12 +10,41 @@
 	<parameterMap type="FileItem" id="FileItemParameterMap">
 		<parameter property="content" jdbcType="BLOB" resultMap="content" typeHandler="org.apache.ibatis.type.BlobTypeHandler"/>
 	</parameterMap>
+	<resultMap type="Card" id="cardResultMap">
+		<association property="picUrl" column="picUrl" javaType="com.chinarewards.alading.domain.FileItem" columnPrefix="pic_">
+			<result property="id" column="id"/>
+			<result property="description" column="description"/>
+			<result property="filesize" column="filesize"/>
+			<result property="mimeType" column="mimeType"/>
+			<result property="originalFilename" column="originalFilename"/>
+			<result property="content" column="content" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler"/>
+		</association>
+		<association property="unit" column="unit_id" javaType="com.chinarewards.alading.domain.Unit" columnPrefix="unit"></association>
+	</resultMap>
+	
+	
 	<insert id="insert" parameterMap="FileItemParameterMap" useGeneratedKeys="true"
 		keyProperty="id">
 		insert into fileitem(description, filesize, mimeType,
 		originalFilename, content) values(#{description}, #{filesize},
 		#{mimeType}, #{originalFilename}, #{content})
 	</insert>
+	
+	<delete id="delete" parameterType="java.lang.Integer" >
+		delete from fileitem where id = #{value}
+	</delete>
+	
+	<update id="updateDescContent" parameterType="FileItem">
+		update fileitem 
+		<set>
+			<if test="content != null">content=#{content},</if>
+			<if test="mimeType != null and mimeType != ''">mimeType = #{mimeType},</if>
+			<if test="originalFilename != null and originalFilename != ''">originalFilename = #{originalFilename},</if>
+			<if test="filesize != 0">filesize = #{filesize},</if>
+			<if test="true">description = #{description}</if>
+		</set>
+		where id = #{id}
+	</update>
 	
 	<select id="selectFileItems" parameterType="map" resultType="FileItem">
 		select id, description, filesize, mimeType, originalFilename from fileitem 
@@ -40,4 +69,5 @@
 		select * from fileitem where id=#{value}
 	</select>
 	
+	<select id="selectCardByImageId" resultType="Card" parameterType="java.lang.Integer"></select>
 </mapper>

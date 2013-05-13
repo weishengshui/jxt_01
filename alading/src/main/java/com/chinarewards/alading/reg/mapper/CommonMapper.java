@@ -2,11 +2,11 @@ package com.chinarewards.alading.reg.mapper;
 
 public interface CommonMapper<T> {
 	
-	void insert(T t);
+	Integer insert(T t);
 	
-	void update(T t);
+	Integer update(T t);
 	
-	void delete(Integer id);
+	Integer delete(Integer id);
 	
 	T select(Integer id);
 }
