@@ -11,15 +11,19 @@
 		<parameter property="content" jdbcType="BLOB" resultMap="content" typeHandler="org.apache.ibatis.type.BlobTypeHandler"/>
 	</parameterMap>
 	<resultMap type="Card" id="cardResultMap">
-		<association property="picUrl" column="picUrl" javaType="com.chinarewards.alading.domain.FileItem" columnPrefix="pic_">
+		<association property="picUrl" columnPrefix="pic_" javaType="com.chinarewards.alading.domain.FileItem">
+			<result column="content"  property="content" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler"/>
 			<result property="id" column="id"/>
 			<result property="description" column="description"/>
 			<result property="filesize" column="filesize"/>
 			<result property="mimeType" column="mimeType"/>
 			<result property="originalFilename" column="originalFilename"/>
-			<result property="content" column="content" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler"/>
 		</association>
-		<association property="unit" column="unit_id" javaType="com.chinarewards.alading.domain.Unit" columnPrefix="unit"></association>
+		<association property="unit" columnPrefix="point" javaType="com.chinarewards.alading.domain.Unit">
+			<result property="pointId"  column="Id"/>
+			<result property="pointName" column="Name"/>
+			<result property="pointRate" column="Rate"/>
+		</association>
 	</resultMap>
 	
 	
@@ -69,5 +73,17 @@
 		select * from fileitem where id=#{value}
 	</select>
 	
-	<select id="selectCardByImageId" resultType="Card" parameterType="java.lang.Integer"></select>
+	<select id="selectCardByImageId" resultMap="cardResultMap" parameterType="java.lang.Integer">
+		select c.id as id, c.cardName as cardName, c.picUrl as picUrl,
+		c.unit_id as unit_id,
+		 fi.id as pic_id, fi.description as pic_description, fi.filesize as pic_filesize,
+		fi.mimeType as pic_mimeType, 
+		fi.originalFilename as pic_originalFilename,
+		fi.content as pic_content,
+		u.pointId as pointId,
+		u.pointName as pointName,
+		u.pointRate as pointRate
+		 from card c left join fileitem fi on c.picUrl = fi.id left join unit u on c.unit_id = u.pointId   
+		where fi.id = #{value}
+	</select>
 </mapper>

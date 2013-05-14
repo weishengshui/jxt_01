@@ -20,7 +20,7 @@ import com.chinarewards.alading.util.CommonTools;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-// 卡图片 上传servlet
+// 卡图片 列表servlet
 @Singleton
 public class CardImageListServlet extends HttpServlet {
 

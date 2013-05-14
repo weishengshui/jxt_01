@@ -17,7 +17,7 @@ import com.chinarewards.alading.service.IFileItemService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-// 卡图片 上传servlet
+// 卡图片 获取servlet (浏览器显示)
 @Singleton
 public class CardImageGetServlet extends HttpServlet {
 

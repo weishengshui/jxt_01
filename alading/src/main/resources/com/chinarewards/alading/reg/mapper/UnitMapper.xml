@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chinarewards.alading.reg.mapper.UnitMapper">
+	
+	<insert id="insert" parameterType="Unit" useGeneratedKeys="true"
+		keyProperty="pointId">
+		insert into unit(pointName, pointRate) values(#{pointName}, #{pointRate})
+	</insert>
+	
+	<update id="update" parameterType="Unit">
+		update unit set pointName=#{pointName}, pointRate=#{pointRate} where pointId = #{pointId}
+	</update>
+	
+	<select id="selectUnit" resultType="Unit">
+		select * from unit limit 0, 1
+	</select>
+	
+</mapper>

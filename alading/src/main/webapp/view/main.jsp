@@ -54,7 +54,7 @@ a.l-btn span span.l-btn-text{line-height: 25px;}
     	}, {
     		text: '积分单位管理',
     		attributes: {
-				url: ""
+				url: "unitShow"
 			}
     	},{
     		text: '卡管理',

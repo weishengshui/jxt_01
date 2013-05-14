@@ -26,6 +26,7 @@
 	
 	
 	<select id="selectMemberInfoByPhone" resultMap="MemberInfoResultMap" parameterType="java.lang.String">
+		
 		SELECT qyyg.nid AS accountId
 		, c.cardName AS cardName
 		, fi.id AS picUrl
@@ -33,10 +34,10 @@
 		, u.pointName AS pointName
 		, u.pointRate AS pointRate
 		, qyyg.jf AS accountBalance  
-		FROM tbl_qyyg qyyg LEFT JOIN tbl_qy qy ON  qyyg.qy=qy.nid, companyCard cc left join card c on cc.card_Id=c.id 
-		,fileitem fi 
-		, unit u
-		WHERE cc.company_Id=qy.nid AND c.picUrl=fi.id AND qyyg.lxdh = #{value} AND c.unit_id = u.pointId;
+		FROM tbl_qyyg qyyg LEFT JOIN tbl_qy qy ON  qyyg.qy=qy.nid LEFT JOIN companyCard cc on qy.nid= cc.company_Id 
+		 left join card c on cc.card_Id=c.id 
+		 left join fileitem fi on c.picUrl=fi.id left join unit u on c.unit_id = u.pointId  
+		WHERE qyyg.lxdh = #{value} and qy.zt &lt;&gt; 4 and qyyg.xtzt &lt;&gt; 3 and qyyg.xtzt &lt;&gt; 2 and qyyg.zt &lt;&gt; 0 ;
 	</select>
 	
 	<select id="select" resultMap="MemberInfoResultMap" parameterType="java.lang.Integer">
@@ -47,10 +48,10 @@
 		, u.pointName AS pointName
 		, u.pointRate AS pointRate
 		, qyyg.jf AS accountBalance  
-		FROM tbl_qyyg qyyg LEFT JOIN tbl_qy qy ON  qyyg.qy=qy.nid, companyCard cc left join card c on cc.card_Id=c.id 
-		,fileitem fi 
-		, unit u
-		WHERE cc.company_Id=qy.nid AND c.picUrl=fi.id AND qyyg.nid = #{value} AND c.unit_id = u.pointId;
+		FROM tbl_qyyg qyyg LEFT JOIN tbl_qy qy ON  qyyg.qy=qy.nid LEFT JOIN companyCard cc on qy.nid= cc.company_Id 
+		 left join card c on cc.card_Id=c.id 
+		 left join fileitem fi on c.picUrl=fi.id left join unit u on c.unit_id = u.pointId  
+		WHERE qyyg.nid = #{value};
 	</select>
 	
 	<select id="selectMemberById" resultMap="MemberResultMap" parameterType="java.lang.Integer">

@@ -8,8 +8,10 @@ import com.chinarewards.alading.service.ICouponService;
 import com.chinarewards.alading.service.IFileItemService;
 import com.chinarewards.alading.service.ILoginService;
 import com.chinarewards.alading.service.IMemberService;
+import com.chinarewards.alading.service.IUnitService;
 import com.chinarewards.alading.service.LoginService;
 import com.chinarewards.alading.service.MemberService;
+import com.chinarewards.alading.service.UnitService;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
@@ -27,6 +29,8 @@ public class ServiceModule implements Module {
 		binder.bind(ICouponService.class).to(CouponService.class)
 				.in(Scopes.SINGLETON);
 		binder.bind(ILoginService.class).to(LoginService.class)
+				.in(Scopes.SINGLETON);
+		binder.bind(IUnitService.class).to(UnitService.class)
 				.in(Scopes.SINGLETON);
 	}
 

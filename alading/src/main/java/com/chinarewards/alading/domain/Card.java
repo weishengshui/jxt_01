@@ -12,6 +12,7 @@ public class Card implements Serializable {
 	private Integer id;
 	private String cardName;
 	private FileItem picUrl;
+	private boolean defaultCard; // 是否默认卡， 默认卡就一张
 	private Unit unit;
 
 	public Integer getId() {
@@ -44,6 +45,14 @@ public class Card implements Serializable {
 
 	public void setUnit(Unit unit) {
 		this.unit = unit;
+	}
+
+	public boolean isDefaultCard() {
+		return defaultCard;
+	}
+
+	public void setDefaultCard(boolean defaultCard) {
+		this.defaultCard = defaultCard;
 	}
 
 }

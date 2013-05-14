@@ -18,7 +18,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.oreilly.servlet.MultipartRequest;
 
-// 卡图片 上传servlet
+// 卡图片 修改、删除servlet
 @Singleton
 public class CardImageUpdateServlet extends HttpServlet {
 
@@ -89,18 +89,21 @@ public class CardImageUpdateServlet extends HttpServlet {
 		
 		resp.setContentType("text/html; charset=utf8");
 		String id = req.getParameter("id");
+		String res = "删除失败";
 		try {
-			Boolean check = fileItemService.checkDeleteFileItemById(Integer.valueOf(id));
-			int count = fileItemService.deleteFileItemById(Integer.valueOf(id));
-			if(count == 1){
-				resp.getWriter().write("success");
-			} else {
-				resp.getWriter().write("failure");
+			boolean check = fileItemService.checkDeleteFileItemById(Integer.valueOf(id));
+			if(!check){
+				res = "该图片已经绑定到卡，不能删除";
+			}else {
+				int count = fileItemService.deleteFileItemById(Integer.valueOf(id));
+				if(count == 1){
+					res = "删除成功";
+				} 
 			}
 		} catch (Exception e) {
-			resp.getWriter().write("failure");
 		}
 		
+		resp.getWriter().write(res);
 		resp.getWriter().flush();
 		resp.getWriter().close();
 	}

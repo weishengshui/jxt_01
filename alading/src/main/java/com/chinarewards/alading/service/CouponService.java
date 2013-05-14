@@ -31,6 +31,16 @@ public class CouponService implements ICouponService {
 	@Override
 	public String exchange(String couponNo, int accountId, int quantity,
 			String terminalId, String terminalAddress, String transactionDate) {
+
+		// 114 日期格式检查
+		try {
+			SimpleDateFormat dateFormat = new SimpleDateFormat(
+					"yyyy-MM-dd HH:mm:ss");
+			dateFormat.parse(transactionDate);
+		} catch (Exception e) {
+			return "114";
+		}
+
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		/*
 		 * IN _couponNo VARCHAR(50), IN _employeeMobile VARCHAR(20), IN
@@ -67,9 +77,11 @@ public class CouponService implements ICouponService {
 			return "114";
 		}
 
+		boolean isEmpty = true;
 		String returnCode = "";
 		for (String cp : couponNo) {
 			if (StringUtils.isNotEmpty(cp)) {
+				isEmpty = false;
 				Map<String, Object> parameters = new HashMap<String, Object>();
 				/*
 				 * IN _couponNo VARCHAR(50), IN _employeeMobile VARCHAR(20), IN
@@ -95,6 +107,10 @@ public class CouponService implements ICouponService {
 				}
 			}
 		}
+		if (isEmpty) {
+			logger.warn("Call expireCoupon that CouponNo is empty!");
+			return "113";
+		}
 		return returnCode;
 	}
 
@@ -102,9 +118,12 @@ public class CouponService implements ICouponService {
 	@Override
 	public String expireCoupon(List<String> couponNo) {
 
+		boolean isEmpty = true;
+
 		String returnCode = "";
 		for (String cn : couponNo) {
 			if (StringUtils.isNotEmpty(cn)) {
+				isEmpty = false;
 				Map<String, Object> parameters = new HashMap<String, Object>();
 				parameters.put("_couponNo", cn);
 				parameters.put("returnCode", "");
@@ -117,6 +136,10 @@ public class CouponService implements ICouponService {
 					throw new IllegalStateException(returnCode);
 				}
 			}
+		}
+		if (isEmpty) {
+			logger.warn("Call expireCoupon that CouponNo is empty!");
+			return "113";
 		}
 		return returnCode;
 	}

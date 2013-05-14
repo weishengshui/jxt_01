@@ -4,8 +4,40 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.chinarewards.alading.reg.mapper.CompanyCardMapper">
 	
+	<resultMap type="Card" id="cardResultMap">
+		<result property="id" column="id"/>
+		<result property="cardName" column="cardName"/>
+		<result property="defaultCard" column="defaultCard"/>
+		<association property="picUrl" columnPrefix="pic_" javaType="com.chinarewards.alading.domain.FileItem">
+			<result column="content"  property="content" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler"/>
+			<result property="id" column="id"/>
+			<result property="description" column="description"/>
+			<result property="filesize" column="filesize"/>
+			<result property="mimeType" column="mimeType"/>
+			<result property="originalFilename" column="originalFilename"/>
+		</association>
+		<association property="unit" columnPrefix="point" javaType="com.chinarewards.alading.domain.Unit">
+			<result property="pointId"  column="Id"/>
+			<result property="pointName" column="Name"/>
+			<result property="pointRate" column="Rate"/>
+		</association>
+	</resultMap>
+	
 	<select id="selectAllPic" resultType="java.lang.Integer">
 		select fi.id from companyCard cc left join tbl_qy qy on cc.company_Id=qy.nid left join card c on cc.card_Id=c.id, fileitem fi 
 		where c.picUrl=fi.id  
+	</select>
+	<select id="selectDefaultCard" resultMap="cardResultMap">
+		select c.id as id, c.cardName as cardName, c.picUrl as picUrl,
+		c.unit_id as unit_id,
+		 fi.id as pic_id, fi.description as pic_description, fi.filesize as pic_filesize,
+		fi.mimeType as pic_mimeType, 
+		fi.originalFilename as pic_originalFilename,
+		fi.content as pic_content,
+		u.pointId as pointId,
+		u.pointName as pointName,
+		u.pointRate as pointRate
+		 from card c left join fileitem fi on c.picUrl = fi.id left join unit u on c.unit_id = u.pointId   
+		where c.defaultCard = 1
 	</select>
 </mapper>

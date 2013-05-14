@@ -6,6 +6,7 @@ import com.chinarewards.alading.image.servlet.CardImageUpdateServlet;
 import com.chinarewards.alading.image.servlet.CardImageUploadServlet;
 import com.chinarewards.alading.servlet.LoginServlet;
 import com.chinarewards.alading.servlet.LogoutServlet;
+import com.chinarewards.alading.unit.servlet.UnitServlet;
 import com.google.inject.servlet.ServletModule;
 
 public class ServletsModule extends ServletModule {
@@ -22,5 +23,6 @@ public class ServletsModule extends ServletModule {
 		serve("/view/cardImageList").with(CardImageListServlet.class);
 		serve("/view/cardImageGet/*").with(CardImageGetServlet.class);
 		serve("/view/cardImageUpdate").with(CardImageUpdateServlet.class);
+		serve("/view/unitShow").with(UnitServlet.class);
 	}
 }

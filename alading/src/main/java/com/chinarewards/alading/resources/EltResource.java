@@ -20,6 +20,7 @@ import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
+import com.chinarewards.alading.domain.Card;
 import com.chinarewards.alading.domain.CardDetail;
 import com.chinarewards.alading.domain.CardList;
 import com.chinarewards.alading.domain.ExchangeLog;
@@ -77,13 +78,13 @@ public class EltResource {
 		PicUrlList picUrlList = new PicUrlList();
 
 		List<String> urlList = new ArrayList<String>();
-		List<Integer> idList = companyCardService.findAllPic();
-		if (null != idList && idList.size() > 0) {
-			for (Integer id : idList) {
-				urlList.add("" + id);
+		Card card = companyCardService.findDefaultCard();
+		if (null != card) {
+			FileItem fileItem = card.getPicUrl();
+			if (null != fileItem && null != fileItem.getId()) {
+				urlList.add("" + fileItem.getId());
 			}
 		}
-
 		picUrlList.setPicUrl(urlList);
 
 		return picUrlList;

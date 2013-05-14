@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `fileitem` (
 -- 积分单位表
 CREATE TABLE IF NOT EXISTS unit
 (
-pointId INT(11) NOT NULL ,
+pointId INT(11) NOT NULL auto_increment,
 pointName VARCHAR(255),
 pointRate INT,
 PRIMARY KEY(pointId)
@@ -27,7 +27,7 @@ PRIMARY KEY(pointId)
 CREATE TABLE IF NOT EXISTS card
 (
 id INT(11) NOT NULL auto_increment,
-cardName VARCHAR(255),
+cardName VARCHAR(255) not null,
 picUrl INT ,
 unit_id INT,
 PRIMARY KEY(id),
@@ -86,3 +86,6 @@ CREATE TABLE IF NOT EXISTS `tbl_exchangelog` (
   `transactionNo` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+
+-- 1 表示默认卡，只有一张默认卡
+alter table card add column defaultCard bit default 0;

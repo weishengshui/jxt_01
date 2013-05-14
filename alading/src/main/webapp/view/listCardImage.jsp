@@ -46,28 +46,31 @@
 	function del(){
 		var row = $('#tt').datagrid('getSelected');
 		if(row == null){
-			alert("请选择要修改的卡图片");
+			alert("请选择要删除的卡图片");
 			return;
 		}
-		var data = 'id='+row.id;
+		var id = row.id;
 		if(!confirm("确认删除？")){
 			return;
 		}
 		$.ajax({
-			url:'cardImageUpdate',
+			url:'cardImageUpdate?id='+id,
 			type:'delete',
-			data:data,
+			// data:'id:' + id ,
+			// dataType: 'json',
+			cache: false,
 			success: function(data){
-				if(data.success){ //删除成功
+				/* if(data.success){ //删除成功
 					$('#tt').datagrid('reload');
-				}
+				} */ 
 				$.messager.show({
 					title:'提示信息',
-					msg:data.msg,
+					msg:data,
 					timeout:5000,
 					showType:'slide'
 				});
 				//alert(data.msg);
+				doSearch();
 			}
 		}); 
 	}
