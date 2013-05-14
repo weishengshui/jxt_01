@@ -10,4 +10,6 @@ public interface CompanyCardMapper extends CommonMapper<CompanyCard> {
 	List<Integer> selectAllPic();
 
 	Card selectDefaultCard();
+
+	void insertCard(Card card);
 }

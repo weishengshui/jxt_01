@@ -18,7 +18,7 @@
 	.select{width:140px;height:22px;margin-right:20px;}
 	form{margin:0; padding:0} 
 </style>
-
+<% response.setHeader("Cache-Control","no-store");%>
 <script type="text/javascript">
 	var baseURL = '<%=request.getContextPath()%>';
 	
@@ -26,7 +26,7 @@
 		$('#tt').datagrid({
 			onDblClickRow: function(rowIndex,rowData){
 					var titile = '维护卡图片信息' ;
-					parent.addTab(titile,'updateCardImage.jsp?id='+ rowData.id+'&description='+rowData.description);			
+					parent.addTab(titile,'cardImageUpdate?id='+ rowData.id+'&temp='+new Date().getTime());			
 			}
 		});	  
 	});
@@ -92,7 +92,7 @@
 			return;
 		}
 		var titile = '维护卡图片信息' ;
-		parent.addTab(titile,'updateCardImage.jsp?id='+ row.id+'&description='+row.description);
+		parent.addTab(titile,'cardImageUpdate?id='+ row.id+'&temp='+new Date().getTime());
 	}
 	function clearForm(){
 		$('#fm').form('clear');
@@ -134,7 +134,8 @@
 		<table id="tt" class="easyui-datagrid" data-options="url:'cardImageList',fitColumns:true,striped:true,loadMsg:'正在载入...',pagination:true,toolbar: '#toolbar',
 			rownumbers:true,pageList:pageList,singleSelect:true">
 		    <thead>  
-		        <tr>  
+		        <tr>
+		        	<th data-options="field:'id',width:50">id</th>  
                		<th data-options="field:'description',width:50">描述</th>
                		<th data-options="field:'mimeType',width:50">图片类型</th>
                		<th data-options="field:'originalFilename',width:50">图片原名</th>

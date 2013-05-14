@@ -22,12 +22,13 @@
 	.red{color:red;font-size:12px;}
 	form{margin:0; padding:0} 
 </style>
+<% response.setHeader("Cache-Control","no-store");%>
 <script type="text/javascript">
 		var baseURL = '<%=request.getContextPath()%>';
 	
 		
 		$(document).ready(function(){
-			var pointRate = '${pointRate}';
+			var pointRate = '${unit.pointRate}';
 			if( pointRate == ''){
 				$('#pointRate').numberbox('setValue', 1);
 			} else {
@@ -91,8 +92,8 @@
 									<td><span style="color: red;">*&nbsp;</span></td>
 									<td>单位名称：</td>
 									<td>
-										<input type="hidden" name="pointId" id="pointId" value="${pointId}">
-										<input type="text" name="pointName" id="pointName" value='<c:out value="${pointName }"></c:out>' maxlength="20"> 
+										<input type="hidden" name="pointId" id="pointId" value="${unit.pointId}">
+										<input type="text" name="pointName" id="pointName" value='<c:out value="${unit.pointName }"></c:out>' maxlength="20"> 
 									</td>
 								</tr>
 								<tr>

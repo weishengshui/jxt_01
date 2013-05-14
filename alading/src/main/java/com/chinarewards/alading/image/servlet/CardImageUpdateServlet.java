@@ -107,4 +107,16 @@ public class CardImageUpdateServlet extends HttpServlet {
 		resp.getWriter().flush();
 		resp.getWriter().close();
 	}
+	
+	// prepare data before update
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		
+		String id = req.getParameter("id");
+		FileItem fileItem = fileItemService.findFileItemById(Integer.valueOf(id));
+		req.setAttribute("image", fileItem);
+		
+		req.getRequestDispatcher("/view/updateCardImage.jsp").forward(req, resp);
+	}
 }

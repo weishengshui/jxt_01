@@ -23,6 +23,10 @@
 		</association>
 	</resultMap>
 	
+	<insert id="insertCard" parameterType="Card" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into card(cardName, picUrl, unit_id, defaultCard) values(#{cardName}, #{picUrl.id}, #{unit.pointId}, #{defaultCard});
+	</insert>
+	
 	<select id="selectAllPic" resultType="java.lang.Integer">
 		select fi.id from companyCard cc left join tbl_qy qy on cc.company_Id=qy.nid left join card c on cc.card_Id=c.id, fileitem fi 
 		where c.picUrl=fi.id  

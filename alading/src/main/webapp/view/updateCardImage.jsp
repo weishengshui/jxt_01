@@ -22,6 +22,7 @@
 	.red{color:red;font-size:12px;}
 	form{margin:0; padding:0} 
 </style>
+<% response.setHeader("Cache-Control","no-store");%>
 <script type="text/javascript">
 		var baseURL = '<%=request.getContextPath()%>';
 	
@@ -33,7 +34,7 @@
 		}
 		
 		$(document).ready(function(){
-			$('#oldPic').attr('src', baseURL+'/view/cardImageGet/${param.id}');
+			$('#oldPic').attr('src', baseURL+'/view/cardImageGet/${image.id}');
 		});
 		
 		function doSubmit(){
@@ -89,7 +90,7 @@
 									<td><span style="color: red;"></span></td>
 									<td>图片：</td>
 									<td>
-										<input type="hidden" name="id" id="id" value="${param.id }" />
+										<input type="hidden" name="id" id="id" value="${image.id }" />
 										<img id="oldPic" alt="" src="">
 									</td>
 								</tr>
@@ -106,7 +107,7 @@
 									<td><span style="color: red;"></span></td>
 									<td>描述：</td>
 									<td>
-										<textarea rows="5" cols="15" name="description">${param.description}</textarea>
+										<textarea rows="5" cols="15" name="description">${image.description}</textarea>
 									</td>
 								</tr>
 								<tr>

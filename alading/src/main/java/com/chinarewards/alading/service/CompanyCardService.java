@@ -28,4 +28,12 @@ public class CompanyCardService implements ICompanyCardService {
 		return companyCardMapper.selectDefaultCard();
 	}
 
+	@Override
+	public void createCard(Card card, String companyId) {
+		
+		logger.info("companyId="+companyId);
+		
+		companyCardMapper.insertCard(card);
+	}
+
 }
