@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `fileitem` (
 -- 积分单位表
 CREATE TABLE IF NOT EXISTS unit
 (
-pointId INT(11) NOT NULL auto_increment,
+pointId INT(11) NOT NULL,
 pointName VARCHAR(255),
 pointRate INT,
 PRIMARY KEY(pointId)
@@ -89,3 +89,5 @@ CREATE TABLE IF NOT EXISTS `tbl_exchangelog` (
 
 -- 1 表示默认卡，只有一张默认卡
 alter table card add column defaultCard bit default 0;
+
+alter table unit modify pointId int not null auto_increment;

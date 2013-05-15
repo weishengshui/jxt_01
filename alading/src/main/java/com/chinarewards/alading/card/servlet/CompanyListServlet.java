@@ -1,4 +1,4 @@
-package com.chinarewards.alading.image.servlet;
+package com.chinarewards.alading.card.servlet;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,16 +13,18 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 
+import com.chinarewards.alading.domain.Company;
 import com.chinarewards.alading.domain.FileItem;
 import com.chinarewards.alading.log.InjectLogger;
+import com.chinarewards.alading.service.ICompanyCardService;
 import com.chinarewards.alading.service.IFileItemService;
 import com.chinarewards.alading.util.CommonTools;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-// 卡图片 列表servlet
+// 企业列表  servlet
 @Singleton
-public class CardImageListServlet extends HttpServlet {
+public class CompanyListServlet extends HttpServlet {
 
 	/**
 	 * 
@@ -33,18 +35,22 @@ public class CardImageListServlet extends HttpServlet {
 	private Logger logger;
 	@Inject
 	private IFileItemService fileItemService;
+	@Inject
+	private ICompanyCardService companyCardService;
 
+	// 获取还没有卡图片的企业列表
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		logger.info("entrance CardImageListServlet");
+		logger.info("entrance CompanyListServlet");
 
 		resp.setContentType("text/html; charset=utf8");
 
 		String pageStr = req.getParameter("page");
 		String rowsStr = req.getParameter("rows");
-		String description = req.getParameter("description");
+		String companyName = req.getParameter("companyName");
+		String companyCode = req.getParameter("companyCode");
 		Integer page = null;
 		Integer rows = null;
 		try {
@@ -55,12 +61,14 @@ public class CardImageListServlet extends HttpServlet {
 
 		page = (page == null) ? 1 : page;
 		rows = (rows == null) ? 10 : rows;
-		FileItem fileItem = new FileItem();
-		fileItem.setDescription(description);
 
-		List<FileItem> list = fileItemService.searchFileItems(page, rows,
-				fileItem);
-		Integer count = fileItemService.countFileItems(page, rows, fileItem);
+		Company company = new Company();
+		company.setCode(companyCode);
+		company.setName(companyName);
+
+		List<Company> list = companyCardService.searchCompanys(page, rows,
+				company);
+		Integer count = companyCardService.countCompanys(page, rows, company);
 
 		Map<String, Object> resMap = new HashMap<String, Object>();
 		resMap.put("page", page);
@@ -82,10 +90,4 @@ public class CardImageListServlet extends HttpServlet {
 		resp.getWriter().close();
 	}
 
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-
-		doPost(req, resp);
-	}
 }

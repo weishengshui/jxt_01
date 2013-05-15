@@ -39,7 +39,6 @@ public class FileItemService implements IFileItemService {
 		params.put("pageSize", rows);
 		params.put("description", fileItem.getDescription());
 		
-		
 		return fileItemMapper.selectFileItems(params);
 	}
 

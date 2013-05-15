@@ -38,7 +38,7 @@ a.l-btn span span.l-btn-text{line-height: 25px;}
     $(document).ready(function(){
     	var treeData = [{
     		text: '卡图片管理',
-    		state: 'closed',
+    		state: 'open',
     		children: [{
     			text: '新增卡图片',
     			attributes: {
@@ -58,16 +58,16 @@ a.l-btn span span.l-btn-text{line-height: 25px;}
 			}
     	},{
     		text: '卡管理',
-    		state: 'closed',
+    		state: 'open',
     		children: [{
     			text: '新增卡',
     			attributes: {
-    				url: ""
+    				url: "cardShow.jsp"
     			}
     		}, {
        			text: '卡列表',
        			attributes: {
-       				url: ""
+       				url: "listCard.jsp"
        			}
     		}
     		]

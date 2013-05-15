@@ -47,7 +47,7 @@ public class Card implements Serializable {
 		this.unit = unit;
 	}
 
-	public boolean isDefaultCard() {
+	public boolean getDefaultCard() {
 		return defaultCard;
 	}
 

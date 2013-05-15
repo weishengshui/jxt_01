@@ -10,15 +10,7 @@ public class CommonTools {
 			return "";
 		}
 		JSONArray jsonArray = JSONArray.fromObject(object);
-		String str = jsonArray.toString();
-		// 去掉外面的 "[]"
-		if (str.startsWith("[")) {
-			str = str.substring(1);
-		}
-		if (str.endsWith("]")) {
-			str = str.substring(0, str.length() - 1);
-		}
 
-		return str;
+		return jsonArray.toString();
 	}
 }
