@@ -89,7 +89,7 @@
 		}
 	function clearForm(){
 		$('#cardName').val('');
-		document.getElementById('defaultCard').checked = false;
+		$('#defaultCard').attr('checked', false);
 		$('#picId').val('');
 		$('#image_desc').text('');
 		$('#companyId').val('');
