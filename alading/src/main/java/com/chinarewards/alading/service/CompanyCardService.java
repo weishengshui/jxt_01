@@ -7,6 +7,7 @@ import java.util.Map;
 import org.mybatis.guice.transactional.Transactional;
 import org.slf4j.Logger;
 
+import com.chinarewards.alading.card.vo.CardVo;
 import com.chinarewards.alading.domain.Card;
 import com.chinarewards.alading.domain.Company;
 import com.chinarewards.alading.domain.CompanyCard;
@@ -81,35 +82,35 @@ public class CompanyCardService implements ICompanyCardService {
 	}
 
 	@Override
-	public List<CompanyCard> findCards(Integer page, Integer rows,
-			CompanyCard companyCard, Boolean defaultCard) {
+	public List<CardVo> findCards(Integer page, Integer rows,
+			CardVo cardVo) {
 		
-		logger.info("defaultCard="+defaultCard);
+		logger.info("defaultCard="+cardVo.getDefaultCard());
 		
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("startIndex", (page - 1) * rows);
 		params.put("pageSize", rows);
-		params.put("cardName", companyCard.getCard().getCardName());
+		params.put("cardName", cardVo.getCardName());
 		// defaultCard == null 查询默认卡 与 非默认卡
 		// defaultCard == false 查询非默认卡
 		// defaultCard == true 查询默认卡
-		params.put("defaultCard", defaultCard);
+		params.put("defaultCard", cardVo.getDefaultCard());
 
 		return companyCardMapper.selectCards(params);
 	}
 
 	@Override
 	public Integer countCards(Integer page, Integer rows,
-			CompanyCard companyCard, Boolean defaultCard) {
+			CardVo cardVo) {
 		
-		logger.info("defaultCard="+defaultCard);
+		logger.info("defaultCard="+cardVo.getDefaultCard());
 		
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("cardName", companyCard.getCard().getCardName());
+		params.put("cardName", cardVo.getCardName());
 		// defaultCard == null 查询默认卡 与 非默认卡
 		// defaultCard == false 查询非默认卡
 		// defaultCard == true 查询默认卡
-		params.put("defaultCard", defaultCard);
+		params.put("defaultCard", cardVo.getDefaultCard());
 
 		return companyCardMapper.countCards(params);
 	}

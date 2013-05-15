@@ -3,6 +3,7 @@ package com.chinarewards.alading.reg.mapper;
 import java.util.List;
 import java.util.Map;
 
+import com.chinarewards.alading.card.vo.CardVo;
 import com.chinarewards.alading.domain.Card;
 import com.chinarewards.alading.domain.Company;
 import com.chinarewards.alading.domain.CompanyCard;
@@ -21,7 +22,7 @@ public interface CompanyCardMapper extends CommonMapper<CompanyCard> {
 
 	Integer updateAllCardStatus(boolean b);
 
-	List<CompanyCard> selectCards(Map<String, Object> params);
+	List<CardVo> selectCards(Map<String, Object> params);
 
 	Integer countCards(Map<String, Object> params);
 }

@@ -2,6 +2,7 @@ package com.chinarewards.alading.service;
 
 import java.util.List;
 
+import com.chinarewards.alading.card.vo.CardVo;
 import com.chinarewards.alading.domain.Card;
 import com.chinarewards.alading.domain.Company;
 import com.chinarewards.alading.domain.CompanyCard;
@@ -19,7 +20,7 @@ public interface ICompanyCardService {
 	 * @param companyId
 	 */
 	void createCard(Card card, String companyId);
-	
+
 	/**
 	 * 查询还没有卡的企业
 	 * 
@@ -29,7 +30,7 @@ public interface ICompanyCardService {
 	 * @return
 	 */
 	List<Company> searchCompanys(Integer page, Integer rows, Company company);
-	
+
 	/**
 	 * 计算没有卡的企业的数量
 	 * 
@@ -39,28 +40,25 @@ public interface ICompanyCardService {
 	 * @return
 	 */
 	Integer countCompanys(Integer page, Integer rows, Company company);
-	
+
 	/**
 	 * 查询卡
 	 * 
 	 * @param page
 	 * @param rows
-	 * @param companyCard
-	 * @param defaultCard 
+	 * @param cardVo
 	 * @return
 	 */
-	List<CompanyCard> findCards(Integer page, Integer rows,
-			CompanyCard companyCard, Boolean defaultCard);
-	
+	List<CardVo> findCards(Integer page, Integer rows, CardVo cardVo);
+
 	/**
 	 * 计算卡数量
 	 * 
 	 * @param page
 	 * @param rows
-	 * @param companyCard
-	 * @param defaultCard 
+	 * @param cardVo
 	 * @return
 	 */
-	Integer countCards(Integer page, Integer rows, CompanyCard companyCard, Boolean defaultCard);
+	Integer countCards(Integer page, Integer rows, CardVo cardVo);
 
 }

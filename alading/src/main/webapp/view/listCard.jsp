@@ -145,8 +145,8 @@
 			rownumbers:true,pageList:pageList,singleSelect:true">
 		    <thead>  
 		        <tr>
-		        	<th data-options="field:'a',width:50,formatter: function(v, r, i){return formatterCardId(v, r, i);}">id</th>  
-               		<th data-options="field:'b',width:50,formatter: function(v, r, i){return formatterCardName(v, r, i);}">卡名称</th>
+		        	<th data-options="field:'id',width:50">id</th>  
+               		<th data-options="field:'cardName',width:50">卡名称</th>
 <!--                		<th data-options="field:'mimeType',width:50">图片类型</th> -->
 <!--                		<th data-options="field:'originalFilename',width:50">图片原名</th> -->
 <!--                		<th data-options="field:'a',width:50,formatter: function(v, r, i){return previewImage(v, r, i);}">操作</th> -->

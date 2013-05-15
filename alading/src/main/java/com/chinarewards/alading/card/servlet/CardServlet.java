@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 
+import com.chinarewards.alading.card.vo.CardVo;
 import com.chinarewards.alading.domain.Card;
 import com.chinarewards.alading.domain.CompanyCard;
 import com.chinarewards.alading.domain.FileItem;
@@ -95,16 +96,13 @@ public class CardServlet extends HttpServlet {
 		}
 		page = (page == null) ? 1 : page;
 		rows = (rows == null) ? 10 : rows;
-
-		CompanyCard companyCard = new CompanyCard();
-		Card card = new Card();
-		card.setCardName(cardName);
-		companyCard.setCard(card);
-
-		List<CompanyCard> list = companyCardService.findCards(page, rows, companyCard, (null != defaultCard && !defaultCard.isEmpty()) ? Boolean
+		
+		CardVo cardVo = new CardVo();
+		cardVo.setCardName(cardName);
+		cardVo.setDefaultCard((null != defaultCard && !defaultCard.isEmpty()) ? Boolean
 				.valueOf(defaultCard) : null);
-		Integer count = companyCardService.countCards(page, rows, companyCard, (null != defaultCard && !defaultCard.isEmpty()) ? Boolean
-				.valueOf(defaultCard) : null);
+		List<CardVo> list = companyCardService.findCards(page, rows, cardVo);
+		Integer count = companyCardService.countCards(page, rows, cardVo);
 
 		Map<String, Object> resMap = new HashMap<String, Object>();
 		resMap.put("page", page);

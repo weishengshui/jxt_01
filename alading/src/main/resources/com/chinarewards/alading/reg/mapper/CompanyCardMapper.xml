@@ -22,31 +22,26 @@
 			<result property="pointRate" column="Rate"/>
 		</association>
 	</resultMap>
-	<resultMap type="CompanyCard" id="companyCardResultMap">
-		<result property="id" column="ccid" />
-		<association property="card" javaType="Card" notNullColumn="">
-			<result property="id" column="cardId"/>
-			<result property="cardName" column="cardName"/>
-			<result property="defaultCard" column="cardDefaultCard"/>
-			<association property="picUrl" javaType="FileItem">
-				<result property="id" column="pic_id"/>
-				<result property="description" column="pic_description"/>
-				<result property="filesize" column="pic_filesize"/>
-				<result property="mimeType" column="pic_mimeType"/>
-				<result property="originalFilename" column="pic_originalFilename"/>
-				<result column="pic_content"  property="content" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler"/>
-			</association>
-			<association property="unit" javaType="Unit" notNullColumn="">
-				<result property="pointId"  column="pointId"/>
-				<result property="pointName" column="pointName"/>
-				<result property="pointRate" column="pointRate"/>
-			</association>
-		</association>
-		<association property="company" javaType="Company" notNullColumn="">
-			<result property="id" column="qy_id"/>
-			<result property="name" column="qy_name"/>
-			<result property="code" column="qy_code"/>
-		</association>
+
+
+	<resultMap type="com.chinarewards.alading.card.vo.CardVo" id="cardVoResultMap">
+		<id property="id" column="cardId"/>
+		<result property="cardName" column="cardName"/>
+		<result property="defaultCard" column="defaultCard"/>
+
+		<result property="imageId" column="pic_id"/>
+		<result property="description" column="pic_description"/>
+		<result property="filesize" column="pic_filesize"/>
+		<result property="mimeType" column="pic_mimeType"/>
+		<result property="originalFilename" column="pic_originalFilename"/>
+
+		<result property="pointId"  column="pointId"/>
+		<result property="pointName" column="pointName"/>
+		<result property="pointRate" column="pointRate"/>
+
+		<result property="companyId" column="qy_id"/>
+		<result property="companyName" column="qy_name"/>
+		<result property="companyCode" column="qy_code"/>
 	</resultMap>
 	
 	<insert id="insert" parameterType="CompanyCard" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
@@ -110,27 +105,20 @@
 	</select>
 	
 	<!-- card list -->
-	<select id="selectCards" parameterType="map" resultMap="companyCardResultMap">
+	<select id="selectCards" parameterType="map" resultMap="cardVoResultMap">
 		select c.id as cardId, 
 		c.cardName as cardName, 
 		c.defaultCard as cardDefaultCard,
-		c.unit_id as unit_id,
-		c.picUrl as picUrl,
 		u.pointId as pointId,
 		u.pointName as pointName,
 		u.pointRate as pointRate,
-		fi.id as pic_id,
 		fi.description as pic_description,
 		fi.filesize as pic_filesize,
 		fi.mimeType as pic_mimeType,
 		fi.originalFilename as pic_originalFilename,
-		fi.content as pic_content,
 		qy.nid as qy_id,
 		qy.qymc as qy_name,
 		qy.qybh as qy_code
-		, cc.id as ccid 
-		, cc.card_Id as card_Id
-		, cc.company_Id as company_Id
 		from card c
 		left join companyCard cc on c.id = cc.card_Id 
 		left join fileitem fi on c.picUrl = fi.id 

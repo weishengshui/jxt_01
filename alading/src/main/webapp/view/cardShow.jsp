@@ -83,10 +83,20 @@
 						timeout:5000,
 						showType:'slide'
 					});
+					clearForm();
 				}
 			}); 
 		}
-		
+	function clearForm(){
+		$('#cardName').val('');
+		document.getElementById('defaultCard').checked = false;
+		$('#picId').val('');
+		$('#image_desc').text('');
+		$('#companyId').val('');
+		$('#company_name').text('');
+		$('#companyStart').text('* ');
+		$('#openCompanyButton').linkbutton('enable');
+	}
 	function getId(v, r, i){
 		return r.id;
 	}
