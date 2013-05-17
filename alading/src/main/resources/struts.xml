@@ -7,10 +7,25 @@
 
     <constant name="struts.devMode" value="true" />
     <constant name="struts.objectFactory" value="guice" />
-
-    <package name="default" namespace="/" extends="struts-default">
-
+    <constant name="struts.action.extension" value="action,do," />
+	
+	<package name="index" namespace="" extends="struts-default">
         <default-action-ref name="index" />
+        <action name="index" class="com.chinarewards.alading.login.action.IndexAction">
+            <result type="dispatcher">/WEB-INF/jsp/login.jsp</result>
+        </action>
+        
+        <action name="login" class="com.chinarewards.alading.login.action.LoginAction" method="login">
+        	<result name="success" type="dispatcher">/WEB-INF/jsp/view/main.jsp</result>
+        	<result name="failure" type="redirectAction">
+        		<param name="actionName">index</param>
+        		<param name="error">true</param>
+        	</result>
+        </action>
+	</package>
+	
+
+    <package name="default" namespace="/view" extends="struts-default">
 
         <global-results>
             <result name="error">/error.jsp</result>
@@ -20,16 +35,6 @@
             <exception-mapping exception="java.lang.Exception" result="error"/>
         </global-exception-mappings>
 
-        <action name="index">
-            <result type="dispatcher">/WEB-INF/jsp/login.jsp</result>
-        </action>
-        
-        <action name="login" class="com.chinarewards.alading.login.action.LoginAction" method="login">
-        	<result name="success" type="dispatcher">/WEB-INF/jsp/view/main.jsp</result>
-        	<result name="failure" type="redirectAction">
-        		<param name="actionName">index</param>
-        	</result>
-        </action>
     </package>
 
 

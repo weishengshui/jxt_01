@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="s" uri="/struts-tags" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -64,39 +65,28 @@
 </head>
 <body bgcolor="gray">
 <div id="win" class="easyui-window" title="登录" style="width:330px;height:250px;padding:30px;"  
-       data-options="iconCls:'icon-save',closable:false,minimizable:false,maximizable:false,resizable:false">  
-	<form id="loginForm" method="post" action="login">
-		<table>
-			<tr>
-				<td>用户名：</td>
-				<td colspan="2"><input type="text" id="userName" name="username" style="width:150px;"/></td>
-			</tr>
-			<tr>
-				<td>密&nbsp;&nbsp;码：</td>
-				<td colspan="2"><input type="password" id="password" name="password" style="width:150px;"/></td>
-			</tr>
-<!-- 			<tr> -->
-<!-- 				<td>验证码：</td> -->
-<!-- 				<td><input name="rand" id="rand" style="width:80px;" onkeydown="pressKeyDown(event)"/>&nbsp;</td> -->
-<!-- 				<td><img src="image.jpg" id="image" style="cursor:pointer" onclick="this.src='image.jpg?'+new Date().getTime();"/></td> -->
-<!-- 			</tr> -->
-			<tr align="right" height="36">
-				<td colspan="3">
-					<a id="btn" href="javascript:void(0)" onclick="login()" class="easyui-linkbutton" data-options="iconCls:'icon-ok'">登录</a>
-				</td>
-			</tr>
-		<table>
-	</form>
-	<%if(request.getParameter("error") != null){%>
-		<div id="pwdError" style="text-align: center;color:red;width: 200px;">用户名或密码错误</div>
-	<%}%>
-	<div id="error" style="text-align: center;color:red;width: 200px;"></div>
-	<%
-		if(request.getSession().getAttribute("USER_ID") != null){
-			String path = request.getContextPath();
-			response.sendRedirect(path + "/index");
-		}
-	%>
+       data-options="iconCls:'icon-save',closable:false,minimizable:false,maximizable:false,resizable:false">
+       <s:form id="loginForm" method="post" action="login">
+			<table>
+				<tr>
+					<td>用户名：</td>
+					<td colspan="2"><input type="text" id="userName" name="username" style="width:150px;"/></td>
+				</tr>
+				<tr>
+					<td>密&nbsp;&nbsp;码：</td>
+					<td colspan="2"><input type="password" id="password" name="password" style="width:150px;"/></td>
+				</tr>
+				<tr align="right" height="36">
+					<td colspan="3">
+						<a id="btn" href="javascript:void(0)" onclick="login()" class="easyui-linkbutton" data-options="iconCls:'icon-ok'">登录</a>
+					</td>
+				</tr>
+			</table>
+       </s:form>  
+		
+		<s:if test="error == 'true'">
+			<div id="pwdError" style="text-align: center;color:red;width: 200px;">用户名或密码错误</div>
+		</s:if>
 </div>
 </body>
 </html>

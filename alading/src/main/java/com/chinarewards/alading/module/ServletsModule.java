@@ -34,10 +34,11 @@ public class ServletsModule extends ServletModule {
 		// login logout servlet
 		serve("/login").with(LoginServlet.class);
 		serve("/view/logout").with(LogoutServlet.class);
-
-		// Struts 2 setup
+		
 		bind(StrutsPrepareAndExecuteFilter.class).in(Scopes.SINGLETON);
-		filter("/*").through(StrutsPrepareAndExecuteFilter.class);
+		filter("*.do").through(StrutsPrepareAndExecuteFilter.class);
+		filter("*.action").through(StrutsPrepareAndExecuteFilter.class);
+		filter("/").through(StrutsPrepareAndExecuteFilter.class);
 
 		// card image servlet
 		serve("/view/cardImageUpload").with(CardImageUploadServlet.class);

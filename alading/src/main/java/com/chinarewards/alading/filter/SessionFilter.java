@@ -46,19 +46,23 @@ public class SessionFilter implements Filter {
 		System.out.println("uri " + req.getRequestURI());
 		System.out.println("servletpath " + req.getServletPath());
 
-		// 是否要过滤
-		boolean isFilter = false;
-		for (String dir : filterDirs) {
-			if (req.getRequestURI().indexOf(dir) != -1) {
-				isFilter = true;
-				break;
+//		if (req.getRequestURI().contains("ishelf")) { // restful 资源访问不过滤
+//			chain.doFilter(request, response);
+//		} else {
+			// 是否要过滤
+			boolean isFilter = false;
+			for (String dir : filterDirs) {
+				if (req.getRequestURI().indexOf(dir) != -1) {
+					isFilter = true;
+					break;
+				}
 			}
-		}
-		if (isFilter && null == session.getAttribute("username")) {
-			res.sendRedirect(req.getContextPath() + "/login.jsp");
-		} else {
-			chain.doFilter(request, response);
-		}
+			if (isFilter && null == session.getAttribute("username")) {
+				res.sendRedirect(req.getContextPath() + "/login.jsp");
+			} else {
+				chain.doFilter(request, response);
+			}
+//		}
 
 	}
 
