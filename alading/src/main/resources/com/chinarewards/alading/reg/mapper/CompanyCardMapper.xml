@@ -27,7 +27,7 @@
 	<resultMap type="com.chinarewards.alading.card.vo.CardVo" id="cardVoResultMap">
 		<id property="id" column="cardId"/>
 		<result property="cardName" column="cardName"/>
-		<result property="defaultCard" column="defaultCard"/>
+		<result property="defaultCard" column="cardDefaultCard"/>
 
 		<result property="imageId" column="pic_id"/>
 		<result property="description" column="pic_description"/>
@@ -55,6 +55,17 @@
 	<update id="updateAllCardStatus" parameterType="java.lang.Boolean">
 		update card set defaultCard = #{value}
 	</update>
+	
+	<update id="updateCard" parameterType="Card">
+		update card set unit_id = #{unit.pointId}, picUrl = #{picUrl.id}, cardName = #{cardName} where id = #{id}
+	</update>
+	
+	<delete id="deleteCompanyCardByCardId" parameterType="java.lang.Integer">
+		delete from companyCard where card_Id = #{value}
+	</delete>
+	<delete id="deleteCard" parameterType="java.lang.Integer">
+		delete from card where id = #{value}
+	</delete>
 		
 	<select id="selectAllPic" resultType="java.lang.Integer">
 		select fi.id from companyCard cc left join tbl_qy qy on cc.company_Id=qy.nid left join card c on cc.card_Id=c.id, fileitem fi 
@@ -112,6 +123,7 @@
 		u.pointId as pointId,
 		u.pointName as pointName,
 		u.pointRate as pointRate,
+		fi.id as pic_id,
 		fi.description as pic_description,
 		fi.filesize as pic_filesize,
 		fi.mimeType as pic_mimeType,
@@ -149,5 +161,42 @@
 				and c.defaultCard = #{defaultCard}
 			</if>
 		</where>     
+	</select>
+	
+	<select id="selectCardVo" parameterType="java.lang.Integer" resultMap="cardVoResultMap">
+		select c.id as cardId, 
+		c.cardName as cardName, 
+		c.defaultCard as cardDefaultCard,
+		u.pointId as pointId,
+		u.pointName as pointName,
+		u.pointRate as pointRate,
+		fi.id as pic_id,
+		fi.description as pic_description,
+		fi.filesize as pic_filesize,
+		fi.mimeType as pic_mimeType,
+		fi.originalFilename as pic_originalFilename,
+		qy.nid as qy_id,
+		qy.qymc as qy_name,
+		qy.qybh as qy_code
+		from card c
+		left join companyCard cc on c.id = cc.card_Id 
+		left join fileitem fi on c.picUrl = fi.id 
+		left join unit u on c.unit_id = u.pointId
+		left join tbl_qy qy on cc.company_Id = qy.nid
+		where c.id = #{value}
+	</select>
+	
+	<select id="selectCardsByName" parameterType="java.lang.String" resultMap="cardResultMap">
+		select c.id as id, c.cardName as cardName, c.picUrl as picUrl,
+		c.unit_id as unit_id,
+		 fi.id as pic_id, fi.description as pic_description, fi.filesize as pic_filesize,
+		fi.mimeType as pic_mimeType, 
+		fi.originalFilename as pic_originalFilename,
+		fi.content as pic_content,
+		u.pointId as pointId,
+		u.pointName as pointName,
+		u.pointRate as pointRate
+		 from card c left join fileitem fi on c.picUrl = fi.id left join unit u on c.unit_id = u.pointId   
+		where c.cardName = #{value}
 	</select>
 </mapper>

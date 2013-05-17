@@ -25,4 +25,14 @@ public interface CompanyCardMapper extends CommonMapper<CompanyCard> {
 	List<CardVo> selectCards(Map<String, Object> params);
 
 	Integer countCards(Map<String, Object> params);
+
+	void deleteCompanyCardByCardId(Integer id);
+
+	void deleteCard(Integer id);
+
+	CardVo selectCardVo(Integer cardId);
+
+	void updateCard(Card card);
+
+	List<Card> selectCardsByName(String cardName);
 }

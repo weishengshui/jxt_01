@@ -66,7 +66,7 @@
 				return;
 			}
 			
-			var companyId = $('#companyId').val(); 
+			/* var companyId = $('#companyId').val(); 
 			var hasDefaultCard = false;
 			if($('#defaultCard').attr('checked')=='checked'){
 				$.ajax({
@@ -86,30 +86,15 @@
 			if(hasDefaultCard){
 				alert("已经有默认卡，不能再添加默认卡");
 				return;
-			}
+			} */
 			
-			var cardNameExists = false;
-			$.ajax({
-				url: 'cardCheck?cardName='+cardName,
-				type: 'get',
-				async: false,
-				success: function(data){
-					if(data == 'true'){
-						cardNameExists = true;
-					}
-				}
-				
-			});
-			if(!confirm("该卡名称已存在，是否继续?")){
-				return ;
-			}
 			
 			var params = 'id='+$('#id').val();
 			params += '&cardName='+cardName;
-			params += '&defaultCard='+(($('#defaultCard').attr('checked')=='checked') ? 'true' : 'false');
+			// params += '&defaultCard='+(($('#defaultCard').attr('checked')=='checked') ? 'true' : 'false');
 			params += '&unitId='+unitId;
 			params += '&picId='+picId;
-			params += '&companyId='+companyId; 
+			// params += '&companyId='+companyId; 
 			$.ajax({
 				url:'card',
 				type:'put',
@@ -121,7 +106,7 @@
 						timeout:5000,
 						showType:'slide'
 					});
-					clearForm();
+					// clearForm();
 				}
 			}); 
 		}
@@ -187,7 +172,6 @@
 		}
 	}
 	function openCompanyDialog(){
-		searchCompany();
 		$('#companyDialog').dialog('center');
 		$('#companyDialog').dialog('open');
 	}
@@ -205,6 +189,18 @@
 			$('#companyDialog').dialog('close')
 		}
 	}
+	function previewOldImage(){
+		var picId = $('#picId').val();
+		if(picId == ''){
+			alert('请先选择图片');
+			return ;
+		}
+		var url = baseURL + "/view/cardImageGet/"+picId;
+		var width = 500;
+		var height = 300;
+        parent.parent.dialog("预览图片",url,width,height);
+	}
+	
 </script>
 
 </head>
@@ -214,23 +210,33 @@
 			<tr>
 				<td>
 					<fieldset style="font-size: 14px;width:570px;height:auto;">
-						<legend style="color: blue;">卡新增</legend>
+						<legend style="color: blue;">卡修改</legend>
 							<table border="0">
 								<tr>
 									<td><span style="color: red;">*&nbsp;</span></td>
 									<td>卡名称：</td>
 									<td>
-										<input type="hidden" name="id" id="id">
-										<input type="text" name="cardName" id="cardName" maxlength="20"> 
+										<input type="hidden" name="id" id="id" value="${card.id}">
+										<input type="text" name="cardName" id="cardName" value='<c:out value="${card.cardName }"></c:out>' maxlength="20"> 
 									</td>
+									<td></td>
 									<td></td>
 								</tr>
 								<tr>
 									<td><span style="color: red;"></span></td>
-									<td>默认卡：</td>
+									<td>是否默认卡：</td>
 									<td>
-										<input type="checkbox" name="defaultCard" id="defaultCard" onclick="defaultCardCheck()" />
+										<c:choose>
+											<c:when test="${card.defaultCard }">
+												是	
+											</c:when>
+											<c:otherwise>
+												否
+											</c:otherwise>
+										</c:choose>
+<!-- 										<input type="checkbox" name="defaultCard" id="defaultCard" onclick="defaultCardCheck()" /> -->
 									</td>
+									<td></td>
 									<td></td>
 								</tr>
 								<tr>
@@ -243,33 +249,50 @@
 <%-- 										<input id="unitId" class="easyui-combobox" name="unitId" data-options="valueField:'pointId',textField:'pointName',url:'<%=request.getContextPath() %>/view/unitJson',method:'get'" />  --%>
 									</td>
 									<td></td>
+									<td></td>
 								</tr>
 								<tr>
 									<td><span style="color: red;">*&nbsp;</span></td>
 									<td>
-										<input type="hidden" id="picId" name="picId" />
+										<input type="hidden" id="picId" name="picId" value="${card.imageId }" />
 										卡图片：
 									</td>
+									<!-- 卡图片没有描述就取 图片id -->
 									<td id="image_desc">
+										<c:choose>
+											<c:when test="${card.description != null && card.description != '' }">
+												${card.description }
+											</c:when>
+											<c:otherwise>
+												${card.imageId }
+											</c:otherwise>
+										</c:choose>
 									</td>
 									<td>
 										<a href="javascript:void(0)" onclick="openImageDialog()" class="easyui-linkbutton" data-options="iconCls:'icon-add'">选择</a>
 									</td>
-								</tr>
-								<tr>
-									<td><span style="color: red;" id="companyStart">*&nbsp;</span></td>
 									<td>
-										所属企业：
-										<input type="hidden" name="companyId" id="companyId" />
-									</td>
-									<td id="company_name">
-									</td>
-									<td>
-										<a id="openCompanyButton" href="javascript:void(0)" onclick="openCompanyDialog()" class="easyui-linkbutton" data-options="iconCls:'icon-add'">选择</a>
+										<a href="javascript:void(0)" onclick="previewOldImage()" class="easyui-linkbutton">预览</a>
 									</td>
 								</tr>
+<%-- 								<c:if test="${card.defaultCard == false}"> --%>
+<!-- 									<tr> -->
+<!-- 										<td><span style="color: red;" id="companyStart">*&nbsp;</span></td> -->
+<!-- 										<td> -->
+<!-- 											所属企业： -->
+<%-- 											<input type="hidden" name="companyId" id="companyId" value="${card.companyId }" /> --%>
+<!-- 										</td> -->
+<!-- 										<td id="company_name"> -->
+<%-- 											${card.companyName } --%>
+<!-- 										</td> -->
+<!-- 										<td> -->
+<!-- 											<a id="openCompanyButton" href="javascript:void(0)" onclick="openCompanyDialog()" class="easyui-linkbutton" data-options="iconCls:'icon-add'">选择</a> -->
+<!-- 										</td> -->
+<!-- 										<td></td> -->
+<!-- 									</tr> -->
+<%-- 								</c:if> --%>
 								<tr>
-									<td align="right" colspan="4">
+									<td align="right" colspan="5">
 										<a href="javascript:void(0)" onclick="doSubmit()" class="easyui-linkbutton" data-options="iconCls:'icon-save'">保存</a>
 									</td>
 								</tr>

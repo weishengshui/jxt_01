@@ -36,24 +36,40 @@ public class CompanyCardService implements ICompanyCardService {
 
 	@Transactional
 	@Override
-	public void createCard(Card card, String companyId) {
+	public void createOrUpdateCard(Card card, String companyId) {
 
 		logger.info("companyId=" + companyId);
 		if (card.getDefaultCard() == true) {
 			companyCardMapper.updateAllCardStatus(false);
 		}
-		companyCardMapper.insertCard(card);
-
-		// 将卡绑定到企业
-		if (null != companyId && !companyId.isEmpty()) {
-
-			CompanyCard companyCard = new CompanyCard();
-			Company company = new Company();
-			company.setId(Integer.valueOf(companyId));
-			companyCard.setCard(card);
-			companyCard.setCompany(company);
-
-			companyCardMapper.insert(companyCard);
+		if(null == card.getId()){ // insert 
+			companyCardMapper.insertCard(card);
+			
+			// 将卡绑定到企业
+			if (null != companyId && !companyId.isEmpty()) {
+				
+				CompanyCard companyCard = new CompanyCard();
+				Company company = new Company();
+				company.setId(Integer.valueOf(companyId));
+				companyCard.setCard(card);
+				companyCard.setCompany(company);
+				
+				companyCardMapper.insert(companyCard);
+			}
+		} else { // update
+			companyCardMapper.updateCard(card);
+			
+			// 更新企业与卡的关系
+			// if (null != companyId && !companyId.isEmpty()) {
+			//
+			// CompanyCard companyCard = new CompanyCard();
+			// Company company = new Company();
+			// company.setId(Integer.valueOf(companyId));
+			// companyCard.setCard(card);
+			// companyCard.setCompany(company);
+			//
+			// companyCardMapper.updateCompanyCard(companyCard);
+			// }
 		}
 
 	}
@@ -113,6 +129,28 @@ public class CompanyCardService implements ICompanyCardService {
 		params.put("defaultCard", cardVo.getDefaultCard());
 
 		return companyCardMapper.countCards(params);
+	}
+	
+	@Transactional
+	@Override
+	public void removeCard(Integer id) {
+		
+		logger.info("id="+id);
+		companyCardMapper.deleteCompanyCardByCardId(id);
+		companyCardMapper.deleteCard(id);
+	}
+
+	@Override
+	public CardVo findCardVoByCardId(Integer cardId) {
+		
+		logger.info("cardId: "+cardId);
+		return companyCardMapper.selectCardVo(cardId);
+	}
+
+	@Override
+	public List<Card> findCardsByName(String cardName) {
+		
+		return companyCardMapper.selectCardsByName(cardName);
 	}
 
 }

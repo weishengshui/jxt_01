@@ -25,7 +25,6 @@ BEGIN
            SET returnCode = "101";
    END IF;
 
-
    SELECT o.`status`,o.id,o.employeeId INTO c_order_status,c_order_id,c_employee_id FROM tbl_orderform o WHERE o.couponNo=_couponNo;
 
    IF returnCode IS NULL THEN
@@ -39,6 +38,10 @@ BEGIN
    IF returnCode IS NULL THEN
            IF c_order_status = 0 THEN
                UPDATE tbl_orderform o SET o.`status` = 2,o.transactionNo=_transactionNo,o.lastUpdatedAt =NOW() WHERE o.id= c_order_id;
+									
+							 UPDATE tbl_ygddzb dd SET dd.state = 5 WHERE dd.ddh = _couponNo;
+							 UPDATE tbl_ygddmx mx SET mx.state= 5 WHERE mx.ddh = _couponNo;		
+
                SET returnCode = "100";
            ELSEIF c_order_status = 1 THEN
                -- expired
@@ -89,11 +92,17 @@ BEGIN
        (_terminalId,'ishelf', _terminalAddress, _couponNo, 'exchange', returnCode,c_err_message, NOW(),_transactionDate, c_employeeMobile);
    END;
 
+		-- validate couponNO 
+		IF (_couponNo IS NULL OR _couponNo = '') THEN	
+			set returnCode = "113";
+			set c_err_message = "CouponNo could not allow empty!";
+		END IF;
+
    -- check coupon whether exists
    SELECT count(1) INTO c_counts  FROM tbl_orderform o WHERE o.couponNo = _couponNo ;
    IF (returnCode IS NULL AND c_counts >= 1) THEN    
        set returnCode = "101";
- END IF;
+	 END IF;
    
    -- find employee
    SELECT count(1) INTO c_counts FROM tbl_qyyg yg WHERE yg.nid = _accountId;
@@ -117,17 +126,30 @@ BEGIN
    
    -- check employee balance is null
    IF returnCode IS NULL AND c_employee_balance IS NULL THEN
+			 set c_err_message = "Employee jf is NULL";	
        set returnCode = "113";
    END IF ;
+
+	IF returnCode IS NULL AND c_amount_pay IS NULL THEN
+			 set c_err_message = "Payment not allow null";	
+       set returnCode = "113";
+   END IF ;
+
+	IF returnCode IS NULL AND c_amount_pay < 0 THEN
+			 set c_err_message = "Payment could not less zero!";	
+       set returnCode = "113";
+  END IF ;
+	
+
 
    IF returnCode IS NULL THEN
        -- ELT ORDER MODEL
        INSERT INTO `tbl_ygddzb` (`ddh`, `state`, `cjrq`, `jsrq`, `ydh`, `shrq`, `fhrq`, `zjf`, `zje`, `jfqsl`, `fhr`, `fhrdh`, `yg`, `ddbz`, `shdz`, `shdzxx`, `qsrq`, `gys`) VALUES
-       (_couponNo, 3, now(), NOW(), NULL, NULL, NULL, c_amount_pay, 0.00, 0, NULL, NULL, c_employeeId, '实时兑换', NULL, NULL, NULL,NULL);
+       (_couponNo, 1, now(), NOW(), NULL, NULL, NULL, c_amount_pay, 0.00, 0, NULL, NULL, c_employeeId, '实时兑换', NULL, NULL, NULL,NULL);
 
        -- 3 waiting comment , 9,cancelled
        INSERT INTO `tbl_ygddmx` (`dd`, `sp`, `dhfs`, `sl`, `jf`, `je`, `jfq`, `yg`, `spl`, `jssj`, `ddh`, `state`) VALUES
-       (last_insert_id(), c_merchandise_id, NULL, _quantity, c_amount_pay, NULL, NULL, c_employeeId, c_group_merchandise_id, now(), _couponNo, 3);
+       (last_insert_id(), c_merchandise_id, NULL, _quantity, c_amount_pay, NULL, NULL, c_employeeId, c_group_merchandise_id, now(), _couponNo, 1);
 
        UPDATE tbl_qyyg yg SET yg.jf = (c_employee_balance - c_amount_pay) WHERE yg.nid = c_employeeId;
 
@@ -168,18 +190,25 @@ BEGIN
        VALUES(_couponNo,'expire',returnCode,c_err_message,NOW());
    END;
 
-   SELECT o.`status`,o.id,o.employeeId,o.units INTO c_order_status,c_order_id,c_employee_id,c_pay_amounts FROM tbl_orderform o WHERE o.couponNo=_couponNo;
+	 -- validate couponNO 
+		IF (_couponNo IS NULL OR _couponNo = '') THEN	
+			set returnCode = "113";
+			set c_err_message = "CouponNo could not allow empty!";
+		END IF;
+	
+		IF returnCode IS NULL THEN 
+			SELECT o.`status`,o.id,o.employeeId,o.units INTO c_order_status,c_order_id,c_employee_id,c_pay_amounts FROM tbl_orderform o WHERE o.couponNo=_couponNo;
+			SELECT yg.jf INTO c_employee_balance FROM tbl_qyyg yg WHERE yg.nid = c_employee_id;
+		END IF;
 
- SELECT yg.jf INTO c_employee_balance FROM tbl_qyyg yg WHERE yg.nid = c_employee_id;
-
-   IF c_order_id IS NULL THEN
+   IF returnCode IS NULL AND c_order_id IS NULL THEN
            SET returnCode = "101";
    END IF;
    
-   IF returnCode IS NULL THEN
+   IF returnCode IS NULL AND c_pay_amounts IS NOT NULL THEN
            IF c_order_status = 0 THEN
                UPDATE tbl_orderform o SET o.`status` = 3,o.lastUpdatedAt =NOW() WHERE o.id= c_order_id;
-               UPDATE tbl_qyyg qy SET qy.jf = (qy.jf + c_employee_balance) WHERE qy.nid = c_employee_id;
+               UPDATE tbl_qyyg qy SET qy.jf = (qy.jf + c_pay_amounts) WHERE qy.nid = c_employee_id;
 
                UPDATE tbl_ygddzb dd SET dd.state = 9 WHERE dd.ddh = _couponNo;
                UPDATE tbl_ygddmx mx SET mx.state= 9 WHERE mx.ddh = _couponNo;
@@ -201,3 +230,7 @@ BEGIN
 END //
  
 delimiter ;
+
+grant execute on procedure jxtelt.proc_exchange_coupon to 'jxtelt'@'localhost';
+grant execute on procedure jxtelt.proc_apply_coupon to 'jxtelt'@'localhost';
+grant execute on procedure jxtelt.proc_expire_coupon to 'jxtelt'@'localhost';

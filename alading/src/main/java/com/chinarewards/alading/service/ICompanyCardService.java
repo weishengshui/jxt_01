@@ -5,7 +5,6 @@ import java.util.List;
 import com.chinarewards.alading.card.vo.CardVo;
 import com.chinarewards.alading.domain.Card;
 import com.chinarewards.alading.domain.Company;
-import com.chinarewards.alading.domain.CompanyCard;
 
 public interface ICompanyCardService {
 
@@ -19,7 +18,7 @@ public interface ICompanyCardService {
 	 * @param card
 	 * @param companyId
 	 */
-	void createCard(Card card, String companyId);
+	void createOrUpdateCard(Card card, String companyId);
 
 	/**
 	 * 查询还没有卡的企业
@@ -60,5 +59,22 @@ public interface ICompanyCardService {
 	 * @return
 	 */
 	Integer countCards(Integer page, Integer rows, CardVo cardVo);
+
+	/**
+	 * 删除卡
+	 * 
+	 * @param id
+	 */
+	void removeCard(Integer id);
+	
+	/**
+	 * 根据card id 查询card，并组装成cardVo
+	 * 
+	 * @param cardId
+	 * @return
+	 */
+	CardVo findCardVoByCardId(Integer cardId);
+
+	List<Card> findCardsByName(String cardName);
 
 }

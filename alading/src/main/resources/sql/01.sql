@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `tbl_orderform` (
 
 -- DROP TABLE IF EXISTS `tbl_exchangelog`;
 CREATE TABLE IF NOT EXISTS `tbl_exchangelog` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL auto_increment,
   `terminalId` varchar(50) DEFAULT NULL,
   `merchantName` varchar(255) DEFAULT NULL,
   `merchantAddress` varchar(50) DEFAULT NULL,
@@ -90,4 +90,3 @@ CREATE TABLE IF NOT EXISTS `tbl_exchangelog` (
   `transactionNo` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
-

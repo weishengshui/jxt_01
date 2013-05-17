@@ -34,8 +34,12 @@
 		}
 		
 		$(document).ready(function(){
-			$('#oldPic').attr('src', baseURL+'/view/cardImageGet/${image.id}');
+			refreshImage();
 		});
+		
+		function refreshImage(){
+			$('#oldPic').attr('src', baseURL+'/view/cardImageGet/${image.id}/temp?temp='+new Date().getTime());
+		}
 		
 		function doSubmit(){
 			/* var pic = document.getElementById('pic');
@@ -56,6 +60,7 @@
 						timeout:5000,
 						showType:'slide'
 					});
+					refreshImage();
 				}
 			}); 
 		}
@@ -83,7 +88,7 @@
 		<table border="0" style="font-size:13px;">
 			<tr>
 				<td>
-					<fieldset style="font-size: 14px;width:570px;height:auto;">
+					<fieldset style="font-size: 14px;width:auto;height:auto;">
 						<legend style="color: blue;">卡图片修改</legend>
 							<table border="0">
 								<tr>
