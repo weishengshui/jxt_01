@@ -10,6 +10,7 @@ import org.mybatis.guice.datasource.helper.JdbcHelper;
 import com.chinarewards.alading.Application;
 import com.google.inject.Binder;
 import com.google.inject.Module;
+import com.google.inject.struts2.Struts2GuicePluginModule;
 
 public class CommonModule implements Module {
 
@@ -31,6 +32,9 @@ public class CommonModule implements Module {
 				bindProperties(binder(), Application.createDatabaseProperties(Application.PRODUCTION_DATABASE_PROPERTIES));
 			}
 		});
+		
+		// struts2 guice plugin module
+		binder.install(new Struts2GuicePluginModule());
 		
 		// add logger module
 		binder.install(new LoggerModule());
