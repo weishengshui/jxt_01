@@ -43,6 +43,7 @@
 /springmvc_demo00001/.gitignore
 
 /oauth/bin/
+/alading/bin/
 
 CVS
 .classpath
