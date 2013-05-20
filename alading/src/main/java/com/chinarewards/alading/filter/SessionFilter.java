@@ -46,7 +46,7 @@ public class SessionFilter implements Filter {
 		System.out.println("uri " + req.getRequestURI());
 		System.out.println("servletpath " + req.getServletPath());
 
-//		if (req.getRequestURI().contains("ishelf")) { // restful 资源访问不过滤
+//		if (req.getRequestURI().contains("login.do")) { 
 //			chain.doFilter(request, response);
 //		} else {
 			// 是否要过滤
@@ -58,7 +58,7 @@ public class SessionFilter implements Filter {
 				}
 			}
 			if (isFilter && null == session.getAttribute("username")) {
-				res.sendRedirect(req.getContextPath() + "/login.jsp");
+				res.sendRedirect(req.getContextPath() + "/index.do");
 			} else {
 				chain.doFilter(request, response);
 			}

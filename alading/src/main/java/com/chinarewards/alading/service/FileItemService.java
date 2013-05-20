@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.mybatis.guice.transactional.Transactional;
 import org.slf4j.Logger;
 
 import com.chinarewards.alading.domain.Card;
@@ -20,6 +21,7 @@ public class FileItemService implements IFileItemService {
 	@Inject
 	private FileItemMapper fileItemMapper;
 	
+	@Transactional
 	@Override
 	public void save(FileItem fileItem) {
 		fileItemMapper.insert(fileItem);

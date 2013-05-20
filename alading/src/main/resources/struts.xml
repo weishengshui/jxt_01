@@ -5,18 +5,20 @@
 
 <struts>
 
-    <constant name="struts.devMode" value="true" />
+    <constant name="struts.devMode" value="false" />
     <constant name="struts.objectFactory" value="guice" />
-    <constant name="struts.action.extension" value="action,do," />
+    <constant name="struts.action.extension" value="do," />
 	
 	<package name="index" namespace="" extends="struts-default">
         <default-action-ref name="index" />
         <action name="index" class="com.chinarewards.alading.login.action.IndexAction">
             <result type="dispatcher">/WEB-INF/jsp/login.jsp</result>
         </action>
-        
         <action name="login" class="com.chinarewards.alading.login.action.LoginAction" method="login">
-        	<result name="success" type="dispatcher">/WEB-INF/jsp/view/main.jsp</result>
+        	<result name="success" type="redirectAction">
+        		<param name="actionName">main</param>
+        		<param name="namespace">/view</param>
+        	</result>
         	<result name="failure" type="redirectAction">
         		<param name="actionName">index</param>
         		<param name="error">true</param>
@@ -25,7 +27,7 @@
 	</package>
 	
 
-    <package name="default" namespace="/view" extends="struts-default">
+    <package name="default" namespace="/view" extends="json-default">
 
         <global-results>
             <result name="error">/error.jsp</result>
@@ -34,7 +36,55 @@
         <global-exception-mappings>
             <exception-mapping exception="java.lang.Exception" result="error"/>
         </global-exception-mappings>
-
+        
+        <!-- 主界面 -->
+        <action name="main">
+        	<result>/WEB-INF/jsp/view/main.jsp</result>
+        </action>
+		
+		<!-- 添加卡图片 -->
+		<action name="addImage" class="com.chinarewards.alading.image.action.ImageAction" method="addImage">
+			<result type="json">
+				<param name="excludeProperties">
+					description,
+					pic,
+					picContentType,
+					picFileName
+				</param>
+			</result>
+			<result name="enter">/WEB-INF/jsp/view/cardImage/addCardImage.jsp</result>
+			<interceptor-ref name="fileUploadStack">
+				<param name="maximumSize">2097152</param>
+			</interceptor-ref>
+		</action>
+		<!-- 卡图片列表 -->
+		<action name="imagesPage">
+			<result>/WEB-INF/jsp/view/cardImage/listCardImage.jsp</result>
+		</action>
+		<action name="listImages" class="com.chinarewards.alading.image.action.ImageAction" method="listImages">
+			<result type="json">
+				<param name="root">imageList</param>
+			</result>
+		</action>
+		<!-- 删除卡图片 -->
+		<action name="deleteImage" class="com.chinarewards.alading.image.action.ImageAction" method="deleteImage">
+			<result type="json">
+				<param name="includeProperties">type</param>
+			</result>
+		</action>
+		<!-- 展示图片 -->
+		<action name="showImage" class="com.chinarewards.alading.image.action.ImageAction" method="showImage">
+			<result type="stream">
+				<param name="contentType">${mimeType}</param>
+				<param name="inputName">cardImage</param>
+			</result>
+		</action>
+		<action name="updateImage" class="com.chinarewards.alading.image.action.ImageAction" method="updateImage">
+			<result name="enter">/WEB-INF/jsp/view/cardImage/updateCardImage.jsp</result>			
+			<result type="json">
+				<param name="includeProperties">type</param>
+			</result>
+		</action>
     </package>
 
 

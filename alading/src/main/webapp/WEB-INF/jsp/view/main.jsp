@@ -42,12 +42,12 @@ a.l-btn span span.l-btn-text{line-height: 25px;}
     		children: [{
     			text: '新增卡图片',
     			attributes: {
-    				url: "addCardImage.jsp"
+    				url: "addImage.do"
     			}
     		}, {
        			text: '卡图片列表',
        			attributes: {
-       				url: "listCardImage.jsp"
+       				url: "imagesPage.do"
        			}
     		}
     		]

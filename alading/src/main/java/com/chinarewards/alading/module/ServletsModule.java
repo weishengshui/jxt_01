@@ -37,7 +37,6 @@ public class ServletsModule extends ServletModule {
 		
 		bind(StrutsPrepareAndExecuteFilter.class).in(Scopes.SINGLETON);
 		filter("*.do").through(StrutsPrepareAndExecuteFilter.class);
-		filter("*.action").through(StrutsPrepareAndExecuteFilter.class);
 		filter("/").through(StrutsPrepareAndExecuteFilter.class);
 
 		// card image servlet

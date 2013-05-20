@@ -17,6 +17,12 @@ public interface IFileItemService {
 	int deleteFileItemById(Integer id);
 
 	Integer updateDescContent(FileItem fileItem);
-
+	
+	/**
+	 * 检查卡图片是否能删除
+	 * 
+	 * @param id
+	 * @return
+	 */
 	Boolean checkDeleteFileItemById(Integer id);
 }	
