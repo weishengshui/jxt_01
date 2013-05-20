@@ -45,16 +45,19 @@ public class CardServlet extends HttpServlet {
 
 		logger.info("add card");
 		resp.setContentType("text/html; charset=utf8");
-		
+
 		String cardId = req.getParameter("id");
 		String cardName = req.getParameter("cardName");
 		String picId = req.getParameter("picId");
 		String unitId = req.getParameter("unitId");
 		String defaultCard = req.getParameter("defaultCard");
 		String companyId = req.getParameter("companyId");
-
+		logger.trace(
+				"cardId={}, cardName={}, picId={}, unitId={}, defaultCard={}, companyId={}",
+				new Object[] { cardId, cardName, picId, unitId, defaultCard,
+						companyId });
 		Card card = new Card();
-		if(null != cardId && !cardId.isEmpty()){
+		if (null != cardId && !cardId.isEmpty()) {
 			card.setId(Integer.valueOf(cardId));
 		}
 		card.setCardName(cardName);
@@ -152,30 +155,30 @@ public class CardServlet extends HttpServlet {
 
 		resp.setContentType("text/html; charset=utf8");
 		String cardId = req.getParameter("id");
-		
+
 		CardVo cardVo = null;
 		try {
 			cardVo = companyCardService.findCardVoByCardId(Integer
 					.valueOf(cardId));
 		} catch (Exception e) {
 		}
-//		String resBody = CommonTools.toJSONString(cardVo);
-//		if (null != resBody) {
-//			if (resBody.startsWith("[")) {
-//				resBody = resBody.substring(1);
-//			}
-//			if (resBody.endsWith("]")) {
-//				resBody = resBody.substring(0, resBody.length() - 1);
-//			}
-//		}
-//		logger.info("cardVo json: " + resBody);
-		
+		// String resBody = CommonTools.toJSONString(cardVo);
+		// if (null != resBody) {
+		// if (resBody.startsWith("[")) {
+		// resBody = resBody.substring(1);
+		// }
+		// if (resBody.endsWith("]")) {
+		// resBody = resBody.substring(0, resBody.length() - 1);
+		// }
+		// }
+		// logger.info("cardVo json: " + resBody);
+
 		req.setAttribute("card", cardVo);
 		req.getRequestDispatcher("/view/cardUpdate.jsp").forward(req, resp);
-		
-//		resp.getWriter().write(resBody);
-//		resp.getWriter().flush();
-//		resp.getWriter().close();
+
+		// resp.getWriter().write(resBody);
+		// resp.getWriter().flush();
+		// resp.getWriter().close();
 
 	}
 

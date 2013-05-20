@@ -46,55 +46,27 @@ public class CardCheckServlet extends HttpServlet {
 		resp.getWriter().flush();
 		resp.getWriter().close();
 	}
-
+	
+	// 检查卡名称是否存在
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		// logger.info("entrance CardImageListServlet");
-		//
-		// resp.setContentType("text/html; charset=utf8");
-		//
-		// String pageStr = req.getParameter("page");
-		// String rowsStr = req.getParameter("rows");
-		// String cardName = req.getParameter("cardName");
-		// String defaultCard = req.getParameter("defaultCard");
-		// Integer page = null;
-		// Integer rows = null;
-		// try {
-		// page = Integer.valueOf(pageStr);
-		// rows = Integer.valueOf(rowsStr);
-		// } catch (Exception e) {
-		// }
-		// page = (page == null) ? 1 : page;
-		// rows = (rows == null) ? 10 : rows;
-		//
-		// CardVo cardVo = new CardVo();
-		// cardVo.setCardName(cardName);
-		// cardVo.setDefaultCard((null != defaultCard && !defaultCard.isEmpty())
-		// ? Boolean
-		// .valueOf(defaultCard) : null);
-		// List<CardVo> list = companyCardService.findCards(page, rows, cardVo);
-		// Integer count = companyCardService.countCards(page, rows, cardVo);
-		//
-		// Map<String, Object> resMap = new HashMap<String, Object>();
-		// resMap.put("page", page);
-		// resMap.put("total", count == null ? 0 : count);
-		// resMap.put("rows", list == null ? new ArrayList<CompanyCard>() :
-		// list);
-		//
-		// String resBody = CommonTools.toJSONString(resMap);
-		// if (null != resBody) {
-		// if (resBody.startsWith("[")) {
-		// resBody = resBody.substring(1);
-		// }
-		// if (resBody.endsWith("]")) {
-		// resBody = resBody.substring(0, resBody.length() - 1);
-		// }
-		// }
-		// logger.info("json array: " + resBody);
-		// resp.getWriter().write(resBody);
-		// resp.getWriter().flush();
-		// resp.getWriter().close();
+		
+		resp.setContentType("text/html; charset=utf8");
+		
+		String cardName = req.getParameter("cardName");
+		logger.info("check cardName={}", cardName);
+		
+		List<Card> list = companyCardService.findCardsByName(cardName);
+
+		if (null != list && list.size() > 0) {
+			resp.getWriter().write("true");
+		} else {
+			resp.getWriter().write("false");
+		}
+
+		resp.getWriter().flush();
+		resp.getWriter().close();
 	}
 
 	@Override
@@ -110,24 +82,10 @@ public class CardCheckServlet extends HttpServlet {
 		// resp.getWriter().close();
 	}
 
-	// 检查卡名称是否存在
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		
-		logger.info("check card name");
-		
-		String cardName = req.getParameter("cardName");
-		List<Card> list = companyCardService.findCardsByName(cardName);
-		
-		if(null != list && list.size() > 0){
-			resp.getWriter().write("true");
-		} else {
-			resp.getWriter().write("false");
-		}
-		
-		resp.getWriter().flush();
-		resp.getWriter().close();
+
 	}
 
 }

@@ -39,6 +39,8 @@ public class UnitServlet extends HttpServlet {
 		String pointId = req.getParameter("pointId");
 		String pointName = req.getParameter("pointName");
 		String pointRate = req.getParameter("pointRate");
+		logger.trace("pointName={}", pointName);
+
 		Unit unit = new Unit();
 		unit.setPointId((pointId != null && !pointId.isEmpty()) ? Integer
 				.valueOf(pointId) : null);

@@ -90,8 +90,9 @@
 			
 			var cardNameExists = false;
 			$.ajax({
-				url: 'cardCheck?cardName='+cardName,
-				type: 'get',
+				url: 'cardCheck',
+				type: 'post',
+				data:{cardName:cardName},
 				async: false,
 				success: function(data){
 					if(data == 'true'){
@@ -100,8 +101,10 @@
 				}
 				
 			});
-			if(!confirm("该卡名称已存在，是否继续?")){
-				return ;
+			if(cardNameExists){
+				if(!confirm("该卡名称已存在，是否继续?")){
+					return ;
+				}
 			}
 			
 			var params = 'id='+$('#id').val();

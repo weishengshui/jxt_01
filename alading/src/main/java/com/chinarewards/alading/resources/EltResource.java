@@ -1,15 +1,20 @@
 package com.chinarewards.alading.resources;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -20,9 +25,9 @@ import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
+import com.chinarewards.alading.crypto.KEY;
+import com.chinarewards.alading.crypto.SignatureUtils;
 import com.chinarewards.alading.domain.Card;
-import com.chinarewards.alading.domain.CardDetail;
-import com.chinarewards.alading.domain.CardList;
 import com.chinarewards.alading.domain.ExchangeLog;
 import com.chinarewards.alading.domain.FileItem;
 import com.chinarewards.alading.domain.MemberInfo;
@@ -254,29 +259,67 @@ public class EltResource {
 	 * @return 
 	 *         100：交易成功、101：抵扣券号码已存在、102：会员账户余额不足、103：积分类型错误、104：超出当日使用限额、110：用户名密码错误
 	 *         、111：用户session无效、112：终端机session无效、113：系统级异常
+	 * @throws Exception
 	 */
 	@POST
 	@Path("redeem/apply")
 	@Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
 	@Produces({ MediaType.TEXT_HTML })
-	public String redeemApply(
+	public String redeemApply(@HeaderParam("signature") String signature,
 			@FormParam("terminalSession") String terminalSession,
-			@FormParam("sessionId") String sessionId,
+			@FormParam("memberSession") String memberSession,
 			@FormParam("accountId") Integer accountId,
 			@FormParam("pointId") String pointId,
 			@FormParam("amount") Integer amount,
 			@FormParam("terminalId") String terminalId,
 			@FormParam("terminalAddress") String terminalAddress,
 			@FormParam("transactionDate") String transactionDate,
-			@FormParam("couponNo") String couponNo) {
+			@FormParam("couponNo") String couponNo,
+			@Context HttpServletRequest request) {
 		logger.trace(
-				"entrance redeemApply terminalSession={}, sessionId={}, accountId={}, pointId={}, amount={}, terminalId={}, terminalAddress={}, transactionDate={}, couponNo={}",
-				new Object[] { terminalSession, sessionId, accountId, pointId,
-						amount, terminalId, terminalAddress, transactionDate,
-						couponNo });
+				"entrance redeemApply terminalSession={}, memberSession={}, accountId={}, pointId={}, amount={}, terminalId={}, terminalAddress={}, transactionDate={}, couponNo={}",
+				new Object[] { terminalSession, memberSession, accountId,
+						pointId, amount, terminalId, terminalAddress,
+						transactionDate, couponNo });
 
-		String response = couponService.exchange(couponNo, accountId, amount,
-				terminalId, terminalAddress, transactionDate);
+		// exchangeLog
+		ExchangeLog exchangeLog = new ExchangeLog();
+		exchangeLog.createdAt = SystemTimeProvider.getCurrentTime();
+		exchangeLog.transactionDate = SystemTimeProvider.getCurrentTime();
+		exchangeLog.terminalId = terminalId;
+		exchangeLog.operation = "exchange";
+
+		String response = "";
+		try {
+			signature = signature.replaceAll("@@", "\n");
+
+			String requestBody = "terminalSession=" + terminalSession
+					+ "&memberSession=" + memberSession + "&accountId="
+					+ accountId + "&pointId=" + pointId + "&amount=" + amount
+					+ "&terminalId=" + terminalId + "&terminalAddress="
+					+ terminalAddress + "&transactionDate=" + transactionDate
+					+ "&couponNo=" + couponNo;
+
+			// String requestBody = getRequestBodyAsString(request);
+
+			if (!SignatureUtils.verifySignatureHash(KEY.PUBLIC_KEY,
+					requestBody, signature)) {
+				logger.error("Call redeemApply failed because the signature is invalid That requestBody is :"
+						+ requestBody + "######## signature is:" + signature);
+				return "113";
+			}
+
+			response = couponService.exchange(couponNo, accountId, amount,
+					terminalId, terminalAddress, transactionDate);
+		} catch (Exception e) {
+			logger.error(
+					"entrance redeemApply terminalSession={}, sessionId={}, accountId={}, pointId={}, amount={}, terminalId={}, terminalAddress={}, transactionDate={}, couponNo={}",
+					new Object[] { terminalSession, memberSession, accountId,
+							pointId, amount, terminalId, terminalAddress,
+							transactionDate, couponNo }, e);
+			response = "113";
+			logExchange(exchangeLog, Arrays.asList(new String[] { couponNo }));
+		}
 
 		return response;
 	}
@@ -308,14 +351,16 @@ public class EltResource {
 	@Path("redeem/accept")
 	@Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
 	@Produces({ MediaType.TEXT_HTML })
-	public String redeemAccept(@FormParam("username") String username,
+	public String redeemAccept(@HeaderParam("signature") String signature,
+			@FormParam("username") String username,
 			@FormParam("password") String password,
 			@FormParam("terminalId") String terminalId,
 			@FormParam("merchantName") String merchantName,
 			@FormParam("merchantAddress") String merchantAddress,
 			@FormParam("transactionDate") String transactionDate,
 			@FormParam("transactionNo") String transactionNo,
-			@FormParam("couponNo") List<String> couponNo) {
+			@FormParam("couponNo") List<String> couponNo,
+			@Context HttpServletRequest request) {
 
 		logger.info(
 				"entrance redeemAccept username={}, password={}, terminalId={}, merchantName={}, merchantAddress={}, transactionDate={}, transactionNo={}, couponNo={}",
@@ -333,6 +378,30 @@ public class EltResource {
 
 		String response = "100";
 		try {
+
+			signature = signature.replaceAll("@@", "\n");
+
+			// String requestBody = getRequestBodyAsString(request);
+
+			StringBuffer couponstr = new StringBuffer();
+			for (String cp : couponNo) {
+				couponstr.append("&couponNo=");
+				couponstr.append(cp);
+			}
+
+			String requestBody = "username=" + username + "&password="
+					+ password + "&terminalId=" + terminalId + "&merchantName="
+					+ merchantName + "&merchantAddress=" + merchantAddress
+					+ "&transactionDate=" + transactionDate + "&transactionNo="
+					+ transactionNo + couponstr.toString();
+
+			if (!SignatureUtils.verifySignatureHash(KEY.PUBLIC_KEY,
+					requestBody, signature)) {
+				logger.error("Call redeemApply failed because the signature is invalid That requestBody is :"
+						+ requestBody + "######## signature is:" + signature);
+				return "113";
+			}
+
 			response = couponService.applyCoupon(couponNo, terminalId,
 					merchantName, merchantAddress, transactionDate,
 					transactionNo);
@@ -341,6 +410,11 @@ public class EltResource {
 			exchangeLog.returnCode = response;
 			logExchange(exchangeLog, couponNo);
 		} catch (Exception e) {
+			logger.error(
+					"entrance redeemAccept username={}, password={}, terminalId={}, merchantName={}, merchantAddress={}, transactionDate={}, transactionNo={}, couponNo={}",
+					new Object[] { username, password, terminalId,
+							merchantName, merchantAddress, transactionDate,
+							transactionNo, couponNo }, e);
 			response = "113";
 			exchangeLog.returnCode = response;
 			logExchange(exchangeLog, couponNo);
@@ -366,9 +440,11 @@ public class EltResource {
 	@Path("redeem/cancel")
 	@Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
 	@Produces({ MediaType.TEXT_HTML })
-	public String redeemCancel(@FormParam("username") String username,
+	public String redeemCancel(@HeaderParam("signature") String signature,
+			@FormParam("username") String username,
 			@FormParam("password") String password,
-			@FormParam("couponNo") List<String> couponNumbers) {
+			@FormParam("couponNo") List<String> couponNumbers,
+			@Context HttpServletRequest request) {
 
 		logger.info(
 				"entrance redeemCancel username={}, password={}, couponNo={}",
@@ -381,12 +457,35 @@ public class EltResource {
 
 		String response = "100";
 		try {
+			signature = signature.replaceAll("@@", "\n");
+
+			// String requestBody = getRequestBodyAsString(request);
+			StringBuffer paramterBody = new StringBuffer("username=" + username);
+			paramterBody.append("&password=" + password);
+			if (null != couponNumbers && couponNumbers.size() > 0) {
+				for (String couponNo : couponNumbers) {
+					paramterBody.append("&couponNo=" + couponNo);
+				}
+			}
+			String requestBody = paramterBody.toString();
+
+			if (!SignatureUtils.verifySignatureHash(KEY.PUBLIC_KEY,
+					requestBody, signature)) {
+				logger.error("Call redeemApply failed because the signature is invalid That requestBody is :"
+						+ requestBody + "######## signature is:" + signature);
+				return "113";
+			}
+
 			response = couponService.expireCoupon(couponNumbers);
 		} catch (IllegalStateException e1) {
 			response = e1.getMessage();
 			exchangeLog.returnCode = response;
 			logExchange(exchangeLog, couponNumbers);
 		} catch (Exception e) {
+			logger.error(
+					"entrance redeemCancel username={}, password={}, couponNo={}",
+					new Object[] { username, password, couponNumbers }, e);
+
 			response = "113";
 			exchangeLog.returnCode = response;
 			logExchange(exchangeLog, couponNumbers);
@@ -432,6 +531,40 @@ public class EltResource {
 				"/ishelf/getPic/");
 
 		return url.toString();
+	}
+
+	/**
+	 * That could not obtain post-body after getParameter method called . So
+	 * append all parameters instead it .
+	 * http://liuhaifeng.com/2009/04/servlet-getinputstream-getparameter.html
+	 * 
+	 * @param request
+	 * @return
+	 */
+	private String getRequestBodyAsString(HttpServletRequest request) {
+
+		BufferedReader reader;
+		InputStream is = null;
+		try {
+			is = request.getInputStream();
+			reader = new BufferedReader(new InputStreamReader(is, "utf-8"));
+			StringBuilder sb = new StringBuilder();
+			String line = null;
+
+			while ((line = reader.readLine()) != null) {
+				sb.append(line + "/n");
+			}
+			return sb.toString();
+		} catch (IOException e) {
+			throw new IllegalStateException(e);
+		} finally {
+			try {
+				if (is != null)
+					is.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	protected void logExchange(ExchangeLog log, List<String> coupon) {

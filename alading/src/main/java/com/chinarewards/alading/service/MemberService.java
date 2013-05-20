@@ -33,6 +33,7 @@ public class MemberService implements IMemberService {
 			CardDetail cardDetail = cardList.getCardDetail().get(0);
 
 			if (null == cardDetail.getCardName()
+					
 					|| "".equals(cardDetail.getCardName())) {
 				Card card = companyCardMapper.selectDefaultCard();
 				if (null != card) {
