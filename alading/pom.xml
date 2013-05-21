@@ -245,6 +245,12 @@
 		    <classifier>jdk15</classifier>  
 		</dependency> 
 		
+		<dependency>  
+		    <groupId>org.bouncycastle</groupId>  
+		    <artifactId>bcprov-jdk15on</artifactId>  
+		    <version>1.48</version>  
+		</dependency>
+		
 		<!-- struts2 -->
 		<dependency>
 			<groupId>org.apache.struts</groupId>
