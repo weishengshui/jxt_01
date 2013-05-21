@@ -155,7 +155,7 @@
 	}
 	
 	function previewImage(v, r, i){
-		var url = baseURL + "/view/cardImageGet/"+r.id;
+		var url = baseURL + "/view/showImage.do?id="+r.id;
 		return '<a href=javascript:show(\''+url+'\',\''+500+'\',\''+300+'\')>预览</a>';
 	}
 	
