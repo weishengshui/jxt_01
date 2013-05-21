@@ -52,3 +52,9 @@ CVS
 .settings
 target
 /externals/
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
