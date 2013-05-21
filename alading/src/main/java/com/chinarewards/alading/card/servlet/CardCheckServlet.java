@@ -35,7 +35,7 @@ public class CardCheckServlet extends HttpServlet {
 			throws ServletException, IOException {
 
 		logger.info("check default card");
-		resp.setContentType("text/html; charset=utf8");
+		resp.setContentType("text/html; charset=UTF-8");
 
 		if (null != companyCardService.findDefaultCard()) {
 			resp.getWriter().write("true");
@@ -52,7 +52,7 @@ public class CardCheckServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
-		resp.setContentType("text/html; charset=utf8");
+		resp.setContentType("text/html; charset=UTF-8");
 		
 		String cardName = req.getParameter("cardName");
 		logger.info("check cardName={}", cardName);
@@ -73,7 +73,7 @@ public class CardCheckServlet extends HttpServlet {
 	protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		// resp.setContentType("text/html; charset=utf8");
+		// resp.setContentType("text/html; charset=UTF-8");
 		// String id = req.getParameter("id");
 		// String res = "删除失败";
 		//

@@ -3,6 +3,7 @@ package com.chinarewards.alading.module;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.chinarewards.alading.card.servlet.AddCardServlet;
 import com.chinarewards.alading.card.servlet.CardCheckServlet;
 import com.chinarewards.alading.card.servlet.CardServlet;
 import com.chinarewards.alading.card.servlet.CompanyListServlet;
@@ -44,5 +45,7 @@ public class ServletsModule extends ServletModule {
 		serve("/view/card").with(CardServlet.class);
 		serve("/view/companyList").with(CompanyListServlet.class);
 		serve("/view/cardCheck").with(CardCheckServlet.class);
+		serve("/view/addCard").with(AddCardServlet.class);
+		
 	}
 }

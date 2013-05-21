@@ -96,8 +96,8 @@
 			params += '&picId='+picId;
 			// params += '&companyId='+companyId; 
 			$.ajax({
-				url:'card',
-				type:'put',
+				url:'addCard',
+				type:'post',
 				data: params,
 				success: function(data){
 					$.messager.show({
@@ -205,7 +205,7 @@
 
 </head>
 <body>
-   	<form action="card" method="put" id="fm"> 
+   	<form action="card" method="post" id="fm"> 
 		<table border="0" style="font-size:13px;">
 			<tr>
 				<td>

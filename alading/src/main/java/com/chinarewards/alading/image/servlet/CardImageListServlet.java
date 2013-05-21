@@ -40,7 +40,7 @@ public class CardImageListServlet extends HttpServlet {
 
 		logger.info("entrance CardImageListServlet");
 
-		resp.setContentType("text/html; charset=utf8");
+		resp.setContentType("text/html;charset=UTF-8");
 
 		String pageStr = req.getParameter("page");
 		String rowsStr = req.getParameter("rows");
@@ -64,8 +64,8 @@ public class CardImageListServlet extends HttpServlet {
 
 		Map<String, Object> resMap = new HashMap<String, Object>();
 		resMap.put("page", page);
-		resMap.put("total", count == null ? 0 : count);
 		resMap.put("rows", list == null ? new ArrayList<FileItem>() : list);
+		resMap.put("total", count == null ? 0 : count);
 
 		String resBody = CommonTools.toJSONString(resMap);
 		if (null != resBody) {
@@ -76,6 +76,7 @@ public class CardImageListServlet extends HttpServlet {
 				resBody = resBody.substring(0, resBody.length() - 1);
 			}
 		}
+		
 		logger.info("json array: " + resBody);
 		resp.getWriter().write(resBody);
 		resp.getWriter().flush();

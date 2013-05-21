@@ -45,7 +45,7 @@ public class CompanyListServlet extends HttpServlet {
 
 		logger.info("entrance CompanyListServlet");
 
-		resp.setContentType("text/html; charset=utf8");
+		resp.setContentType("text/html; charset=UTF-8");
 
 		String pageStr = req.getParameter("page");
 		String rowsStr = req.getParameter("rows");

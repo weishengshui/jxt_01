@@ -34,7 +34,7 @@ public class UnitServlet extends HttpServlet {
 			throws ServletException, IOException {
 
 		logger.info("pathInfo=" + req.getPathInfo());
-		resp.setContentType("text/html; charset=utf8");
+		resp.setContentType("text/html; charset=UTF-8");
 
 		String pointId = req.getParameter("pointId");
 		String pointName = req.getParameter("pointName");
