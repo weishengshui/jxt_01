@@ -87,7 +87,8 @@ CREATE TABLE IF NOT EXISTS `tbl_exchangelog` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
+-- 只有第一次部署需要
 -- 1 表示默认卡，只有一张默认卡
-alter table card add column defaultCard bit default 0;
+-- alter table card add column defaultCard bit default 0;
 
-alter table unit modify pointId int not null auto_increment;
+-- alter table unit modify pointId int not null auto_increment;
