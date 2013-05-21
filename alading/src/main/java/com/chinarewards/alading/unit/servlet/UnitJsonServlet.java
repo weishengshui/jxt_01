@@ -34,7 +34,7 @@ public class UnitJsonServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		resp.setContentType("text/html; charset=utf8");
+		resp.setContentType("text/html; charset=UTF-8");
 		Unit unit = unitService.findUnit();
 		String res = CommonTools.toJSONString(unit);
 		if (null != res) {

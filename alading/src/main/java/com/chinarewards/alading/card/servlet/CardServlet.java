@@ -38,43 +38,6 @@ public class CardServlet extends HttpServlet {
 	@Inject
 	private ICompanyCardService companyCardService;
 
-	// create or update Card
-	@Override
-	protected void doPut(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-
-		logger.info("add card");
-		resp.setContentType("text/html; charset=utf8");
-		
-		String cardId = req.getParameter("id");
-		String cardName = req.getParameter("cardName");
-		String picId = req.getParameter("picId");
-		String unitId = req.getParameter("unitId");
-		String defaultCard = req.getParameter("defaultCard");
-		String companyId = req.getParameter("companyId");
-
-		Card card = new Card();
-		if(null != cardId && !cardId.isEmpty()){
-			card.setId(Integer.valueOf(cardId));
-		}
-		card.setCardName(cardName);
-		card.setDefaultCard((null != defaultCard && !defaultCard.isEmpty()) ? Boolean
-				.valueOf(defaultCard) : false);
-		FileItem pic = new FileItem();
-		pic.setId(Integer.valueOf(picId));
-		Unit unit = new Unit();
-		unit.setPointId(Integer.valueOf(unitId));
-
-		card.setPicUrl(pic);
-		card.setUnit(unit);
-
-		companyCardService.createOrUpdateCard(card, companyId);
-
-		resp.getWriter().write("保存成功");
-		resp.getWriter().flush();
-		resp.getWriter().close();
-	}
-
 	// card list
 	// 组装成 CardVo，方便页面显示
 	@Override
@@ -82,7 +45,7 @@ public class CardServlet extends HttpServlet {
 			throws ServletException, IOException {
 		logger.info("card list");
 
-		resp.setContentType("text/html; charset=utf8");
+		resp.setContentType("text/html; charset=UTF-8");
 
 		String pageStr = req.getParameter("page");
 		String rowsStr = req.getParameter("rows");
@@ -130,7 +93,7 @@ public class CardServlet extends HttpServlet {
 	protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		resp.setContentType("text/html; charset=utf8");
+		resp.setContentType("text/html; charset=UTF-8");
 		String id = req.getParameter("id");
 		String res = "删除成功";
 
@@ -150,32 +113,32 @@ public class CardServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		resp.setContentType("text/html; charset=utf8");
+		resp.setContentType("text/html; charset=UTF-8");
 		String cardId = req.getParameter("id");
-		
+
 		CardVo cardVo = null;
 		try {
 			cardVo = companyCardService.findCardVoByCardId(Integer
 					.valueOf(cardId));
 		} catch (Exception e) {
 		}
-//		String resBody = CommonTools.toJSONString(cardVo);
-//		if (null != resBody) {
-//			if (resBody.startsWith("[")) {
-//				resBody = resBody.substring(1);
-//			}
-//			if (resBody.endsWith("]")) {
-//				resBody = resBody.substring(0, resBody.length() - 1);
-//			}
-//		}
-//		logger.info("cardVo json: " + resBody);
-		
+		// String resBody = CommonTools.toJSONString(cardVo);
+		// if (null != resBody) {
+		// if (resBody.startsWith("[")) {
+		// resBody = resBody.substring(1);
+		// }
+		// if (resBody.endsWith("]")) {
+		// resBody = resBody.substring(0, resBody.length() - 1);
+		// }
+		// }
+		// logger.info("cardVo json: " + resBody);
+
 		req.setAttribute("card", cardVo);
 		req.getRequestDispatcher("/view/cardUpdate.jsp").forward(req, resp);
-		
-//		resp.getWriter().write(resBody);
-//		resp.getWriter().flush();
-//		resp.getWriter().close();
+
+		// resp.getWriter().write(resBody);
+		// resp.getWriter().flush();
+		// resp.getWriter().close();
 
 	}
 

@@ -38,18 +38,5 @@ public class ServletsModule extends ServletModule {
 		bind(StrutsPrepareAndExecuteFilter.class).in(Scopes.SINGLETON);
 		filter("*.do").through(StrutsPrepareAndExecuteFilter.class);
 		filter("/").through(StrutsPrepareAndExecuteFilter.class);
-
-		// card image servlet
-//		serve("/view/cardImageUpload").with(CardImageUploadServlet.class);
-//		serve("/view/cardImageList").with(CardImageListServlet.class);
-//		serve("/view/cardImageGet/*").with(CardImageGetServlet.class);
-//		serve("/view/cardImageUpdate").with(CardImageUpdateServlet.class);
-		// unit servlet
-//		serve("/view/unitShow").with(UnitServlet.class);
-//		serve("/view/unitJson").with(UnitJsonServlet.class);
-		// card servlet
-//		serve("/view/card").with(CardServlet.class);
-//		serve("/view/companyList").with(CompanyListServlet.class);
-//		serve("/view/cardCheck").with(CardCheckServlet.class);
 	}
 }

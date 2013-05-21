@@ -37,6 +37,7 @@ public class LoginServlet extends HttpServlet {
 
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
+		logger.info("username={}, password={}", new Object[]{username, password});
 		if (StringUtils.isNotEmpty(username)
 				&& StringUtils.isNotEmpty(password)
 				&& loginService.checkUsernamePassword(username, password)) {

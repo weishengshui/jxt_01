@@ -121,7 +121,7 @@
 					picId: picId,
 					companyId: companyId,
 					type: $('#type').val()},
-				success: function(data){
+					success: function(data){
 					var res = "保存失败";
 					if(data.type == 3){
 						res = "保存成功";

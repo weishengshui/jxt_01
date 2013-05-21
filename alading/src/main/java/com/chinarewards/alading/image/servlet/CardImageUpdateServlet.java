@@ -39,7 +39,7 @@ public class CardImageUpdateServlet extends HttpServlet {
 
 		logger.info("entrance CardImageUploadServlet");
 
-		resp.setContentType("text/html; charset=utf8");
+		resp.setContentType("text/html; charset=UTF-8");
 
 		MultipartRequest mr = null;
 		int maxSize = 10485760;
@@ -87,7 +87,7 @@ public class CardImageUpdateServlet extends HttpServlet {
 	protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
-		resp.setContentType("text/html; charset=utf8");
+		resp.setContentType("text/html; charset=UTF-8");
 		String id = req.getParameter("id");
 		String res = "删除失败";
 		try {

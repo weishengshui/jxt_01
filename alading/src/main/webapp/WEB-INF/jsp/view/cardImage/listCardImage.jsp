@@ -3,7 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<link id="easyuiTheme" rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/js/jquery/themes/default/easyui.css" />
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/js/jquery/themes/default/easyui.css" />
 <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/js/jquery/themes/icon.css" />
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery/jquery-1.8.0.min.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery/jquery.easyui.min.js"></script>
@@ -13,7 +13,6 @@
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/PCASClass.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/constant.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery/jquery.cookie.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery/changeEasyuiTheme.js"></script>
 <style type="text/css">
 	.select{width:140px;height:22px;margin-right:20px;}
 	form{margin:0; padding:0} 
@@ -41,7 +40,7 @@
 		
 	    $('#tt').datagrid('load',{  
 	    	description:$('#description').val()
-	    });  
+	    });   
 	}
 	function del(){
 		var row = $('#tt').datagrid('getSelected');

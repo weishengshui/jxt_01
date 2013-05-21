@@ -41,7 +41,7 @@ public class SessionFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse res = (HttpServletResponse) response;
 		HttpSession session = req.getSession();
-
+		request.setCharacterEncoding("UTF-8");
 		System.out.println("url " + req.getRequestURL().toString());
 		System.out.println("uri " + req.getRequestURI());
 		System.out.println("servletpath " + req.getServletPath());

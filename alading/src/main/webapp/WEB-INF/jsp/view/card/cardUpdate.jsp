@@ -102,7 +102,7 @@
 					unitId: unitId,
 					picId: picId,
 					type: 2},
-				success: function(data){
+					success: function(data){
 					var res = "保存失败";
 					if(data.type == 3){
 						res = "保存成功";

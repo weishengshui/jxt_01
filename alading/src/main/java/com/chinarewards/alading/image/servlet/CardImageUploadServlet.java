@@ -38,7 +38,7 @@ public class CardImageUploadServlet extends HttpServlet {
 
 		logger.info("entrance CardImageUploadServlet");
 
-		resp.setContentType("text/html; charset=utf8");
+		resp.setContentType("text/html; charset=UTF-8");
 
 		MultipartRequest mr = null;
 		int maxSize = 10485760;
