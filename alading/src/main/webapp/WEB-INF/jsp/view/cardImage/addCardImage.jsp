@@ -81,7 +81,7 @@
 
 </head>
 <body>
-	<s:form action="addImage" namespace="/view" id="fm" method="post" enctype="multipart/form-data" theme="simple">
+	<s:form action="addImage" namespace="/view" id="fm" method="post" enctype="multipart/form-data" theme="simple" target="hidden_frame">
 		<table border="0" style="font-size:13px;">
 			<tr>
 				<td>
@@ -115,6 +115,8 @@
 				</td>
 			</tr>
 		</table>
+		<iframe name="hidden_frame" id="hidden_frame" style="display:none"></iframe>
 	</s:form>
+	
 </body>
 </html>

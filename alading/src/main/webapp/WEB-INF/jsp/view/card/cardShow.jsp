@@ -31,9 +31,9 @@
 			$('#comfirmImage').linkbutton('disable');
 			$('#comfirmCompany').linkbutton('disable');
 			$.ajax({
-				url: 'unitJson',
-				type: 'get',
-				dataType:'json',
+				url: 'unitJson.do',
+				type: 'post',
+				async: false,
 				success: function(data){
 					if(data && data != null){
 						$('#unitId').val(data.pointId);
@@ -70,11 +70,11 @@
 			var hasDefaultCard = false;
 			if($('#defaultCard').attr('checked')=='checked'){
 				$.ajax({
-					url: 'cardCheck',
+					url: 'checkDefaultCard.do',
 					async: false,
-					type: 'put',
+					type: 'post',
 					success: function(data){
-						if(data == 'true'){
+						if(data.type == 5){
 							hasDefaultCard = true;
 						}
 					}
@@ -90,34 +90,45 @@
 			
 			var cardNameExists = false;
 			$.ajax({
-				url: 'cardCheck?cardName='+cardName,
-				type: 'get',
+				url: 'checkCardName.do',
+				type: 'post',
+				data: {cardName: cardName},
 				async: false,
 				success: function(data){
-					if(data == 'true'){
+					if(data.type == 7){
 						cardNameExists = true;
 					}
 				}
 				
 			});
-			if(!confirm("该卡名称已存在，是否继续?")){
+			if(cardNameExists && !confirm("该卡名称已存在，是否继续?")){
 				return ;
 			}
 			
-			var params = 'id='+$('#id').val();
+			/* var params = 'id='+$('#id').val();
 			params += '&cardName='+cardName;
 			params += '&defaultCard='+(($('#defaultCard').attr('checked')=='checked') ? 'true' : 'false');
 			params += '&unitId='+unitId;
 			params += '&picId='+picId;
-			params += '&companyId='+companyId; 
+			params += '&companyId='+companyId;  */
 			$.ajax({
-				url:'card',
-				type:'put',
-				data: params,
+				url:'addCard.do',
+				type:'post',
+				data: {id: $('#id').val(), 
+					cardName: cardName, 
+					defaultCard: (($('#defaultCard').attr('checked')=='checked') ? 'true' : 'false'), 
+					unitId: unitId, 
+					picId: picId,
+					companyId: companyId,
+					type: $('#type').val()},
 				success: function(data){
+					var res = "保存失败";
+					if(data.type == 3){
+						res = "保存成功";
+					}
 					$.messager.show({
 						title:'提示信息',
-						msg: data,
+						msg: res,
 						timeout:5000,
 						showType:'slide'
 					});
@@ -209,7 +220,7 @@
 
 </head>
 <body>
-   	<form action="card" method="put" id="fm"> 
+   	<form action="addCard.do" method="post" id="fm"> 
 		<table border="0" style="font-size:13px;">
 			<tr>
 				<td>
@@ -221,6 +232,7 @@
 									<td>卡名称：</td>
 									<td>
 										<input type="hidden" name="id" id="id">
+										<input type="hidden" name="type" id="type" value="2">
 										<input type="text" name="cardName" id="cardName" maxlength="20"> 
 									</td>
 									<td></td>
@@ -297,7 +309,7 @@
 			</table>
 		</form>
 		<!-- 显示列表Table -->
-		<table id="imageTable" class="easyui-datagrid" data-options="url:'cardImageList',fitColumns:true,striped:true,loadMsg:'正在载入...',pagination:true,
+		<table id="imageTable" class="easyui-datagrid" data-options="url:'listImages.do',fitColumns:true,striped:true,loadMsg:'正在载入...',pagination:true,
 			rownumbers:true,pageList:pageList,singleSelect:true,onCheck:function(rowIndex, rowData){
 				$('#comfirmImage').linkbutton('enable');
 			}">
@@ -345,7 +357,7 @@
 			</table>
 		</form>
 		<!-- 显示列表Table -->
-		<table id="companyTable" class="easyui-datagrid" data-options="url:'companyList',method:'get',fitColumns:true,striped:true,loadMsg:'正在载入...',pagination:true,
+		<table id="companyTable" class="easyui-datagrid" data-options="url:'listCompanies.do',fitColumns:true,striped:true,loadMsg:'正在载入...',pagination:true,
 			rownumbers:true,pageList:pageList,singleSelect:true,onCheck:function(rowIndex, rowData){
 				$('#comfirmCompany').linkbutton('enable');
 			}">

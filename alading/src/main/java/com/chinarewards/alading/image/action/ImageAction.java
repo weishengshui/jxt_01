@@ -1,14 +1,11 @@
 package com.chinarewards.alading.image.action;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 
@@ -17,7 +14,6 @@ import com.chinarewards.alading.domain.FileItem;
 import com.chinarewards.alading.image.vo.ImageList;
 import com.chinarewards.alading.log.InjectLogger;
 import com.chinarewards.alading.service.IFileItemService;
-import com.chinarewards.alading.util.CommonTools;
 import com.google.inject.Inject;
 
 /**
@@ -179,7 +175,13 @@ public class ImageAction extends BaseAction {
 			} catch (Exception e) {
 				type = 4; // 保存图片失败
 			}
-			return SUCCESS;
+			// 避免ajax 提交form表单出现文件下载框
+			response.setContentType("text/html; charset=UTF-8");
+			response.getWriter().write("{\"type\":"+type+"}");
+			response.getWriter().flush();
+			response.getWriter().close();
+			
+			return null;
 		}
 	}
 
@@ -274,6 +276,12 @@ public class ImageAction extends BaseAction {
 		} catch (Exception e) {
 			type = 4; // 保存卡图片失败
 		}
-		return SUCCESS;
+		// 避免ajax 提交form表单出现文件下载框
+		response.setContentType("text/html; charset=UTF-8");
+		response.getWriter().write("{\"type\":"+type+"}");
+		response.getWriter().flush();
+		response.getWriter().close();
+		
+		return null;
 	}
 }

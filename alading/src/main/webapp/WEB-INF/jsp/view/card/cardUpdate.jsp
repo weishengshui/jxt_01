@@ -29,10 +29,9 @@
 		
 		$(document).ready(function(){
 			$('#comfirmImage').linkbutton('disable');
-			$('#comfirmCompany').linkbutton('disable');
 			$.ajax({
-				url: 'unitJson',
-				type: 'get',
+				url: 'unitJson.do',
+				type: 'post',
 				dataType:'json',
 				success: function(data){
 					if(data && data != null){
@@ -96,17 +95,24 @@
 			params += '&picId='+picId;
 			// params += '&companyId='+companyId; 
 			$.ajax({
-				url:'card',
-				type:'put',
-				data: params,
+				url:'addCard.do',
+				type:'post',
+				data: {id: $('#id').val(),
+					cardName: cardName, 
+					unitId: unitId,
+					picId: picId,
+					type: 2},
 				success: function(data){
+					var res = "保存失败";
+					if(data.type == 3){
+						res = "保存成功";
+					}
 					$.messager.show({
 						title:'提示信息',
-						msg: data,
+						msg: res,
 						timeout:5000,
 						showType:'slide'
 					});
-					// clearForm();
 				}
 			}); 
 		}
@@ -129,7 +135,7 @@
 	}
 	
 	function previewImage(v, r, i){
-		var url = baseURL + "/view/cardImageGet/"+r.id;
+		var url = baseURL + "/view/showImage.do?id="+r.id;
 		return '<a href=javascript:show(\''+url+'\',\''+500+'\',\''+300+'\')>预览</a>';
 	}
 	
@@ -195,7 +201,7 @@
 			alert('请先选择图片');
 			return ;
 		}
-		var url = baseURL + "/view/cardImageGet/"+picId;
+		var url = baseURL + "/view/showImage.do?id="+picId;
 		var width = 500;
 		var height = 300;
         parent.parent.dialog("预览图片",url,width,height);
@@ -205,7 +211,7 @@
 
 </head>
 <body>
-   	<form action="card" method="put" id="fm"> 
+   	<form action="addCard.do" method="post" id="fm"> 
 		<table border="0" style="font-size:13px;">
 			<tr>
 				<td>
@@ -275,22 +281,6 @@
 										<a href="javascript:void(0)" onclick="previewOldImage()" class="easyui-linkbutton">预览</a>
 									</td>
 								</tr>
-<%-- 								<c:if test="${card.defaultCard == false}"> --%>
-<!-- 									<tr> -->
-<!-- 										<td><span style="color: red;" id="companyStart">*&nbsp;</span></td> -->
-<!-- 										<td> -->
-<!-- 											所属企业： -->
-<%-- 											<input type="hidden" name="companyId" id="companyId" value="${card.companyId }" /> --%>
-<!-- 										</td> -->
-<!-- 										<td id="company_name"> -->
-<%-- 											${card.companyName } --%>
-<!-- 										</td> -->
-<!-- 										<td> -->
-<!-- 											<a id="openCompanyButton" href="javascript:void(0)" onclick="openCompanyDialog()" class="easyui-linkbutton" data-options="iconCls:'icon-add'">选择</a> -->
-<!-- 										</td> -->
-<!-- 										<td></td> -->
-<!-- 									</tr> -->
-<%-- 								</c:if> --%>
 								<tr>
 									<td align="right" colspan="5">
 										<a href="javascript:void(0)" onclick="doSubmit()" class="easyui-linkbutton" data-options="iconCls:'icon-save'">保存</a>
@@ -320,7 +310,7 @@
 			</table>
 		</form>
 		<!-- 显示列表Table -->
-		<table id="imageTable" class="easyui-datagrid" data-options="url:'cardImageList',fitColumns:true,striped:true,loadMsg:'正在载入...',pagination:true,
+		<table id="imageTable" class="easyui-datagrid" data-options="url:'listImages.do',fitColumns:true,striped:true,loadMsg:'正在载入...',pagination:true,
 			rownumbers:true,pageList:pageList,singleSelect:true,onCheck:function(rowIndex, rowData){
 				$('#comfirmImage').linkbutton('enable');
 			}">
@@ -346,51 +336,5 @@
 			</tr>
 		</table>
     </div>
-    
-    <!-- company dialog -->
-    <div id="companyDialog" class="easyui-dialog" title="企业选择" style="width:600px;height:430px;"  
-           data-options="iconCls:'icon-add',resizable:false,modal:true,closed:true,cache:false">  
-           <form action="" id="companyForm" style="width:auto;" method="get">
-			<table border="0" style="font-size: 14px;">
-				<tr>
-					<td>企业名称：</td>
-					<td>
-						<input id="companyName" name="companyName" type="text" style="width:100px" maxlength="300"/> 
-					</td>
-					<td>企业编号：</td>
-					<td>
-						<input id="companyCode" name="companyCode" type="text" style="width:100px" maxlength="300"/> 
-					</td>
-					<td>
-						<a href="javascript:void(0)" onclick="searchCompany()" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="javascript:$('#companyForm').form('clear')" class="easyui-linkbutton" data-options="iconCls:'icon-redo'">重置</a>
-					</td>
-				</tr>
-			</table>
-		</form>
-		<!-- 显示列表Table -->
-		<table id="companyTable" class="easyui-datagrid" data-options="url:'companyList',method:'get',fitColumns:true,striped:true,loadMsg:'正在载入...',pagination:true,
-			rownumbers:true,pageList:pageList,singleSelect:true,onCheck:function(rowIndex, rowData){
-				$('#comfirmCompany').linkbutton('enable');
-			}">
-		    <thead>  
-		        <tr>
-		        	<th data-options="field:'id',checkbox:true"></th>
-		        	<th data-options="field:'b',width:50,formatter: function(v, r, i){return getId(v, r, i);}">id</th>  
-               		<th data-options="field:'name',width:50">描企业名称</th>
-               		<th data-options="field:'code',width:50">企业编号</th>
-		        </tr>  
-		    </thead>  
-		</table>
-		<table align="right">
-			<tr align="right">
-				<td>
-					<a id="comfirmCompany" href="javascript:void(0)" onclick="selectCompany()" class="easyui-linkbutton" data-options="iconCls:'icon-ok'">确定</a>
-				<td>
-				<td>
-					<a href="javascript:void(0)" onclick="javascript:$('#companyDialog').dialog('close')" class="easyui-linkbutton" data-options="iconCls:'icon-back'">关闭</a>
-				</td>
-			</tr>
-		</table>
-    </div>  
 </body>
 </html>

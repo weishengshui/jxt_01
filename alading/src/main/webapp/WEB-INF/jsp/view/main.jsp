@@ -54,7 +54,7 @@ a.l-btn span span.l-btn-text{line-height: 25px;}
     	}, {
     		text: '积分单位管理',
     		attributes: {
-				url: "unitShow"
+				url: "unitShow.do"
 			}
     	},{
     		text: '卡管理',
@@ -62,12 +62,12 @@ a.l-btn span span.l-btn-text{line-height: 25px;}
     		children: [{
     			text: '新增卡',
     			attributes: {
-    				url: "cardShow.jsp"
+    				url: "addCard.do"
     			}
     		}, {
        			text: '卡列表',
        			attributes: {
-       				url: "listCard.jsp"
+       				url: "cardsPage.do"
        			}
     		}
     		]

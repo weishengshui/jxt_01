@@ -8,6 +8,7 @@
     <constant name="struts.devMode" value="false" />
     <constant name="struts.objectFactory" value="guice" />
     <constant name="struts.action.extension" value="do," />
+    <constant name="struts.i18n.encoding" value="UTF-8" />
 	
 	<package name="index" namespace="" extends="struts-default">
         <default-action-ref name="index" />
@@ -44,14 +45,9 @@
 		
 		<!-- 添加卡图片 -->
 		<action name="addImage" class="com.chinarewards.alading.image.action.ImageAction" method="addImage">
-			<result type="json">
-				<param name="excludeProperties">
-					description,
-					pic,
-					picContentType,
-					picFileName
-				</param>
-			</result>
+<!-- 			<result type="json"> -->
+<!-- 				<param name="includeProperties">type</param> -->
+<!-- 			</result> -->
 			<result name="enter">/WEB-INF/jsp/view/cardImage/addCardImage.jsp</result>
 			<interceptor-ref name="fileUploadStack">
 				<param name="maximumSize">2097152</param>
@@ -81,8 +77,65 @@
 		</action>
 		<action name="updateImage" class="com.chinarewards.alading.image.action.ImageAction" method="updateImage">
 			<result name="enter">/WEB-INF/jsp/view/cardImage/updateCardImage.jsp</result>			
+<!-- 			<result type="json"> -->
+<!-- 				<param name="includeProperties">type</param> -->
+<!-- 			</result> -->
+		</action>
+		
+		<!-- 创建或更新积分单位 -->
+		<action name="unitShow" class="com.chinarewards.alading.unit.action.UnitAction" method="unitShow">
 			<result type="json">
 				<param name="includeProperties">type</param>
+			</result>
+			<result name="enter">/WEB-INF/jsp/view/unit/unitShow.jsp</result>
+		</action>
+		<!-- 获取积分单位json -->
+		<action name="unitJson" class="com.chinarewards.alading.unit.action.UnitAction" method="unitJson">
+			<result type="json">
+				<param name="root">unit</param>
+			</result>
+		</action>
+		
+		<!-- 添加或更新卡action -->
+		<action name="addCard" class="com.chinarewards.alading.card.action.CardAction" method="addCard">
+			<result name="enter">/WEB-INF/jsp/view/card/cardShow.jsp</result>
+			<result type="json">
+				<param name="includeProperties">type</param>
+			</result>
+		</action>
+		<!-- 查询卡列表 -->
+		<action name="listCards" class="com.chinarewards.alading.card.action.CardAction" method="listCards">
+			<result type="json">
+				<param name="root">cardList</param>
+			</result>
+		</action>
+		<!-- 删除卡 -->
+		<action name="deleteCard" class="com.chinarewards.alading.card.action.CardAction" method="deleteCard">
+			<result type="json">
+				<param name="includeProperties">type</param>
+			</result>
+		</action>
+		<!-- prepare data for update card -->
+		<action name="showCard" class="com.chinarewards.alading.card.action.CardAction" method="showCard">
+			<result>/WEB-INF/jsp/view/card/cardUpdate.jsp</result>
+		</action>
+		<action name="checkDefaultCard" class="com.chinarewards.alading.card.action.CardAction" method="checkDefaultCard">
+			<result type="json">
+				<param name="includeProperties">type</param>
+			</result>
+		</action>
+		<action name="checkCardName" class="com.chinarewards.alading.card.action.CardAction" method="checkCardName">
+			<result type="json">
+				<param name="includeProperties">type</param>
+			</result>
+		</action>
+		<action name="cardsPage">
+			<result>/WEB-INF/jsp/view/card/listCard.jsp</result>
+		</action>
+		<!-- company list -->
+		<action name="listCompanies" class="com.chinarewards.alading.card.action.CardAction" method="listCompanies">
+			<result type="json">
+				<param name="root">companyList</param>
 			</result>
 		</action>
     </package>
