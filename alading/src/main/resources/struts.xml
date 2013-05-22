@@ -25,13 +25,35 @@
         		<param name="error">true</param>
         	</result>
         </action>
+        <action name="logout" class="com.chinarewards.alading.login.action.LoginAction" method="logout">
+        	<result type="redirectAction">
+        		<param name="actionName">index</param>
+        	</result>
+        </action>
 	</package>
 	
-
     <package name="default" namespace="/view" extends="json-default">
-
+		
+        <interceptors>
+        	<interceptor name="sessionInterceptor" class="com.chinarewards.alading.interceptor.SessionInterceptor" />
+        	<interceptor-stack name="myStack">
+        		<interceptor-ref name="sessionInterceptor" />
+        		<interceptor-ref name="defaultStack" />
+        	</interceptor-stack>
+        	<interceptor-stack name="uploadStack">
+        		<interceptor-ref name="sessionInterceptor" />
+        		<interceptor-ref name="fileUploadStack" />
+        	</interceptor-stack>
+        </interceptors>
+        
+        <default-interceptor-ref name="myStack" />
+        
         <global-results>
             <result name="error">/error.jsp</result>
+            <result name="index" type="redirectAction">
+            	<param name="actionName">index</param>
+        		<param name="namespace"></param>
+            </result>
         </global-results>
 
         <global-exception-mappings>
@@ -49,8 +71,8 @@
 <!-- 				<param name="includeProperties">type</param> -->
 <!-- 			</result> -->
 			<result name="enter">/WEB-INF/jsp/view/cardImage/addCardImage.jsp</result>
-			<interceptor-ref name="fileUploadStack">
-				<param name="maximumSize">2097152</param>
+			<interceptor-ref name="uploadStack">
+				<param name="fileUpload.maximumSize">2097152</param>
 			</interceptor-ref>
 		</action>
 		<!-- 卡图片列表 -->
@@ -80,6 +102,9 @@
 <!-- 			<result type="json"> -->
 <!-- 				<param name="includeProperties">type</param> -->
 <!-- 			</result> -->
+			<interceptor-ref name="uploadStack">
+				<param name="fileUpload.maximumSize">2097152</param>
+			</interceptor-ref>
 		</action>
 		
 		<!-- 创建或更新积分单位 -->

@@ -231,6 +231,6 @@ END //
  
 delimiter ;
 
-grant execute on procedure jxtelt.proc_exchange_coupon to 'jxtelt'@'localhost';
-grant execute on procedure jxtelt.proc_apply_coupon to 'jxtelt'@'localhost';
-grant execute on procedure jxtelt.proc_expire_coupon to 'jxtelt'@'localhost';
+grant execute on procedure jxtelt.proc_exchange_coupon to 'jxtelt'@'%';
+grant execute on procedure jxtelt.proc_apply_coupon to 'jxtelt'@'%';
+grant execute on procedure jxtelt.proc_expire_coupon to 'jxtelt'@'%';

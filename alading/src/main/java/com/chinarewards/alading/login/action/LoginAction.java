@@ -7,7 +7,6 @@ import com.chinarewards.alading.action.BaseAction;
 import com.chinarewards.alading.log.InjectLogger;
 import com.chinarewards.alading.service.ILoginService;
 import com.google.inject.Inject;
-import com.opensymphony.xwork2.ActionContext;
 
 public class LoginAction extends BaseAction {
 
@@ -46,12 +45,18 @@ public class LoginAction extends BaseAction {
 				&& loginService.checkUsernamePassword(username, password)) {
 
 			session.put("username", username);
-			ActionContext.getContext().getSession();
-			
+
 			return "success";
 		} else {
 			return "failure";
 		}
+	}
+
+	public String logout() throws Exception {
+
+		session.clear();
+
+		return SUCCESS;
 	}
 
 }

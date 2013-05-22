@@ -165,8 +165,9 @@ a.l-btn span span.l-btn-text{line-height: 25px;}
 	<a href="javascript:void(0);" style="width: 55px;" onclick="logout()" class="easyui-menubutton" data-options="menu:'#layout_north_zxMenu',iconCls:'icon-back'">注销</a>
 </div>  
 <script>
+var baseURL = '<%=request.getContextPath()%>';
 function logout(){
-	window.location.href="logout";
+	window.location.href=baseURL + "/logout.do";
 }
 </script>
 </body>
