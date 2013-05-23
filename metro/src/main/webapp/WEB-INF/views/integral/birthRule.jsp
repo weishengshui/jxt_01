@@ -28,7 +28,7 @@
 	        	dataType:'json',
 	        	data:$("#myform").serialize(),
 	        	success:function(data){
-	        		if($("#id").val()=='')$("#id").val(id);
+	        		if($("#id").val()=='')$("#id").val(data);
 	        		$.messager.show({  
 	                    title:'提示',  
 	                    msg:'保存成功!',  

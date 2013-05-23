@@ -1,0 +1,11 @@
+<html t:type="layout" title="myapp start"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+      xmlns:p="tapestry:parameter">
+
+	<t:grid source="users" row="user">
+		<p:nameCell>
+			<t:pagelink page="userEdit" context="user.id">${user.name}</t:pagelink>
+		</p:nameCell>
+	</t:grid>
+	
+</html>

@@ -1117,13 +1117,11 @@ public class DiscountServiceImpl implements IDiscountService {
 		sql.append(" LIMIT ?,?");
 		args.add(page.getStart());
 		args.add(page.getRows());
-	log.trace(sqlCount.toString());
 		if(argsCount.size()>0){
 			page.setTotalRows(jdbcDaoSupport.findCount(sqlCount.toString(),argsCount.toArray()));
 		}else{
 			page.setTotalRows(jdbcDaoSupport.findCount(sqlCount.toString()));
 		}
-		log.trace(sql);
 		mlist = jdbcDaoSupport.findTsBySQL(DiscountNumberReport.class, sql.toString(),args.toArray());
 		List<DiscountNumberReport> list=new ArrayList<DiscountNumberReport>();
 		for(DiscountNumberReport d:mlist){
@@ -1298,13 +1296,11 @@ public class DiscountServiceImpl implements IDiscountService {
 		sql.append("   LIMIT ?,?");
 		args.add(discount.getPaginationDetail().getStart());
 		args.add(discount.getPaginationDetail().getRows());
-		log.trace(sql);
 		long d1=System.currentTimeMillis();
 		RowMapper rowMapper = getRowDiscountMapper();
 		mlist = jdbcDaoSupport.findTsBySQL(DiscountNumberReport.class, sql.toString(),args.toArray());
-		
 		long d2=System.currentTimeMillis();
-		log.trace("sql======"+(d2-d1)/1000);
+	
 		List<DiscountNumberReport> list=new ArrayList<DiscountNumberReport>();
 				for(DiscountNumberReport d:mlist){
 					if(d.getStatus()==0){
