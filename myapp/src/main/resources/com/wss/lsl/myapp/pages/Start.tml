@@ -1,11 +1,25 @@
 <html t:type="layout" title="myapp start"
       xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
       xmlns:p="tapestry:parameter">
-
-	<t:grid source="users" row="user">
+	<t:zone t:id="viewZone" />
+	<t:block id="userDetails">
+		<h2>${detailUser.name}</h2>
+		<ul style="padding-left:40px;">
+			<li>Inentifier: ${detailUser.id}</li>
+			<li>Name: ${detailUser.name}</li>
+			<li>Email: ${detailUser.email}</li>
+		</ul>
+	</t:block>
+	<t:grid source="users" row="user" model="model">
 		<p:nameCell>
 			<t:pagelink page="userEdit" context="user.id">${user.name}</t:pagelink>
 		</p:nameCell>
+		<p:deleteCell>
+			<t:actionlink t:id="delete" context="user.id">Delete</t:actionlink>
+		</p:deleteCell>
+		<p:viewCell>
+			<t:actionlink t:id="view" zone="viewZone" context="user.id">View</t:actionlink>
+		</p:viewCell>
 	</t:grid>
 	
 </html>

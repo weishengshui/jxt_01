@@ -1,0 +1,11 @@
+<html t:type="layout" title="myapp start"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+      xmlns:p="tapestry:parameter">
+
+	<h1>Edit/Create Citizen</h1>
+	<div id="section">
+		<t:beaneditform t:id="form" t:object="user">
+		
+		</t:beaneditform>
+	</div>	
+</html>
