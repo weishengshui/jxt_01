@@ -4,6 +4,8 @@ import java.util.Random;
 
 import org.apache.tapestry5.annotations.InjectPage;
 import org.apache.tapestry5.annotations.Log;
+import org.apache.tapestry5.ioc.annotations.Inject;
+import org.slf4j.Logger;
 
 
 /**
@@ -12,6 +14,9 @@ import org.apache.tapestry5.annotations.Log;
 public class Index {
 	
 	private final Random random = new Random(System.nanoTime());
+	
+	@Inject
+	private Logger logger;
 	
 	@InjectPage
 	private Guess guess;
