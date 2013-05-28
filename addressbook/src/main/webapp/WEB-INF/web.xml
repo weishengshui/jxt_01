@@ -9,6 +9,12 @@
         <param-name>tapestry.app-package</param-name>
         <param-value>com.wss.lsl.addressbook</param-value>
     </context-param>
+    <context-param>
+        <param-name>tapestry.development-modules</param-name>
+        <param-value>
+            com.wss.lsl.addressbook.services.AppModule
+        </param-value>
+    </context-param>
     <filter>
         <filter-name>app</filter-name>
         <filter-class>org.apache.tapestry5.TapestryFilter</filter-class>

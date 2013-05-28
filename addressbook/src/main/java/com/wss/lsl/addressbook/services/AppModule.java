@@ -13,9 +13,11 @@ public class AppModule {
 		binder.bind(UserDao.class, UserDaoImpl.class);
 	}
 	
-	public static void contributeApplicationDefaults(MappedConfiguration<String, String> configuration){
-		configuration.add(SymbolConstants.SUPPORTED_LOCALES, "zh,en");
-		configuration.add(SymbolConstants.FILE_CHECK_INTERVAL, "10 m");
+	public static void contributeApplicationDefaults(MappedConfiguration<String, Object> configuration){
+		configuration.add(SymbolConstants.SUPPORTED_LOCALES, "en");
+		configuration.add(SymbolConstants.PRODUCTION_MODE, false);
+		configuration.add(SymbolConstants.FILE_CHECK_INTERVAL, "10s");
 		configuration.add(SymbolConstants.APPLICATION_VERSION, "0.0.1-SNAPSHOT");
+		configuration.add(SymbolConstants.HMAC_PASSPHRASE, "00-1E-90-BD-4F-EB");
 	}
 }
