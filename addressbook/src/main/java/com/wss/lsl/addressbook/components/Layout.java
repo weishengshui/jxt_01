@@ -27,11 +27,11 @@ public class Layout {
 	@Inject
 	@Symbol(SymbolConstants.APPLICATION_VERSION)
 	private String appVersion;
-	
+
 	@InjectPage
 	private ListAddresses listAddresses;
-	
-	Object onActionFromIndex(){
+
+	Object onActionFromIndex() {
 		return listAddresses;
 	}
 }

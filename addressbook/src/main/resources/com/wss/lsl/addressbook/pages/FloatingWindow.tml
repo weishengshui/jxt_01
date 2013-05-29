@@ -1,0 +1,13 @@
+<html t:type="layout" title="滚动动态页面加载"
+	xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter">
+
+	<!-- 飘动窗口demo -->
+
+	<div id="roll"
+		style="width: 190px; height: 90px; background-color: rgb(0, 0, 0); color: rgb(255, 255, 255); position: absolute; left: 97px; top: 107px;">
+		<a target="_blank" href="http://acm.nyist.net/acm-icpc/provincial/sixth/news.php">
+			<img width="190" height="90" border="0" src="images/icpc.PNG" />
+		</a>
+	</div>
+	<script src="${floatingWindowJS}" language="JavaScript"></script>
+</html>
