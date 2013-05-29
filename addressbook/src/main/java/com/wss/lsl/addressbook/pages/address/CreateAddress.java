@@ -7,7 +7,7 @@ import org.apache.tapestry5.ioc.annotations.Inject;
 import org.hibernate.Session;
 
 import com.wss.lsl.addressbook.entities.Address;
-import com.wss.lsl.addressbook.pages.Index;
+import com.wss.lsl.addressbook.pages.ListAddresses;
 
 public class CreateAddress {
 	
@@ -18,7 +18,7 @@ public class CreateAddress {
 	private Session session;
 	
 	@InjectPage
-	private Index index;
+	private ListAddresses index;
 	
 	@CommitAfter
 	public Object onSuccess(){

@@ -1,208 +1,217 @@
-<html t:type="layout" title="滚动动态加载页面"
-	xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter">
-	
-	<script type="text/javascript" src="js/jquery/jquery-1.8.0.min.js"></script>
-	<script type="text/javascript" src="js/jquery.scrollLoading-min.js"></script>
-	<!-- 
-		四个要点：
-		1、统一指定：class="scrollLoading"
-		2、图片src指定一张隐藏图片：src="images/hiddenImage.bmp"(1*1)
-		3、指定图片真实url： data-url="http://image.zhangxinxu.com/image/study/head/s180/1.jpeg"
-		4、javaScript：$(function() {
-			$(".scrollLoading").scrollLoading();
-			});
-	 -->
-	<img width="180" height="180"
-		style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
-		src="images/hiddenImage.bmp"
-		data-url="http://image.zhangxinxu.com/image/study/head/s180/1.jpeg"
-		class="scrollLoading"></img>
-	<br /><br />
-	<img width="180" height="180"
-		style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
-		src="images/hiddenImage.bmp"
-		data-url="http://image.zhangxinxu.com/image/study/head/s180/2.jpeg"
-		class="scrollLoading"></img>
-	<br /><br />
-	<img width="180" height="180"
-		style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
-		src="images/hiddenImage.bmp"
-		data-url="http://image.zhangxinxu.com/image/study/head/s180/3.jpeg"
-		class="scrollLoading"></img>
-	<br /><br />
-	<img width="180" height="180"
-		style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
-		src="images/hiddenImage.bmp"
-		data-url="http://image.zhangxinxu.com/image/study/head/s180/4.jpeg"
-		class="scrollLoading"></img>
-	<br /><br />
-	<img width="180" height="180"
-		style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
-		src="images/hiddenImage.bmp"
-		data-url="http://image.zhangxinxu.com/image/study/head/s180/5.jpeg"
-		class="scrollLoading"></img>
-	<br /><br />
+<html t:type="layout" title="滚动动态页面加载"
+  xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+  xmlns:p="tapestry:parameter">
 
-	<img width="180" height="180"
-		style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
-		src="images/hiddenImage.bmp"
-		data-url="http://image.zhangxinxu.com/image/study/head/s180/7.jpeg"
-		class="scrollLoading"></img>
+	<t:form>
+		<!-- 四个要点： 1、统一指定：class="scrollLoading" 2、图片src指定一张隐藏图片：src="images/hiddenImage.bmp"(1*1) 
+			3、指定图片真实url： data-url="http://image.zhangxinxu.com/image/study/head/s180/1.jpeg" 
+			4、javaScript：$(function() { $(".scrollLoading").scrollLoading(); }); -->
+		<img width="180" height="180"
+			style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
+			src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/1.jpeg"
+			class="scrollLoading"></img>
+		<br />
+		<br />
+		<img width="180" height="180"
+			style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
+			src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/2.jpeg"
+			class="scrollLoading"></img>
+		<br />
+		<br />
+		<img width="180" height="180"
+			style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
+			src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/3.jpeg"
+			class="scrollLoading"></img>
+		<br />
+		<br />
+		<img width="180" height="180"
+			style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
+			src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/4.jpeg"
+			class="scrollLoading"></img>
+		<br />
+		<br />
+		<img width="180" height="180"
+			style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
+			src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/5.jpeg"
+			class="scrollLoading"></img>
+		<br />
+		<br />
 
-	<br /><br />
-	<img width="180" height="180"
-		style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
-		src="images/hiddenImage.bmp"
-		data-url="http://image.zhangxinxu.com/image/study/head/s180/8.jpeg"
-		class="scrollLoading"></img>
-	<br /><br />
+		<img width="180" height="180"
+			style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
+			src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/7.jpeg"
+			class="scrollLoading"></img>
 
-	<img width="180" height="180"
-		style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
-		src="images/hiddenImage.bmp"
-		data-url="http://image.zhangxinxu.com/image/study/head/s180/9.jpeg"
-		class="scrollLoading"></img>
+		<br />
+		<br />
+		<img width="180" height="180"
+			style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
+			src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/8.jpeg"
+			class="scrollLoading"></img>
+		<br />
+		<br />
 
-	<br /><br />
-	<img width="180" height="180"
-		style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
-		src="images/hiddenImage.bmp"
-		data-url="http://image.zhangxinxu.com/image/study/head/s180/10.jpeg"
-		class="scrollLoading"></img>
+		<img width="180" height="180"
+			style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
+			src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/9.jpeg"
+			class="scrollLoading"></img>
 
-	<br /><br />
-	<img width="180" height="180"
-		style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
-		src="images/hiddenImage.bmp"
-		data-url="http://image.zhangxinxu.com/image/study/head/s180/11.jpeg"
-		class="scrollLoading"></img>
+		<br />
+		<br />
+		<img width="180" height="180"
+			style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
+			src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/10.jpeg"
+			class="scrollLoading"></img>
 
-	<br /><br />
-	<img width="180" height="180"
-		style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
-		src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/12.jpeg"
-		class="scrollLoading"></img>
-	<br /><br />
+		<br />
+		<br />
+		<img width="180" height="180"
+			style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
+			src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/11.jpeg"
+			class="scrollLoading"></img>
 
-	<img width="180" height="180"
-		style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
-		src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/13.jpeg"
-		class="scrollLoading"></img>
-	<br /><br />
+		<br />
+		<br />
+		<img width="180" height="180"
+			style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
+			src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/12.jpeg"
+			class="scrollLoading"></img>
+		<br />
+		<br />
 
-	<img width="180" height="180"
-		style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
-		src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/14.jpeg"
-		class="scrollLoading"></img>
+		<img width="180" height="180"
+			style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
+			src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/13.jpeg"
+			class="scrollLoading"></img>
+		<br />
+		<br />
 
-	<br /><br />
-	<img width="180" height="180"
-		style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
-		src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/15.jpeg"
-		class="scrollLoading"></img>
-	<br /><br />
+		<img width="180" height="180"
+			style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
+			src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/14.jpeg"
+			class="scrollLoading"></img>
 
-	<img width="180" height="180"
-		style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
-		src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/16.jpeg"
-		class="scrollLoading"></img>
-	<br /><br />
+		<br />
+		<br />
+		<img width="180" height="180"
+			style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
+			src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/15.jpeg"
+			class="scrollLoading"></img>
+		<br />
+		<br />
 
-	<img width="180" height="180"
-		style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
-		src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/17.jpeg"
-		class="scrollLoading"></img>
-	<br /><br />
+		<img width="180" height="180"
+			style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
+			src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/16.jpeg"
+			class="scrollLoading"></img>
+		<br />
+		<br />
 
-	<img width="180" height="180"
-		style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
-		src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/18.jpeg"
-		class="scrollLoading"></img>
+		<img width="180" height="180"
+			style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
+			src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/17.jpeg"
+			class="scrollLoading"></img>
+		<br />
+		<br />
 
-	<br /><br />
-	<img width="180" height="180"
-		style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
-		src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/19.jpeg"
-		class="scrollLoading"></img>
-	<br /><br />
+		<img width="180" height="180"
+			style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
+			src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/18.jpeg"
+			class="scrollLoading"></img>
 
-	<img width="180" height="180"
-		style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
-		src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/20.jpeg"
-		class="scrollLoading"></img>
-	<br /><br />
+		<br />
+		<br />
+		<img width="180" height="180"
+			style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
+			src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/19.jpeg"
+			class="scrollLoading"></img>
+		<br />
+		<br />
 
-	<img width="180" height="180"
-		style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
-		src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/21.jpeg"
-		class="scrollLoading"></img>
-	<br /><br />
+		<img width="180" height="180"
+			style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
+			src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/20.jpeg"
+			class="scrollLoading"></img>
+		<br />
+		<br />
 
-	<img width="180" height="180"
-		style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
-		src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/22.jpeg"
-		class="scrollLoading"></img>
-	<br /><br />
+		<img width="180" height="180"
+			style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
+			src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/21.jpeg"
+			class="scrollLoading"></img>
+		<br />
+		<br />
 
-	<img width="180" height="180"
-		style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
-		src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/23.jpeg"
-		class="scrollLoading"></img>
-	<br /><br />
+		<img width="180" height="180"
+			style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
+			src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/22.jpeg"
+			class="scrollLoading"></img>
+		<br />
+		<br />
 
-	<img width="180" height="180"
-		style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
-		src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/24.jpeg"
-		class="scrollLoading"></img>
-	<br /><br />
+		<img width="180" height="180"
+			style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
+			src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/23.jpeg"
+			class="scrollLoading"></img>
+		<br />
+		<br />
 
-	<img width="180" height="180"
-		style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
-		src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/25.jpeg"
-		class="scrollLoading"></img>
-	<br /><br />
+		<img width="180" height="180"
+			style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
+			src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/24.jpeg"
+			class="scrollLoading"></img>
+		<br />
+		<br />
 
-	<img width="180" height="180"
-		style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
-		src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/26.jpeg"
-		class="scrollLoading"></img>
-	<br /><br />
+		<img width="180" height="180"
+			style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
+			src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/25.jpeg"
+			class="scrollLoading"></img>
+		<br />
+		<br />
 
-	<img width="180" height="180"
-		style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
-		src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/27.jpeg"
-		class="scrollLoading"></img>
-	<br /><br />
+		<img width="180" height="180"
+			style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
+			src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/26.jpeg"
+			class="scrollLoading"></img>
+		<br />
+		<br />
 
-	<img width="180" height="180"
-		style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
-		src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/28.jpeg"
-		class="scrollLoading"></img>
-	<br /><br />
+		<img width="180" height="180"
+			style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
+			src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/27.jpeg"
+			class="scrollLoading"></img>
+		<br />
+		<br />
 
-	<img width="180" height="180"
-		style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
-		src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/29.jpeg"
-		class="scrollLoading"></img>
+		<img width="180" height="180"
+			style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
+			src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/28.jpeg"
+			class="scrollLoading"></img>
+		<br />
+		<br />
 
-	<br /><br />
-	<img width="180" height="180"
-		style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
-		src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/30.jpeg"
-		class="scrollLoading"></img>
+		<img width="180" height="180"
+			style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
+			src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/29.jpeg"
+			class="scrollLoading"></img>
 
-	<br /><br />
-	
-	<table align="center">
-		<tr>
-			<td>
-				<img src="images/hiddenImage.bmp" data-url="images/11.JPG" class="scrollLoading"></img>
-			</td>
-		</tr>
-	</table>
-	<script>
-		$(function() {
-		$(".scrollLoading").scrollLoading();
-		});
-	</script>
+		<br />
+		<br />
+		<img width="180" height="180"
+			style="background:url(http://www.zhangxinxu.com/study/image/loading.gif) no-repeat center;"
+			src="images/hiddenImage.bmp" data-url="http://image.zhangxinxu.com/image/study/head/s180/30.jpeg"
+			class="scrollLoading"></img>
+
+		<br />
+		<br />
+		<table align="center">
+			<tr>
+				<td>
+					<img src="images/hiddenImage.bmp" data-url="images/11.JPG"
+						class="scrollLoading"></img>
+				</td>
+			</tr>
+		</table>
+	</t:form>
 </html>

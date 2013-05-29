@@ -8,10 +8,7 @@ import org.slf4j.Logger;
 
 import com.wss.lsl.addressbook.entities.Address;
 
-/**
- * Start page of application addressbook.
- */
-public class Index {
+public class ListAddresses {
 
 	@Inject
 	private Logger logger;

@@ -13,5 +13,13 @@
 		<br/>
 		<input type="submit" value="上传" />
 	</t:form>
+	<table align="center">
+			<tr>
+				<td>
+					<img src="images/hiddenImage.bmp" data-url="images/11.JPG"
+						class="scrollLoading" />
+				</td>
+			</tr>
+		</table>
 	
 </html>
