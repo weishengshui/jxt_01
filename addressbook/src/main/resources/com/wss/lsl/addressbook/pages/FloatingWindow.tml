@@ -1,4 +1,4 @@
-<html t:type="layout" title="滚动动态页面加载"
+<html t:type="layout" title="滚动动态页面加载" 
 	xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter">
 
 	<!-- 飘动窗口demo -->

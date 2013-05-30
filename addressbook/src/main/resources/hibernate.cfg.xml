@@ -5,13 +5,23 @@
     <session-factory>
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
         <property name="hibernate.connection.url">jdbc:mysql://192.168.4.97:3306/tapestry</property>
+        <property name="hibernate.connection.username">tapestry</property>
+        <property name="hibernate.connection.password">tapestry</property>
         <property name="hibernate.connection.useUnicode">true</property>
 		<property name="hibernate.connection.characterEncoding">UTF-8</property> 	
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
-        <property name="hibernate.connection.username">tapestry</property>
-        <property name="hibernate.connection.password">tapestry</property>
         <property name="hbm2ddl.auto">update</property>
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.format_sql">true</property>
+        <!-- c3p0 -->
+        <property name="hibernate.connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</property>
+		<property name="hibernate.c3p0.max_size">50</property>
+		<property name="hibernate.c3p0.min_size">1</property>
+		<property name="hibernate.c3p0.acquire_increment">2</property>
+		<property name="hibernate.c3p0.idle_test_period">60</property> 
+		<property name="hibernate.c3p0.timeout">1800</property>
+		<property name="hibernate.c3p0.max_statements">100</property>
+<!-- 		<property name="hibernate.c3p0.testConnectionOnCheckin">true</property> -->
+<!-- 		<property name="hibernate.c3p0.preferredTestQuery">select 1</property> -->
     </session-factory>
 </hibernate-configuration>
