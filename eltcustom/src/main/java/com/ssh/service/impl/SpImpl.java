@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ssh.base.SqlDao;
 import com.ssh.dao.SpDao;
 import com.ssh.dao.TblSpDao;
 import com.ssh.dao.TblSplDao;
@@ -25,6 +26,9 @@ public class SpImpl implements SpService{
 	private TblSpDao tspDao;
 	@Resource
 	private TblSplDao tsplDao;
+	@Resource
+	private SqlDao sqldao;
+
 	public List<Map<String, Object>> getTjsp(Long jf, int limit){
 		return spDao.getTjsp(jf, limit);
 	}
@@ -179,5 +183,18 @@ public class SpImpl implements SpService{
 		String param = " AND t.lb3 = "+lm +" and (s.qbjf - "+jf+" <=100" +
 				" or  "+jf+"- s.qbjf <= 100) order by s.qbjf";
 		return spDao.querySpl(param, limit);
+	}
+
+	public Boolean checkInQyList(String spid) {
+		String param = " AND t.nid = " + spid;
+		String sqlString = this.spDao.pageSqlsp(param);
+		try {
+			List spList = this.sqldao.query(sqlString);
+			if (spList.size() > 0)
+				return Boolean.valueOf(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return Boolean.valueOf(false);
 	}
 }

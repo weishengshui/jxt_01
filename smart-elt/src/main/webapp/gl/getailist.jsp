@@ -90,11 +90,11 @@ try
 		strsql+=" and srsj<='"+esrsj+" 23:59:59'";
 	if (ffzt!=null && ffzt.length()>0)
 		strsql+=" and ffzt="+ffzt;
-	//判断是否是hr发放
-	if (session.getAttribute("ffjf")!=null && session.getAttribute("ffjf").equals("1"))
+	if (session.getAttribute("glqx").toString().indexOf(",11,")!=-1) {
+		strsql+=" and fftype=0 and ffxx=0";
+	} else if (isLeader) {
 		strsql+=" and ffr="+session.getAttribute("ygid");
-	else
-		strsql+=" and ffxx=0";
+	}
 	
 	rs=stmt.executeQuery(strsql);
 	if (rs.next())
@@ -114,12 +114,15 @@ try
 		strsql+=" and f.srsj<='"+esrsj+" 23:59:59'";
 	if (ffzt!=null && ffzt.length()>0)
 		strsql+=" and f.ffzt="+ffzt;
-	if (session.getAttribute("ffjf")!=null && session.getAttribute("ffjf").equals("1"))
-		strsql+=" and ffr="+session.getAttribute("ygid");
-	else
-		strsql+=" and ffxx=0";
+	
+	if (session.getAttribute("glqx").toString().indexOf(",11,")!=-1) {
+		strsql+=" and f.fftype=0 and f.ffxx=0";
+	} else if (isLeader) {
+		strsql+=" and f.ffr="+session.getAttribute("ygid");
+	}
+	
 	strsql+=" order by f.nid desc limit " + (Integer.valueOf(pno)-1)*psize+","+psize;	
-	//out.print(strsql);
+	
 	rs=stmt.executeQuery(strsql);
 	while (rs.next())
 	{

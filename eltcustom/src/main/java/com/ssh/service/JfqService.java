@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ssh.entity.TblJfqmc;
+import com.ssh.entity.TblSyqyjfq;
 
 public interface JfqService {
 	public List<Map<String, Object>> getJfqbyUid(String userid, int limit);
@@ -23,4 +24,6 @@ public interface JfqService {
     public TblJfqmc findById(Integer id);
     public TblJfqmc[] findByIds(Integer[] ids);
 	
+	public List<Map<String, Object>> getylqmrjfq(String paramString);
+	public boolean syqylqjfq(TblSyqyjfq paramTblSyqyjfq);
 }

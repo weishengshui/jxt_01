@@ -156,8 +156,9 @@ try
                           	<li><input type="checkbox" name="xtsz" id="xtsz" onclick="allcheck(2)"/> 操作设置：</li>
                           	<li>　　<input type="checkbox" name="glqx2" id="glqx2" value="10" <%if (glqx.indexOf(",10,")>-1) out.print("checked='checked'"); %> /> 购买积分：用于企业购买积分，该积分可用于向员工发放或购买福利发放给员工</li>
 						  	<li>　　<input type="checkbox" name="glqx2" id="glqx2" value="11" <%if (glqx.indexOf(",11,")>-1) out.print("checked='checked'"); %> /> 发放积分：用于设置发放给员工和授权给部门积分</li>
-						  	<li>　　<input type="checkbox" name="glqx2" id="glqx2" value="12" <%if (glqx.indexOf(",12,")>-1) out.print("checked='checked'"); %> /> 购买福利：用于企业使用积分购买相关的积分券</li>						  
+						  	<li>　　<input type="checkbox" name="glqx2" id="glqx2" value="12" <%if (glqx.indexOf(",12,")>-1) out.print("checked='checked'"); %> /> 购买福利：用于企业使用积分购买相关的福利券</li>						  
 						  	<li>　　<input type="checkbox" name="glqx2" id="glqx2" value="13" <%if (glqx.indexOf(",13,")>-1) out.print("checked='checked'"); %> /> 发放福利：用于设置发放给员工和授权给部门积分</li>
+						  	<li>　　<input type="checkbox" name="glqx2" id="glqx2" value="14" <%if (glqx.indexOf(",14,")>-1) out.print("checked='checked'"); %> /> 福利商城：用于设置购买商品和生成福利券</li>
                           	</ul></div>
                           </td>
                         </tr>

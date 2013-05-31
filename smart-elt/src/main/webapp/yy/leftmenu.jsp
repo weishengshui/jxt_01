@@ -69,7 +69,7 @@ if (menun!=null && menun.substring(0,2).equals("20"))
 
 if (menun!=null && menun.substring(0,2).equals("30"))
 {
-	out.print("<div class='lefttop'><span>积分券管理</span></div><ul class='leftlist'>");
+	out.print("<div class='lefttop'><span>福利券管理</span></div><ul class='leftlist'>");
 	if (session.getAttribute("xtczqx")!=null && session.getAttribute("xtczqx").toString().indexOf("3001")>-1)
 	{
 		if (menun!=null && menun.equals("3001"))
@@ -80,16 +80,16 @@ if (menun!=null && menun.substring(0,2).equals("30"))
 	if (session.getAttribute("xtczqx")!=null && session.getAttribute("xtczqx").toString().indexOf("3002")>-1)
 	{
 		if (menun!=null && menun.equals("3002"))
-			out.print("<li class=\"current\"><a href=\"jifenjuanhuodong.jsp\">积分券活动管理</a></li>");
+			out.print("<li class=\"current\"><a href=\"jifenjuanhuodong.jsp\">福利券活动管理</a></li>");
 		else
-			out.print("<li><a href=\"jifenjuanhuodong.jsp\">积分券活动管理</a></li>");
+			out.print("<li><a href=\"jifenjuanhuodong.jsp\">福利券活动管理</a></li>");
 	}
 	if (session.getAttribute("xtczqx")!=null && session.getAttribute("xtczqx").toString().indexOf("3003")>-1)
 	{
 		if (menun!=null && menun.equals("3003"))
-			out.print("<li class=\"current\"><a href=\"jifenjuan.jsp\">积分券内容管理</a></li>");
+			out.print("<li class=\"current\"><a href=\"jifenjuan.jsp\">福利券内容管理</a></li>");
 		else
-			out.print("<li><a href=\"jifenjuan.jsp\">积分券内容管理</a></li>");
+			out.print("<li><a href=\"jifenjuan.jsp\">福利券内容管理</a></li>");
 	}
 	
 }
@@ -227,5 +227,26 @@ if (menun!=null && menun.substring(0,2).equals("90"))
 			out.print("<li><a href=\"helpgl.jsp\">帮助中心管理</a></li>");
 	}
 	
+	if (session.getAttribute("xtczqx")!=null && session.getAttribute("xtczqx").toString().indexOf("9005")>-1)
+	{
+		if (menun!=null && menun.equals("9005"))
+			out.print("<li class=\"current\"><a href=\"emailconfig.jsp\">发送邮件设置</a></li>");
+		else
+			out.print("<li><a href=\"emailconfig.jsp\">发送邮件设置</a></li>");
+	}
+	if (session.getAttribute("xtczqx")!=null && session.getAttribute("xtczqx").toString().indexOf("9007")>-1)
+	{
+		if (menun!=null && menun.equals("9007"))
+			out.print("<li class=\"current\"><a href=\"emailTemplate.jsp\">邮件模板设置</a></li>");
+		else
+			out.print("<li><a href=\"emailTemplate.jsp\">邮件模板设置</a></li>");
+	}
+	if (session.getAttribute("xtczqx")!=null && session.getAttribute("xtczqx").toString().indexOf("9006")>-1)
+	{
+		if (menun!=null && menun.equals("9006"))
+			out.print("<li class=\"current\"><a href=\"entreport.jsp\">企业汇总表</a></li>");
+		else
+			out.print("<li><a href=\"entreport.jsp\">企业汇总表</a></li>");
+	}
 }
 %>

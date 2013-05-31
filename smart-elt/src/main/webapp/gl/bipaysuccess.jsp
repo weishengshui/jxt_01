@@ -18,7 +18,7 @@
 <%@ page import="com.tenpay.util.TenpayUtil"%> 
 
 <%
-if (session.getAttribute("glqx").toString().indexOf(",10,")==-1) 
+if (!isAuth && !isLeader) 
 	response.sendRedirect("main.jsp");
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -102,8 +102,11 @@ try
 					</li>
 				</ul>	
 				<div class="paydetail">恭喜您，您的订单 <span class="txt1"><%=bh%></span> 已经生成，您已选择“线下支付”，请将购买积分款项（<%=total_fee%>元）支付到合同约定的公司账号<br/><br/>您购买的<%=zzjf%>积分将在线下支付成功之后到账，感谢您的使用！ </div>
-				
+				<%if (isAuth) {%>
 				<div class="paytishi">您目前公司账户积分余额 <span><%=session.getAttribute("qyjf")%></span></div>
+				<%} else if (isLeader) { %>
+				<div class="paytishi">您目前账户积分余额 <span><%=session.getAttribute("qyjf")%></span></div>
+				<%} %>
 				<div class="paybtnbox2">					<a href="assignintegral.jsp" class="ffjfbtn2"></a>
 					<span>您还可以进行以下操作</span>
 					<a href="buyintegral.jsp" class="jsgmbtn2"></a>
@@ -203,14 +206,17 @@ try
 					  		
   							//PayLogger.getLogger().log(out_trade_no,"success",queryReq.getRequestURL(),debuginfo,"");
 		
-  							strsql="select qy,zzjf,zzje,zzzt from tbl_jfzz where zzbh='"+bh+"' for update";
+  							strsql="select qy,zzjf,zzje,zzzt,zztype,zzr from tbl_jfzz where zzbh='"+bh+"' for update";
 							rs=stmt.executeQuery(strsql);
+  							int zztype=0,zzr=0;
 							if (rs.next())
 							{
 								qy=rs.getInt("qy");
 								zzzt=rs.getInt("zzzt");
 								total_fee=rs.getDouble("zzje");
 								zzjf=rs.getInt("zzjf");
+								zztype=rs.getInt("zztype");
+								zzr=rs.getInt("zzr");
 							}
 							rs.close();
 							
@@ -224,14 +230,54 @@ try
 								}
 								else
 								{
-								
-									//更新企业积分
-									strsql="update tbl_qy set jf=jf+"+String.valueOf(total_fee*10)+" where nid="+qy;
-									stmt.executeUpdate(strsql);
-									
 									//更新状态					
 									strsql="update tbl_jfzz set zzzt=3,dzjf="+String.valueOf(total_fee*10)+",fksj=now(),zzfs=2 where zzbh='"+bh+"'";
 									stmt.executeUpdate(strsql);
+									
+									//zztype 0:企业HR和管理员  1:部门leader 2:小组leader 3:员工既是部门leader,又是小组leader
+									if (zztype==0) {
+										//更新企业积分
+										strsql="update tbl_qy set jf=jf+"+String.valueOf(total_fee*10)+" where nid="+qy;
+										stmt.executeUpdate(strsql);
+									} else {
+										String ffh=zzr+String.valueOf(Calendar.getInstance().getTimeInMillis());
+										strsql="insert into tbl_jfff (qy,ffjf,ffr,ffsj,ffzt,ffh,fftype) values("+qy+","+zzjf+","+zzr+",now(),1,'"+ffh+"',"+zztype+")";
+										stmt.executeUpdate(strsql);
+										
+										strsql="select nid from tbl_jfff where qy="+qy+" and ffr="+zzr+" and ffh='"+ffh+"'";
+										rs=stmt.executeQuery(strsql);
+										String jfffId="";
+										if (rs.next())
+										{
+											jfffId=rs.getString("nid");
+										}
+										rs.close();
+										
+										//1:部门 2:小组
+										int fflx=1;
+										if (zztype==2) {
+											fflx=2;
+											strsql="select nid,xzmc as mc from tbl_qyxz where ld="+zzr;
+										} else {
+											fflx=1;
+											strsql="select nid,bmmc as mc from tbl_qybm where ld="+zzr;
+										}
+										rs=stmt.executeQuery(strsql);
+										String nid="0";
+										String mc="";
+										if (rs.next())
+										{
+											nid=rs.getString("nid");
+											mc=rs.getString("mc");
+										}
+										rs.close();
+										
+										strsql="insert into tbl_jfffxx (qy,jfff,fflx,lxbh,jf,ldbh,jsmc) values("+qy+","+jfffId+","+fflx+","+nid+","+zzjf+","+zzr+",'"+mc+"')";
+										stmt.executeUpdate(strsql);
+
+										getjfxx(stmt, session);
+										out.print("<script type='text/javascript'>reftopjfxx('"+session.getAttribute("hrffjf")+"', '"+session.getAttribute("gmjf")+"');</script>");
+									}
 									
 									long newqyjf=Integer.valueOf(session.getAttribute("qyjf").toString())+Math.round(total_fee*10);
 									session.setAttribute("qyjf",newqyjf);

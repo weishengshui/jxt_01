@@ -1,6 +1,7 @@
 <%@page import="org.apache.velocity.Template"%>
 <%@page import="org.apache.velocity.VelocityContext"%>
 <%@page import="org.apache.velocity.app.Velocity"%>
+<%@page import="jxt.elt.common.EmailTemplate"%>
 <%@page import="java.io.StringWriter"%>
 <%@page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@page import="java.sql.Connection"%>
@@ -143,9 +144,12 @@ try{
 			stmt.executeUpdate(strsql);
 			
 			SecurityUtil su=new SecurityUtil();
-			Random rand=new Random();
-			int dlmm=rand.nextInt(999999);
-			if (dlmm<100000) dlmm=100000+dlmm;
+// 			Random rand=new Random();
+// 			int dlmm=rand.nextInt(999999);
+// 			if (dlmm<100000) dlmm=100000+dlmm;
+			
+			// 试用账号发送默认密码“111111”
+			int dlmm = 111111;
 			strsql="select qymc,lxr,lxremail from tbl_qy where nid="+qyid;
 			rs=stmt.executeQuery(strsql);
 			if (rs.next())
@@ -176,7 +180,8 @@ try{
 			context.put("loginAccount", email);
 			context.put("loginPassword", dlmm);
 			
-			Template template = Velocity.getTemplate("templates/mail/testaccountgenerated.vm");
+// 			Template template = Velocity.getTemplate("templates/mail/testaccountgenerated.vm");
+			Template template = EmailTemplate.getTemplate("testaccountgenerated.vm");
 			StringWriter sw = new StringWriter();
 			template.merge(context, sw);
 			String mailContent = sw.toString();
@@ -205,9 +210,12 @@ try{
 	if (naction!=null && naction.equals("audit2"))
 	{
 		SecurityUtil su=new SecurityUtil();
-		Random rand=new Random();
-		int dlmm=rand.nextInt(999999);
-		if (dlmm<100000) dlmm=100000+dlmm;
+// 		Random rand=new Random();
+// 		int dlmm=rand.nextInt(999999);
+// 		if (dlmm<100000) dlmm=100000+dlmm;
+
+		// 试用账号发送默认密码“111111”
+		int dlmm = 111111;
 		strsql="select qymc,lxr,lxremail from tbl_qy where nid="+qyid;
 		rs=stmt.executeQuery(strsql);
 		if (rs.next())
@@ -240,7 +248,8 @@ try{
 		context.put("loginAccount", email);
 		context.put("loginPassword", dlmm);
 		
-		Template template = Velocity.getTemplate("templates/mail/testresetpwd.vm");
+// 		Template template = Velocity.getTemplate("templates/mail/testresetpwd.vm");
+		Template template = EmailTemplate.getTemplate("testresetpwd.vm");
 		StringWriter sw = new StringWriter();
 		template.merge(context, sw);
 		String mailContent = sw.toString();

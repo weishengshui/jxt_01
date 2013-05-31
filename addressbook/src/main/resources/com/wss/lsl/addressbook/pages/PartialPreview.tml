@@ -2,96 +2,96 @@
 	xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter">
 
 	<!-- 局部预览demo -->
-		<div id="product-intro">
-			<div id="preview">
-				<div id="spec-n1" class="jqzoom"
-					onclick="window.open('http://www.jd.com/bigimage.aspx?id=849503')"
-					clstag="shangpin|keycount|product|spec-n1">
-					<img data-img="1" width="350" height="350"
-						src="http://img13.360buyimg.com/n1/g7/M03/0D/11/rBEHZVCXJvUIAAAAAAEq4uvrNhYAACpeQN9OZcAASr6498.jpg"
-						alt="宏碁（acer） EC-471G-53214G50Mnks 14.0英寸笔记本电脑 (i5-3210M 4G 500G GT630M 1G独显 Linux)"
-						jqimg="http://img13.360buyimg.com/n0/g7/M03/0D/11/rBEHZVCXJvUIAAAAAAEq4uvrNhYAACpeQN9OZcAASr6498.jpg" />
-				</div>
+	<div id="product-intro">
+		<div id="preview">
+			<div id="spec-n1" class="jqzoom"
+				onclick="window.open('http://www.jd.com/bigimage.aspx?id=849503')"
+				clstag="shangpin|keycount|product|spec-n1">
+				<img data-img="1" width="350" height="350"
+					src="images/merchandise/normal/1.jpg"
+					alt="宏碁（acer） EC-471G-53214G50Mnks 14.0英寸笔记本电脑 (i5-3210M 4G 500G GT630M 1G独显 Linux)"
+					jqimg="images/merchandise/big/1.jpg" />
+			</div>
 
-				<div id="spec-list" clstag="shangpin|keycount|product|spec-n5">
-					<a href="javascript:;" class="spec-control" id="spec-forward"></a>
-					<a href="javascript:;" class="spec-control" id="spec-backward"></a>
-					<div class="spec-items">
-						<ul class="lh">
-							<li>
-								<img data-img="1" class="img-hover"
-									alt="宏碁（acer） EC-471G-53214G50Mnks 14.0英寸笔记本电脑 (i5-3210M 4G 500G GT630M 1G独显 Linux)"
-									src="http://img13.360buyimg.com/n5/g7/M03/0D/11/rBEHZVCXJvUIAAAAAAEq4uvrNhYAACpeQN9OZcAASr6498.jpg"
-									width="50" height="50"
-									data-url="g7/M03/0D/11/rBEHZVCXJvUIAAAAAAEq4uvrNhYAACpeQN9OZcAASr6498.jpg" />
-							</li>
-							<li>
-								<img data-img="1"
-									alt="宏碁（acer） EC-471G-53214G50Mnks 14.0英寸笔记本电脑 (i5-3210M 4G 500G GT630M 1G独显 Linux)"
-									src="http://img13.360buyimg.com/n5/1141/818c13c7-6169-4625-9cf9-5758b9ef0aaa.jpg"
-									width="50" height="50"
-									data-url="1141/818c13c7-6169-4625-9cf9-5758b9ef0aaa.jpg" />
-							</li>
-							<li>
-								<img data-img="1"
-									alt="宏碁（acer） EC-471G-53214G50Mnks 14.0英寸笔记本电脑 (i5-3210M 4G 500G GT630M 1G独显 Linux)"
-									src="http://img13.360buyimg.com/n5/4729/efa38177-0c01-4c9b-86e5-11fb18e0d255.jpg"
-									width="50" height="50"
-									data-url="4729/efa38177-0c01-4c9b-86e5-11fb18e0d255.jpg" />
-							</li>
-							<li>
-								<img data-img="1"
-									alt="宏碁（acer） EC-471G-53214G50Mnks 14.0英寸笔记本电脑 (i5-3210M 4G 500G GT630M 1G独显 Linux)"
-									src="http://img13.360buyimg.com/n5/705/ddf7ae75-ca27-4b59-983f-a81c856af686.jpg"
-									width="50" height="50"
-									data-url="705/ddf7ae75-ca27-4b59-983f-a81c856af686.jpg" />
-							</li>
-							<li>
-								<img data-img="1"
-									alt="宏碁（acer） EC-471G-53214G50Mnks 14.0英寸笔记本电脑 (i5-3210M 4G 500G GT630M 1G独显 Linux)"
-									src="http://img13.360buyimg.com/n5/1681/7f3e864b-172e-4f63-a30b-68ffed324c49.jpg"
-									width="50" height="50"
-									data-url="1681/7f3e864b-172e-4f63-a30b-68ffed324c49.jpg" />
-							</li>
-							<li>
-								<img data-img="1"
-									alt="宏碁（acer） EC-471G-53214G50Mnks 14.0英寸笔记本电脑 (i5-3210M 4G 500G GT630M 1G独显 Linux)"
-									src="http://img13.360buyimg.com/n5/2657/f3549d45-3ec4-453c-bb6c-d83a04e4979b.jpg"
-									width="50" height="50"
-									data-url="2657/f3549d45-3ec4-453c-bb6c-d83a04e4979b.jpg" />
-							</li>
-						</ul>
-					</div>
+			<div id="spec-list" clstag="shangpin|keycount|product|spec-n5">
+				<a href="javascript:;" class="spec-control" id="spec-forward"></a>
+				<a href="javascript:;" class="spec-control" id="spec-backward"></a>
+				<div class="spec-items">
+					<ul class="lh">
+						<li>
+							<img data-img="1" class="img-hover"
+								alt="宏碁（acer） EC-471G-53214G50Mnks 14.0英寸笔记本电脑 (i5-3210M 4G 500G GT630M 1G独显 Linux)"
+								src="images/merchandise/small/1.jpg" width="50" height="50" />
+						</li>
+						<li>
+							<img data-img="1"
+								alt="宏碁（acer） EC-471G-53214G50Mnks 14.0英寸笔记本电脑 (i5-3210M 4G 500G GT630M 1G独显 Linux)"
+								src="images/merchandise/small/2.jpg" width="50" height="50" />
+						</li>
+						<li>
+							<img data-img="1"
+								alt="宏碁（acer） EC-471G-53214G50Mnks 14.0英寸笔记本电脑 (i5-3210M 4G 500G GT630M 1G独显 Linux)"
+								src="images/merchandise/small/3.jpg" width="50" height="50" />
+						</li>
+						<li>
+							<img data-img="1"
+								alt="宏碁（acer） EC-471G-53214G50Mnks 14.0英寸笔记本电脑 (i5-3210M 4G 500G GT630M 1G独显 Linux)"
+								src="images/merchandise/small/4.jpg" width="50" height="50" />
+						</li>
+						<li>
+							<img data-img="1"
+								alt="宏碁（acer） EC-471G-53214G50Mnks 14.0英寸笔记本电脑 (i5-3210M 4G 500G GT630M 1G独显 Linux)"
+								src="images/merchandise/small/5.jpg" width="50" height="50" />
+						</li>
+						<li>
+							<img data-img="1"
+								alt="宏碁（acer） EC-471G-53214G50Mnks 14.0英寸笔记本电脑 (i5-3210M 4G 500G GT630M 1G独显 Linux)"
+								src="images/merchandise/small/6.jpg" width="50" height="50" />
+						</li>
+					</ul>
 				</div>
+			</div>
 
-			</div><!--preview end -->
-		</div><!--product-intro end -->
-	
+		</div><!--preview end -->
+	</div><!--product-intro end -->
+
 	<!-- import -->
 
 	<!-- import -->
 	<script type="text/javascript">
-    	window.pageConfig = {
-			compatible: true,
-       		product: {
-				skuid: 849503,
-				name: '\u5b8f\u7881\uff08\u0061\u0063\u0065\u0072\uff09\u0020\u0045\u0043\u002d\u0034\u0037\u0031\u0047\u002d\u0035\u0033\u0032\u0031\u0034\u0047\u0035\u0030\u004d\u006e\u006b\u0073\u0020\u0031\u0034\u002e\u0030\u82f1\u5bf8\u7b14\u8bb0\u672c\u7535\u8111\u0020\u0028\u0069\u0035\u002d\u0033\u0032\u0031\u0030\u004d\u0020\u0034\u0047\u0020\u0035\u0030\u0030\u0047\u0020\u0047\u0054\u0036\u0033\u0030\u004d\u0020\u0031\u0047\u72ec\u663e\u0020\u004c\u0069\u006e\u0075\u0078\u0029',
-				skuidkey:'6535D2B3D6FC992E6641FB347AB55DBC',
-				href: 'http://item.jd.com/849503.html',
-				src: 'g7/M03/0D/11/rBEHZVCXJvUIAAAAAAEq4uvrNhYAACpeQN9OZcAASr6498.jpg',
-				cat: [670,671,672],
-				brand: 1000,
-				tips: false,
-				type: 1
-			}
+		window.pageConfig = {
+		compatible: true,
+		product: {
+		skuid: 849503,
+		name:
+		'\u5b8f\u7881\uff08\u0061\u0063\u0065\u0072\uff09\u0020\u0045\u0043\u002d\u0034\u0037\u0031\u0047\u002d\u0035\u0033\u0032\u0031\u0034\u0047\u0035\u0030\u004d\u006e\u006b\u0073\u0020\u0031\u0034\u002e\u0030\u82f1\u5bf8\u7b14\u8bb0\u672c\u7535\u8111\u0020\u0028\u0069\u0035\u002d\u0033\u0032\u0031\u0030\u004d\u0020\u0034\u0047\u0020\u0035\u0030\u0030\u0047\u0020\u0047\u0054\u0036\u0033\u0030\u004d\u0020\u0031\u0047\u72ec\u663e\u0020\u004c\u0069\u006e\u0075\u0078\u0029',
+		skuidkey:'6535D2B3D6FC992E6641FB347AB55DBC',
+		href:
+		'http://item.jd.com/849503.html',
+		src:
+		'g7/M03/0D/11/rBEHZVCXJvUIAAAAAAEq4uvrNhYAACpeQN9OZcAASr6498.jpg',
+		cat: [670,671,672],
+		brand: 1000,
+		tips: false,
+		type: 1
+		}
 		};
 	</script>
 
-<!-- 	<script src="${pshowJS}" language="JavaScript"></script> -->
+	<t:loop source="pshowJS" value="var:ppshow">
+		<script src="${var:ppshow}" language="JavaScript"></script>
+	</t:loop>
 
-<script type="text/javascript" src="http://misc.360buyimg.com/lib/js/2012/base-v1.js" charset="gb2312"></script>
-<script type="text/javascript" src="http://misc.360buyimg.com/lib/js/e/jquery-1.2.6.pack.js"></script>
-<script type="text/javascript" src="http://misc.360buyimg.com/lib/js/2012/lib-v1.js"></script>
-<script type="text/javascript" src="http://misc.360buyimg.com/product/js/2012/iplocation_server.js"></script>
-<script type="text/javascript" src="http://misc.360buyimg.com/product/js/2012/product.js"></script>
+	<!-- <script src="${pshowJS[0]}" language="JavaScript" charset="gb2312"></script> -->
+	<!-- <script src="${pshowJS[1]}" language="JavaScript"></script> -->
+	<!-- <script src="${pshowJS[2]}" language="JavaScript"></script> -->
+	<!-- <script src="${pshowJS[3]}" language="JavaScript"></script> -->
+	<!-- <script src="${pshowJS[4]}" language="JavaScript"></script> -->
+
+	<!-- <script type="text/javascript" src="http://misc.360buyimg.com/lib/js/2012/base-v1.js" 
+		charset="gb2312"></script> -->
+	<!-- <script type="text/javascript" src="http://misc.360buyimg.com/lib/js/e/jquery-1.2.6.pack.js"></script> -->
+	<!-- <script type="text/javascript" src="http://misc.360buyimg.com/lib/js/2012/lib-v1.js"></script> -->
+	<!-- <script type="text/javascript" src="http://misc.360buyimg.com/product/js/2012/iplocation_server.js"></script> -->
+	<!-- <script type="text/javascript" src="http://misc.360buyimg.com/product/js/2012/product.js"></script> -->
 </html>

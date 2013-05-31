@@ -23,9 +23,8 @@ public class ShdzDaoImpl extends BaseDAO<TblShdz, Integer> implements ShdzDao {
 			.getName());
 
 	public List<Map<String, Object>> getShdzByUid(String userid) {
-		String sql = " SELECT t.nid,t.yg,t.shr,t.sheng,t.shi,t.qu,t.dz,t.yb,t.dh,IF(s.nid IS NULL,0,1) AS mr FROM " +
-					" tbl_shdz t LEFT JOIN tbl_qyyg s ON t.nid = s.shdz AND t.yg = s.nid " +
-					" WHERE t.yg="+userid+" ORDER BY rq DESC ";
+		String sql = " SELECT t.nid,t.yg,t.shr,t.sheng,t.shi,t.qu,t.dz,t.yb,t.dh,IF(s.nid IS NULL,0,1) AS mr FROM  tbl_shdz t LEFT JOIN tbl_qyyg s ON t.nid = s.shdz AND t.yg = s.nid  WHERE t.yg="
+				+ userid + " ORDER BY rq DESC ";
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		try {
 			list = sqldao.query(sql);

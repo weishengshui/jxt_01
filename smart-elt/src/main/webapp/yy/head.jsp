@@ -3,7 +3,7 @@
   <tr>
     <td style="border-bottom:4px #4f8d02 solid"><table width="100%" border="0" cellspacing="0" cellpadding="0">
       <tr>
-        <td width="256"><img src="images/logo.jpg" /></td>
+        <td width="256"><img style="width: 256px; height: 82px;" src="images/IReward-logo-white2.jpg" /></td>
         <td valign="bottom" style="background:url(images/top-bg.jpg) repeat-x bottom"><table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td height="26" align="right" bgcolor="#f4f4f4"><span class="toptxt1">欢迎您：<%=session.getAttribute("xtdlm")%></span><span class="toptxt2"><a href="pwdedit.jsp">修改密码</a></span><span class="toptxt2"><a href="logout.jsp">安全退出</a></span></td>
@@ -57,11 +57,11 @@
 							else
 								out.print("<li><a ");
 							if (session.getAttribute("xtczqx").toString().indexOf("3001")>-1)
-								out.print("href=\"huodongleimu.jsp\">积分券管理</a></li>");
+								out.print("href=\"huodongleimu.jsp\">福利券管理</a></li>");
 							else if (session.getAttribute("xtczqx").toString().indexOf("3002")>-1)
-								out.print("href=\"jifenjuanhuodong.jsp\">积分券管理</a></li>");
+								out.print("href=\"jifenjuanhuodong.jsp\">福利券管理</a></li>");
 							else if (session.getAttribute("xtczqx").toString().indexOf("3003")>-1)
-								out.print("href=\"jifenjuan.jsp\">积分券管理</a></li>");
+								out.print("href=\"jifenjuan.jsp\">福利券管理</a></li>");
 						}
 					    if (session.getAttribute("xtczqx").toString().indexOf("40")>-1)
 						{

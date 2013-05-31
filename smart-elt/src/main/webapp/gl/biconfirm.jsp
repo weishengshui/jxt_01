@@ -4,7 +4,7 @@
 <%@ include file="../common/hrlogcheck.jsp" %>
 <%@page import="jxt.elt.common.DbPool"%>
 <%
-if (session.getAttribute("glqx").toString().indexOf(",10,")==-1) 
+if (!isAuth && !isLeader) 
 	response.sendRedirect("main.jsp");
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -36,7 +36,9 @@ SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
 						<div class="local3-3"><h1>订单成功</h1></div>
 					</li>
 				</ul>
+				<%if (isAuth) {%>
 				<div class="gsjf-states">尊敬的<%=session.getAttribute("qymc")%>，您目前公司账户积分：<em class="yellowtxt txtsize16"><%=session.getAttribute("qyjf")%></em><%if (session.getAttribute("djjf")!=null && !session.getAttribute("djjf").equals("0")) {%>，冻结积分：<em class="yellowtxt txtsize16"><%=session.getAttribute("djjf")%></em><%} %></div>
+				<%} %>
 				<form name="buyform" id="buyform" action="bipay.jsp" method="post">
 				<input type="hidden" name="gmh" id="gmh"  value="<%=session.getAttribute("ygid").toString()+String.valueOf(Calendar.getInstance().getTimeInMillis())%>"/>
 				<ul class="gs-states">
@@ -84,7 +86,7 @@ SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
 					</li>
 				</ul>
 				</form>
-				<div class="querenbox"><span class="floatleft"><a href="#" class="querenbtn" onclick="javascript:document.getElementById('buyform').submit();"></a></span><span class="modify"><a href="#" onclick="javascript:history.back(-1);">修改订单</a></span></div>
+				<div class="querenbox"><span class="floatleft"><a href="#" class="querenbtn" onclick="javascript:document.getElementById('buyform').submit();"></a></span><span class="modify"><a href="#" onclick="javascript:history.back();return false;">修改订单</a></span></div>
 		  </div>
 	  	</div>
 	</div>

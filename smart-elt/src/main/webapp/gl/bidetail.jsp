@@ -9,7 +9,7 @@
 <%@ include file="../common/hrlogcheck.jsp" %>
 <%@page import="jxt.elt.common.DbPool"%>
 <%
-if (session.getAttribute("glqx").toString().indexOf(",10,")==-1) 
+if (!isAuth && !isLeader) 
 	response.sendRedirect("main.jsp");
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

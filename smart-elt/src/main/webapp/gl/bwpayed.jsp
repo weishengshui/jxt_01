@@ -7,7 +7,7 @@
 <%@ include file="../common/hrlogcheck.jsp" %>
 <%@page import="jxt.elt.common.DbPool"%>
 <%
-if (session.getAttribute("glqx").toString().indexOf(",12,")==-1) 
+if (session.getAttribute("glqx").toString().indexOf(",12,")==-1 && !isLeader) 
 	response.sendRedirect("main.jsp");
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -46,21 +46,47 @@ try{
 		
 		
 		
-		strsql="select ddbh,ddjf,zt,ddsj from tbl_jfqdd where nid="+jfqdd;
+		strsql="select ddbh,ddjf,zt,ddsj,ddtype from tbl_jfqdd where nid="+jfqdd;
 		rs=stmt.executeQuery(strsql);
+		int ddtype=0;
 		if (rs.next())
 		{
-			ddjf=rs.getString("ddjf");	
+			ddjf=rs.getString("ddjf");
 			ddsj=sf.format(rs.getDate("ddsj"));
 			nowzt=rs.getInt("zt");
+			ddtype=rs.getInt("ddtype");
 		}
 		rs.close();
 		
-		if (Integer.valueOf(session.getAttribute("qyjf").toString())<Integer.valueOf(ddjf))
+		int kyjf=0;
+		boolean isGly=session.getAttribute("glqx").toString().indexOf(",12,")!=-1;
+		String ffbm = session.getAttribute("ffbm").toString();
+	    if ("''".equals(ffbm)) {
+	    	ffbm = "-1";
+	    }
+	    String ffxz = session.getAttribute("ffxz").toString();
+	    if ("''".equals(ffxz)) {
+	    	ffxz = "-1";
+	    }
+		if (isGly) {
+			kyjf=Integer.valueOf(session.getAttribute("qyjf").toString());
+		} else if (isLeader){
+			
+			strsql="select sum(x.jf-x.yffjf) from tbl_jfffxx x inner join tbl_jfff f on x.jfff=f.nid where ((x.fflx=1 and x.lxbh in ("+ffbm+")) or (x.fflx=2 and x.lxbh in ("+ffxz+"))) and x.jf<>x.yffjf  and f.ffzt=1 and f.fftype>0";			
+			
+			rs=stmt.executeQuery(strsql);
+			if (rs.next())
 			{
-				response.sendRedirect("bwpay.jsp?jid="+jfqdd);
-				return;
+				kyjf=rs.getInt(1);
 			}
+			rs.close();
+		}
+		
+		if (kyjf<Integer.valueOf(ddjf))
+		{
+			response.sendRedirect("bwpay.jsp?jid="+jfqdd);
+			return;
+		}
 		
 		if (nowzt==1)
 		{
@@ -88,13 +114,46 @@ try{
 			rs.close();
 		}
 		
-		//企业表中扣去积分
-		strsql="update tbl_qy set jf=jf-"+ddjf+" where nid="+session.getAttribute("qy");
-		stmt.execute(strsql);
-		
+		String qyid=session.getAttribute("qy").toString();
+		Integer newqyjf = 0;
+		if (isGly) {
+			//企业表中扣去积分
+			strsql="update tbl_qy set jf=jf-"+ddjf+" where nid="+qyid;
+			stmt.execute(strsql);
+			newqyjf=Integer.valueOf(session.getAttribute("qyjf").toString())-Integer.valueOf(ddjf);
+		} else if (isLeader){
+            strsql="select x.nid, (x.jf-x.yffjf) as ye from tbl_jfffxx x inner join tbl_jfff f on x.jfff=f.nid where ((x.fflx=1 and x.lxbh in ("+ffbm+")) or (x.fflx=2 and x.lxbh in ("+ffxz+"))) and x.jf<>x.yffjf  and f.ffzt=1 and f.fftype>0 order by ye";			
+			
+			rs=stmt.executeQuery(strsql);
+			int ykjf=0;
+			int ye=0;
+			int ddjfInt=Integer.parseInt(ddjf);
+			int nid=0;
+			Statement stmt2=conn.createStatement();
+			while (rs.next())
+			{
+				nid=rs.getInt("nid");
+				ye=rs.getInt("ye");
+				if (ye>=(ddjfInt-ykjf)) {
+					strsql="update tbl_jfffxx set yffjf=yffjf+"+(ddjfInt-ykjf)+" where nid="+nid;
+					stmt2.execute(strsql);
+					break;
+				} else {
+					strsql="update tbl_jfffxx set yffjf=yffjf+"+ye+" where nid="+nid;
+					stmt2.execute(strsql);
+					ykjf+=ye;
+				}
+			}
+			getjfxx(stmt2, session);
+			stmt2.close();
+			rs.close();
+			
+			newqyjf=Integer.valueOf(session.getAttribute("hrffjf").toString())+ Integer.valueOf(session.getAttribute("gmjf").toString());
+		}
+ 		
 		//更改session中的值 
-		Integer newqyjf=Integer.valueOf(session.getAttribute("qyjf").toString())-Integer.valueOf(ddjf);
 		session.setAttribute("qyjf",newqyjf.toString());
+		
 		
 		//修改订单状态
 		strsql="update tbl_jfqdd set zt=1,ztsj=now() where  nid="+jfqdd;
@@ -104,7 +163,7 @@ try{
 		strsql="update tbl_jfqddmc set zt=1 where jfqdd="+jfqdd;
 		stmt.execute(strsql);
 		
-		//对应具体的积分券
+		//对应具体的福利券
 		
 		
 		ArrayList jfq=new ArrayList();
@@ -112,22 +171,59 @@ try{
 		strsql="select jfq,sl from tbl_jfqddmc where jfqdd="+jfqdd;
 		rs=stmt.executeQuery(strsql);
 		while(rs.next())
-			{
-				jfq.add(rs.getString("jfq"));
-				sl.add(rs.getString("sl"));
-			}
+		{
+			jfq.add(rs.getString("jfq"));
+			sl.add(rs.getString("sl"));
+		}
 		rs.close();
 		
 		//把券对应到企业帐号上
 		for (int i=0;i<jfq.size();i++)
-			{
-				strsql="update tbl_jfqmc set qy="+session.getAttribute("qy")+",jfqdd="+jfqdd+" where nid in (select s.nid from (select nid from tbl_jfqmc where jfq="+jfq.get(i)+" and qy=0 and zt=0 order by nid limit "+sl.get(i)+") as s)";
-				
+		{
+			strsql="update tbl_jfqmc set qy="+qyid+",jfqdd="+jfqdd+" where nid in (select s.nid from (select nid from tbl_jfqmc where jfq="+jfq.get(i)+" and qy=0 and zt=0 order by nid limit "+sl.get(i)+") as s)";
+			stmt.executeUpdate(strsql);
+			
+			if (isLeader) {
+				String ygid=session.getAttribute("ygid").toString();
+				String ffh=ygid+String.valueOf(Calendar.getInstance().getTimeInMillis());
+				strsql="insert into tbl_jfqff (qy,ffjf,ffr,ffsj,jfq,ffzt,ffh,fftype) values("+qyid+","+sl.get(i)+","+ygid+",now(),"+jfq.get(i)+",1,'"+ffh+"',"+ddtype+")";
 				stmt.executeUpdate(strsql);
-				//修改库存
-				strsql="update tbl_jfq set kcsl=kcsl-"+sl.get(i)+" where nid="+jfq.get(i);
+				
+				strsql="select nid from tbl_jfqff where qy="+qyid+" and ffr="+ygid+" order by nid desc limit 1";
+				rs=stmt.executeQuery(strsql);
+				String jfqffId="";
+				if (rs.next())
+				{
+					jfqffId=rs.getString("nid");
+				}
+				rs.close();
+				
+				//1:部门 2:小组
+				int fflx=1;
+				if (ddtype==2) {
+					fflx=2;
+					strsql="select nid,xzmc as mc from tbl_qyxz where ld="+ygid;
+				} else {
+					fflx=1;
+					strsql="select nid,bmmc as mc from tbl_qybm where ld="+ygid;
+				}
+				rs=stmt.executeQuery(strsql);
+				String nid="0";
+				String mc="";
+				if (rs.next())
+				{
+					nid=rs.getString("nid");
+					mc=rs.getString("mc");
+				}
+				rs.close();
+				strsql="insert into tbl_jfqffxx (qy,jfqff,fflx,lxbh,jf,jfq,ldbh,jsmc) values("+qyid+","+jfqffId+","+fflx+","+nid+","+sl.get(i)+","+jfq.get(i)+","+ygid+",'"+mc+"')";
 				stmt.executeUpdate(strsql);
 			}
+			
+			//修改库存
+			strsql="update tbl_jfq set kcsl=kcsl-"+sl.get(i)+" where nid="+jfq.get(i);
+			stmt.executeUpdate(strsql);
+		}
 		
 	}
 	

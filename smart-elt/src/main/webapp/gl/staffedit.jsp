@@ -1,6 +1,7 @@
 <%@page import="org.apache.velocity.Template"%>
 <%@page import="org.apache.velocity.VelocityContext"%>
 <%@page import="org.apache.velocity.app.Velocity"%>
+<%@page import="jxt.elt.common.EmailTemplate"%>
 <%@page import="java.io.StringWriter"%>
 <%@page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@page import="java.sql.Connection"%>
@@ -28,8 +29,7 @@ if (session.getAttribute("glqx").toString().indexOf(",4,")==-1)
 <script type="text/javascript" src="js/calendar3.js"></script>
 <script type="text/javascript">
 function saveit()
-{
-	
+{		
 	if (document.getElementById("ygxm").value=="")
 	{
 		alert("请填写员工姓名！");
@@ -45,9 +45,46 @@ function saveit()
 		alert("填写的邮箱格式不正确！");
 		return false;
 	}
-	document.getElementById("naction").value="save";
-	document.getElementById("yform").submit();
+	
+	if (document.getElementById("lxdh").value != "")
+	{
+		if (!checkMobile(document.getElementById("lxdh").value))
+		{
+			alert("不是完整的11位手机号或者正确的手机号前七位"); 
+			return false;
+		}
+	}
+	
+	if (document.getElementsByName("zt")[1].checked == true)
+	{
+		if(window.confirm("录入离职员工后档案将不可编辑，是否提交并录入？"))
+		{
+			document.getElementById("email").value = document.getElementById("email").value.replace('@','$');						
+		    document.getElementById("naction").value="save";
+			document.getElementById("yform").submit();
+		}
+		else
+		{
+			document.getElementsByName("zt")[1].focus();
+		}
+	}
+	else
+	{
+		 document.getElementById("naction").value="save";
+		 document.getElementById("yform").submit();
+	}
+	
 }
+
+function checkMobile(sMobile){ 
+	if(!(/^1[0-9]{10}$/.test(sMobile))){
+        return false;
+    }
+    else
+    {
+    	return true; 
+    }
+} 
 
 var bml=1;
 function bmshow(v,l)
@@ -75,6 +112,10 @@ function showbm()
 		catch(exception){}
 	}
 }
+function comboselectvaluechange()
+{
+	document.yform.gzxz.value=document.yform.gzxzselect.options[document.yform.gzxzselect.selectedIndex].value;
+}
 </script>
 <link rel="shortcut icon" href="<%=request.getContextPath() %>/images/favicon.ico" type="image/x-icon" /></head>
  <body>
@@ -86,7 +127,7 @@ Connection conn=DbPool.getInstance().getConnection();
 Statement stmt=conn.createStatement();
 ResultSet rs=null;
 Fun fun=new Fun();
-String strsql="",naction="",ygid="",ygbh="",ygxm="",xb="",bm="",zw="",zsld="",lxdh="",email="",csrj="",zt="",rzsj="",bm1="",bm2="",bm3="",bm4="",bm5="";
+String strsql="",naction="",ygid="",ygbh="",ygxm="",xb="",bm="",zw="",zsld="",lxdh="",email="",csrj="",zt="",rzsj="",bm1="",bm2="",bm3="",bm4="",bm5="",gzxz="";
 naction=request.getParameter("naction");
 ygid=request.getParameter("ygid");
 if (ygid==null) ygid="";
@@ -106,6 +147,7 @@ if (naction!=null && naction.equals("save"))
 	csrj=request.getParameter("csrj");
 	zt=request.getParameter("zt");
 	rzsj=request.getParameter("rzsj");
+	gzxz=request.getParameter("gzxz");
 	if (bm1!=null && !bm1.equals(""))
 		bm="," + bm1+",";
 	if (bm2!=null && !bm2.equals(""))
@@ -122,7 +164,6 @@ if (naction!=null && naction.equals("save"))
 	
 }
 
-
 if (!fun.sqlStrCheck(ygid) || !fun.sqlStrCheck(ygbh) || !fun.sqlStrCheck(ygxm) || !fun.sqlStrCheck(xb) || !fun.sqlStrCheck(bm) || !fun.sqlStrCheck(zw) || !fun.sqlStrCheck(zsld) || !fun.sqlStrCheck(lxdh)|| !fun.sqlStrCheck(email)|| !fun.sqlStrCheck(csrj)|| !fun.sqlStrCheck(zt)|| !fun.sqlStrCheck(rzsj))
 {
 	return;
@@ -134,20 +175,23 @@ try
 		{
 			if (ygid!=null && !ygid.equals(""))
 			{
-				strsql="select nid from tbl_qyyg where nid!="+ygid+" and email='"+email+"'";
-				rs=stmt.executeQuery(strsql);
-				if (rs.next())
+				if (zt.equals("1"))
 				{
+					strsql="select nid from tbl_qyyg where nid!="+ygid+" and email='"+email+"'";
+					rs=stmt.executeQuery(strsql);
+					if (rs.next())
+					{
+						rs.close();
+						out.print("<script type='text/javascript'>");
+		        	    out.print("alert('此邮箱已经有人使用！');");
+		        	    out.print("history.back(-1);");
+		        	    out.print("</script>");
+		        	    return;
+					}
 					rs.close();
-					out.print("<script type='text/javascript'>");
-	        	    out.print("alert('此邮箱已经有人使用！');");
-	        	    out.print("history.back(-1);");
-	        	    out.print("</script>");
-	        	    return;
 				}
-				rs.close();
 				
-				strsql="update tbl_qyyg set ygbh='"+ygbh+"',ygxm='"+ygxm+"',xb="+xb+",bm='"+bm+"',lxdh='"+lxdh+"',zt="+zt;
+				strsql="update tbl_qyyg set ygbh='"+ygbh+"',ygxm='"+ygxm+"',xb="+xb+",bm='"+bm+"',lxdh='"+lxdh+"',gzxz='"+gzxz+"',zt="+zt;
 				if (zt.equals("1"))
 					strsql+=",email='"+email+"'";
 				else
@@ -161,35 +205,41 @@ try
 			}
 			else
 			{
-				strsql="select nid from tbl_qyyg where email='"+email+"'";
-				rs=stmt.executeQuery(strsql);
-				if (rs.next())
+				System.out.println("打印zt数据"+zt);
+				if (zt.equals("1"))
 				{
-					rs.close();
-					out.print("<script type='text/javascript'>");
-	        	    out.print("alert('此邮箱已经有人使用！');");
-	        	    out.print("history.back(-1);");
-	        	    out.print("</script>");
-	        	    return;
+					strsql="select nid from tbl_qyyg where email='"+email+"'";
+					rs=stmt.executeQuery(strsql);
+					if (rs.next())
+					{
+						rs.close();
+						out.print("<script type='text/javascript'>");
+		        	    out.print("alert('此邮箱已经有人使用！');");
+		        	    out.print("history.back(-1);");
+		        	    out.print("</script>");
+		        	    return;
+					}
+				    rs.close();
 				}
-				rs.close();
 				
 				SecurityUtil su=new SecurityUtil();
 				Random rand=new Random();
 				int dlmm=rand.nextInt(999999);
 				if (dlmm<100000) dlmm=100000+dlmm;
 				
-				strsql="insert into tbl_qyyg (qy,ygbh,ygxm,xb,bm,lxdh,email,zt,dlmm";
+				strsql="insert into tbl_qyyg (qy,ygbh,ygxm,xb,bm,lxdh,email,zt,dlmm,gzxz";
 				if (csrj!=null && csrj.length()>0)
 					strsql+=",csrj";
 				if (rzsj!=null && rzsj.length()>0)
 					strsql+=",rzsj";
-				strsql+=") values("+session.getAttribute("qy")+",'"+ygbh+"','"+ygxm+"',"+xb+",'"+bm+"','"+lxdh+"','"+email+"',"+zt+",'"+su.md5(String.valueOf(dlmm))+"'";
+				strsql+=") values("+session.getAttribute("qy")+",'"+ygbh+"','"+ygxm+"',"+xb+",'"+bm+"','"+lxdh+"','"+email+"',"+zt+",'"+su.md5(String.valueOf(dlmm))+"','"+gzxz+"'";
 				if (csrj!=null && csrj.length()>0)
 					strsql+=",'"+csrj+"'";
 				if (rzsj!=null && rzsj.length()>0)
 					strsql+=",'"+rzsj+"'";
 				strsql+=")";
+			
+				System.out.println(strsql);
 				stmt.executeUpdate(strsql);
 				
 				//发送初始密码							
@@ -209,7 +259,8 @@ try
 				context.put("loginAccount", email);
 				context.put("loginPassword", dlmm);
 				
-				Template template = Velocity.getTemplate("templates/mail/staffregisterpwd.vm");
+// 				Template template = Velocity.getTemplate("templates/mail/staffregisterpwd.vm");
+				Template template = EmailTemplate.getTemplate("staffregisterpwd.vm");
 				StringWriter sw = new StringWriter();
 				template.merge(context, sw);
 				String mailContent = sw.toString();
@@ -249,6 +300,7 @@ try
 				bm=rs.getString("bm");				
 				lxdh=rs.getString("lxdh")==null?"":rs.getString("lxdh");;
 				email=rs.getString("email");
+				gzxz=rs.getString("gzxz")==null?"":rs.getString("gzxz");
 				if (rs.getDate("csrj")!=null && !rs.getDate("csrj").equals(""))
 				csrj=sf.format(rs.getDate("csrj"));
 				zt=rs.getString("zt");
@@ -383,8 +435,43 @@ try
                           <td>状　　态：</td><td><input type="radio" name="zt" id="zt" value="1" <%if (zt==null || zt.equals("") || zt.equals("1")) out.print("checked='checked'"); %> />在职　　<input type="radio" name="zt" id="zt" value="0" <%if (zt!=null && zt.equals("0")) out.print("checked='checked'"); %> />离职&nbsp;员工离职后该档案不可编辑</td></tr>
   	<tr>
                           <td align="center"></td>
+                          <td>工作性质：</td>
+                          <td>                       
+	   <span id='gzxzlist'>  
+		       <%
+		   	   out.print("<select name='gzxzselect' id='gzxzselect' class=\"comboselect\" onchange=\"comboselectvaluechange();\">");
+		       out.print("<option value=''></option>");
+		       strsql="select gzxz from tbl_qyyg where qy="+session.getAttribute("qy")+" and gzxz <> '' group by gzxz";
+			   rs=stmt.executeQuery(strsql);
+			   String currentValue=null;
+			   while (rs.next())
+			   {		   
+			    if (gzxz.equals(rs.getString("gzxz")))
+			    {
+			    	out.print("<option value='"+rs.getString("gzxz")+"' selected='selected'>"+rs.getString("gzxz")+"</option>"); 	
+			    	currentValue=rs.getString("gzxz");
+			    }
+			    else
+			    {
+					out.print("<option value='"+rs.getString("gzxz")+"'>"+rs.getString("gzxz")+"</option>");
+			    }			    		   		  
+			   }
+			   out.print("</select>");
+		       if (currentValue==null)
+		       {
+		       		out.print("<input type=\"text\" name='gzxz' id='gzxz' class=\'comboinput\' />");
+		       }
+		       else
+		       {
+		    	   out.print("<input type=\"text\" name='gzxz' id='gzxz' class=\"comboinput\" value='"+currentValue+"'/>");
+		       }
+		       %>        
+	   </span>                       
+                          </td></tr>
+  	<tr>
+                          <td align="center"></td>
                           <td>入职时间：</td><td><input  class="input3" type="text" name="rzsj" id="rzsj" value="<%=rzsj%>" onclick="new Calendar().show(this);" /></td></tr>
-  	 <tr>
+  	<tr>
                           <td>&nbsp;</td>
                           <td>&nbsp;</td>
                           <td><span class="floatleft"><a href="javascript:void(0);" class="submit" onclick="saveit()" ></a></span><span class="floatleft" ><a href="staffedit.jsp?ygid=<%=ygid%>" class="reset"></a></span></td>

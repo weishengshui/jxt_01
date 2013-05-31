@@ -143,7 +143,7 @@ try{
          <td width="10">&nbsp;</td>
         <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td><div class="local"><span>积分券管理 &gt; 活动管理 &gt; <%if (hdid!=null && hdid.length()>0) out.print("修改活动"); else out.print("添加活动");%></span><a href="jifenjuanhuodong.jsp" class="back">返回上一页</a></div></td>
+            <td><div class="local"><span>福利券管理 &gt; 活动管理 &gt; <%if (hdid!=null && hdid.length()>0) out.print("修改活动"); else out.print("添加活动");%></span><a href="jifenjuanhuodong.jsp" class="back">返回上一页</a></div></td>
           </tr>
          
           <tr>

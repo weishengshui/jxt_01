@@ -151,7 +151,7 @@ try{
          <td width="10">&nbsp;</td>
         <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td><div class="local"><span>积分券管理 &gt; 活动类目管理 &gt; <%if (lmid!=null && lmid.length()>0) out.print("修改类目"); else out.print("添加类目");%></span><a href="huodongleimu.jsp" class="back">返回上一页</a></div></td>
+            <td><div class="local"><span>福利券管理 &gt; 活动类目管理 &gt; <%if (lmid!=null && lmid.length()>0) out.print("修改类目"); else out.print("添加类目");%></span><a href="huodongleimu.jsp" class="back">返回上一页</a></div></td>
           </tr>
          
           <tr>

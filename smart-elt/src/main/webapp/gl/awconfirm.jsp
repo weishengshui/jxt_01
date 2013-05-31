@@ -76,7 +76,7 @@ try
 		}
 		else
 		{
-			strsql="select sum(sl-ffsl) as haven from tbl_jfqddmc  where qy="+session.getAttribute("qy")+" and zt=1 and sl<>ffsl and jfq="+jfq;
+			strsql="select sum(sl-ffsl) as haven from tbl_jfqddmc  where qy="+session.getAttribute("qy")+" and zt=1 and sl<>ffsl and ddtype=0 and jfq="+jfq;
 			rs=stmt.executeQuery(strsql);
 			if (rs.next())
 			{
@@ -138,7 +138,7 @@ try
 	  	<div class="main2">
 	  		<div class="box">
 				<ul class="local2">
-					<li class="local2-ico3"><h1>选择积分券</h1><h2><%=sf.format(Calendar.getInstance().getTime())%></h2></li>
+					<li class="local2-ico3"><h1>选择福利券</h1><h2><%=sf.format(Calendar.getInstance().getTime())%></h2></li>
 					<li class="local2-ico1"><h1>选择发放对象</h1><h2><%=sf.format(Calendar.getInstance().getTime())%></h2></li>
 					<li class="local2-ico2"><h1 class="current-local">确认发放信息</h1></li>
 					<li><h1>确认发放</h1></li>
@@ -150,7 +150,7 @@ try
 				if (rs.next())
 				{
 				%>
-				<div class="confirm-t">您选择的积分券</div>
+				<div class="confirm-t">您选择的福利券</div>
 				<div class="confirm-states">
 					<h1><img src="../hdimg/<%=rs.getString("hdtp")%>" width="121" height="88" /></h1>
 					<dl>

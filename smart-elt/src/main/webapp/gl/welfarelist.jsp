@@ -38,7 +38,9 @@ try{%>
 	<%@ include file="head.jsp" %>
 	<div id="main">
 		<div class="main2">
+		    <%if (isAuth) {%>
 			<div class="jifeng-t">尊敬的<%=session.getAttribute("qymc")%>，您目前公司账户积分：<em class="yellowtxt txtsize16"><%=session.getAttribute("qyjf")%></em><%if (session.getAttribute("djjf")!=null && !session.getAttribute("djjf").equals("0")) {%>，冻结积分：<em class="yellowtxt txtsize16"><%=session.getAttribute("djjf")%></em><%} %>&nbsp;&nbsp;&nbsp;&nbsp;<a href="buyintegral.jsp">立即充值&gt;&gt;</a></div>
+			<%} %>
 			<div class="subnav">
 				<a href="buywelfare.jsp">推荐</a>
 				<%

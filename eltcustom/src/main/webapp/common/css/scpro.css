@@ -1,0 +1,10 @@
+.scpro {width: 725px; margin-top: 8px; float:left;}
+.scpro li{width: 164px; height: 205px; display: inline; float: left;  padding: 0 8px;}
+.scpro li img{width:159px; height:138px; float:left}
+.scpro li .scpro-title{width:159px;overflow:hidden;height:42px;padding-top:2px;text-align:center;display:table-cell;vertical-align:middle;}
+.scpro li .scpro-title .scpro-title-content{display:block;max-height:42px;width: 159px;overflow:hidden;};
+.scpro li .scpro-money{padding-left:10px; padding-right:20px;line-height:28px; float:left; display:inline-block}
+.scpro li .scpro-money span{font-size:16px;}
+.scpro li .scpro-money2{text-align:center;width:159px; line-height:25px; float:left}
+.scpro li .scpro-money2 label{line-height:25px; padding-right:0;}
+

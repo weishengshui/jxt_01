@@ -1,16 +1,16 @@
 
 String.prototype.trim = function() { 
 	return this.replace(/(^\s*)|(\s*$)/g, ""); 
-} 
+};
 
 Date.prototype.toformat = function(split){
-	if(split == undefined)split="-"
+	if(split == undefined)split="-";
 	var d = this.getDate();
 	var m = this.getMonth()+1;
-	var y = this.getYear();
+	var y = this.getFullYear();
 	var datestr = y+split+(m<10?("0"+m):m)+split+(d<10?("0"+d):d);
 	return datestr;
-}
+};
 
 Number.prototype.toFixed = function( fractionDigits )
 {
@@ -31,7 +31,7 @@ Number.prototype.toFixed = function( fractionDigits )
 	var temp = Math.pow(10, fractionDigits);
 	s = Math.floor(this*temp) + add;
 	return (s/temp).toFixed(2);
-}
+};
 
 Array.prototype.unique = function() {
 	var ret = [], record = {}, it, tmp;
@@ -120,7 +120,7 @@ var getParams = function(classname){
 		or = ' and ('+or.substr(or.indexOf('or')+2)+')';
 	}
 	return str+or+order;
-}
+};
 
 
 function FixWidth(selectObj)
@@ -222,6 +222,69 @@ function delCookie(name){
     if(cval!=null) document.cookie= name + "="+cval+";expires="+exp.toGMTString();
 }
 
+var isWelfareCoupons = function(){
+	var dhfsstr = getCookie("dhfs");
+	if (dhfsstr != "") {
+		if(dhfsstr.indexOf(",") == -1){
+			if (dhfsstr.indexOf("jfq") == 0) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			var dhfsarr = dhfsstr.split(",");
+			for(var i = 0; i < dhfsarr.length; i++){
+				if (dhfsarr[i].indexOf("jfq") != 0) {
+					return false;
+				}
+			}
+			return true;
+		}
+	}
+	return false;
+};
+
+var getSpDhfs = function(sp){
+	var spstr = getCookie("sp");
+	var dhfsstr = getCookie("dhfs");
+	if(spstr==""){
+		return "";
+	}
+	else if(spstr.indexOf(",")==-1){
+		return dhfsstr;
+	}
+	else {
+		var sparr = spstr.split(",");
+		var dhfsarr = dhfsstr.split(",");
+		for(var i=0;i<sparr.length;i++){
+			if(sparr[i]==sp){
+				return dhfsarr[i];
+			}
+		}
+	}
+};
+
+var getFlqJf = function(sps){
+	if(sps==""){
+		return 0;
+	}
+	else{
+		var sparr = sps.split(",");
+		var maxjf=0;
+		var jf=0;
+		for(var i=0;i<sparr.length;i++){
+			if(sparr[i]==""){
+				continue;
+			}
+			jf=getSpDhfs(sparr[i]);
+			if(parseInt(jf)>parseInt(maxjf)){
+				maxjf=jf;
+			}
+		}
+		return maxjf;
+	}
+};
+
 var addShopCar = function(sp,spcount,dhfs){
 	var spstr = getCookie("sp");
 	var dhfsstr = getCookie("dhfs");
@@ -265,7 +328,192 @@ var addShopCar = function(sp,spcount,dhfs){
 	setCookie("dhfs",dhfsstr,10);
 	setCookie("spcount",spcountstr,10);
 	refreshHeadDhlCount();
-}
+};
+
+var addWelfareShopCar = function(sp,spcount,dhfs,jfqmcid){
+	var oldsp = isLqWelfare(jfqmcid);
+	if (oldsp == 0) {
+		addShopCar(sp,spcount,dhfs);
+		addWelfareRecord(sp,jfqmcid);
+	} else {
+		if (oldsp == sp) {
+			//empty here
+		} else {
+			minusWelfare(oldsp,jfqmcid);
+			addShopCar(sp,spcount,dhfs);
+			addWelfareRecord(sp,jfqmcid);
+	    }
+	}
+};
+
+//not get:return 0, get:return sp id
+var isLqWelfare = function(jfqmcid){
+	//usedflq->sp:id,id,...;sp:id,id,...;
+	var usedflq = getCookie("usedflq");
+	if(usedflq==""){
+		return 0;
+	} else {
+		var pos=usedflq.indexOf(":"+jfqmcid+",")!=-1?usedflq.indexOf(":"+jfqmcid+","):usedflq.indexOf(","+jfqmcid+",");
+		if(pos==-1){
+			return 0;
+		} else {
+			var str = usedflq.substring(0,pos+1);
+			var stop = str.lastIndexOf(":");
+			var start = str.lastIndexOf(";");
+			if (start == -1) {
+				start = 0;
+			} else {
+				start += 1;
+			}
+			return str.substring(start,stop);
+		}
+	}
+};
+
+var getSpCount = function(sp){
+	var spstr = getCookie("sp");
+	var spcountstr = getCookie("spcount");
+	if(spstr==""){
+		return 0;
+	}
+	else if(spstr.indexOf(",")==-1){
+		return spstr==sp?spcountstr:0;
+	}
+	else {
+		var sparr = spstr.split(",");
+		var spcountarr = spcountstr.split(",");
+		for(var i=0;i<sparr.length;i++){
+			if(sparr[i]==sp){
+				return spcountarr[i];
+			}
+		}
+	}
+};
+
+var minusSpCount = function(sp){
+	var spstr = getCookie("sp");
+	var dhfsstr = getCookie("dhfs");
+	var spcountstr = getCookie("spcount");
+	if(spstr!=""){
+		if(spstr.indexOf(",")==-1){
+			if(spstr==sp){
+				spcountstr = parseInt(spcountstr)-1;
+			}
+		}
+		else {
+			var sparr = spstr.split(",");
+			var spcountarr = spcountstr.split(",");
+			for(var i=0;i<sparr.length;i++){
+				if(sparr[i]==sp){
+					spcountarr[i] = parseInt(spcountarr[i])-1;
+					break;
+				}
+			}
+			spcountstr = spcountarr.toString();
+		}
+		setCookie("sp",spstr,10);
+		setCookie("dhfs",dhfsstr,10);
+		setCookie("spcount",spcountstr,10);
+	}
+};
+
+var addWelfareRecord = function(sp,jfqmcid){
+	//usedflq->sp:id,id,...;sp:id,id,...;
+	var usedflq = getCookie("usedflq");
+	if(usedflq==""){
+		usedflq=sp+":"+jfqmcid+",;";
+	}else if(usedflq.indexOf(sp+":")==-1){
+		usedflq +=sp+":"+jfqmcid+",;";
+	}else{
+		var frompos=usedflq.indexOf(sp+":");
+		if(frompos!=0){
+			frompos=usedflq.indexOf(";"+sp+":");
+			if(frompos==-1){
+				usedflq +=sp+":"+jfqmcid+",;";
+			}else{
+				frompos+=1;
+				var pos=usedflq.indexOf(";",frompos);
+				usedflq=usedflq.substring(0,pos)+jfqmcid+","+usedflq.substring(pos);
+			}
+		}else{
+			var pos=usedflq.indexOf(";");
+			usedflq=usedflq.substring(0,pos)+jfqmcid+","+usedflq.substring(pos);
+		}
+	}
+	setCookie("usedflq",usedflq,10);
+};
+
+//delete one welfare coupon identity of this product
+var delWelfareRecord = function(sp,jfqmcid){
+	//usedflq->sp:id,id,...;sp:id,id,...;
+	var usedflq = getCookie("usedflq");
+	if(usedflq==""){
+		//empty here
+	}else if(jfqmcid==null||jfqmcid==""){
+		delWelfareSpRecord(sp);
+	}else{
+		var p1=usedflq.indexOf(sp+":");
+		if(p1!=-1){
+			p1=p1==0?0:usedflq.indexOf(";"+sp+":");
+			if(p1!=-1){
+				var p2=usedflq.indexOf(";",p1+1);
+				var p3=usedflq.indexOf(":"+jfqmcid+",")!=-1?usedflq.indexOf(":"+jfqmcid+","):usedflq.indexOf(","+jfqmcid+",");
+				if(p3>p1&&p3<p2){
+					var p4=usedflq.indexOf(":",p1+1);
+					if(p2-p4-2==jfqmcid.length){
+						delWelfareSpRecord(sp);
+					}else{
+						usedflq=usedflq.substring(0,p3+1)+usedflq.substring(p3+jfqmcid.length+2);
+						setCookie("usedflq",usedflq,10);
+					}
+				}
+			}
+		}
+	}
+};
+
+//delete all welfare coupon detail of this product
+var delWelfareSpRecord = function(sp){
+	//usedflq->sp:id,id,...;sp:id,id,...;
+	var usedflq = getCookie("usedflq");
+	if(usedflq==""){
+		//empty here
+	}else{
+		var index=usedflq.indexOf(sp+":");
+		if(index!=-1){
+			var end = usedflq.lastIndexOf(";");
+			if(index==0){
+				var p1=usedflq.indexOf(";");
+				if(p1!=end){
+					usedflq=usedflq.substring(p1+1);
+				}else{
+					usedflq="";
+				}
+			}else{
+				var p2=usedflq.indexOf(";"+sp+":");
+				if(p2!=-1){
+					var p3=usedflq.indexOf(";",p2+1);
+					if(p3!=end){
+						usedflq=usedflq.substring(0,p2+1)+usedflq.substring(p3+1);
+					}else{
+						usedflq=usedflq.substring(0,p2+1);
+					}
+				}
+			}
+		}
+		setCookie("usedflq",usedflq,10);
+	}
+};
+
+var minusWelfare = function(sp,jfqmcid){
+	var spCount = getSpCount(sp);
+	if (spCount == 1) {
+		delShopCar(sp);
+	} else if (spCount > 1) {
+		minusSpCount(sp);
+		delWelfareRecord(sp,jfqmcid);
+	}
+};
 
 var delShopCar = function(sp){
 	var spstr = getCookie("sp");
@@ -279,6 +527,7 @@ var delShopCar = function(sp){
 			delCookie("sp");
 			delCookie("dhfs");
 			delCookie("spcount");
+			delCookie("usedflq");
 		}
 	}
 	else{
@@ -301,9 +550,10 @@ var delShopCar = function(sp){
 		setCookie("sp",spstr,10);
 		setCookie("dhfs",dhfsstr,10);
 		setCookie("spcount",spcountstr,10);
+		delWelfareSpRecord(sp);
 	}
 	refreshHeadDhlCount();
-}
+};
 
 var getShopCarCount = function(){
 	var count = 0;
@@ -321,7 +571,7 @@ var getShopCarCount = function(){
 		}
 		return count;
 	}
-}
+};
 var getShopCarTpyeCount = function(){
 	var count = 0;
 	var spcountstr = getCookie("spcount");
@@ -335,13 +585,14 @@ var getShopCarTpyeCount = function(){
 		var spcountarr = spcountstr.split(",");
 		return spcountarr.length;
 	}
-}
+};
 var removeShopCar = function(){
 	delCookie("sp");
 	delCookie("dhfs");
 	delCookie("spcount");
+	delCookie("usedflq");
 	refreshHeadDhlCount();
-}
+};
 
 function Objsp(sp,sl,dh){
 	this.sp=sp;
@@ -358,7 +609,7 @@ var getShopCarSplist = function(){
 		return sparr;
 	}
 	else if(spstr.indexOf(",")==-1){
-		var so = new Objsp(spstr,countstr,dhstr)
+		var so = new Objsp(spstr,countstr,dhstr);
 		sparr.push(so);
 	}
 	else{
@@ -371,16 +622,16 @@ var getShopCarSplist = function(){
 		}
 	}
 	return sparr;
-}
+};
 var refreshHeadDhlCount = function(){
 	$("#headhdltotal").html(getShopCarTpyeCount());
-}
+};
 
-function U2A(val) { 		
+function U2A(val) {
 	var result = "";
 	var code = val.match(/&#(\d+);/g); 
 	if (code == null) { 
-		return val; 
+		return val;
 	}  
 	for (var i=0; i<code.length; i++) {
 		result += String.fromCharCode(code[i].replace(/[&#;]/g, '')); 

@@ -88,20 +88,21 @@ if(resHandler.isTenpaySign()) {
 		//判断签名及结果
 		if(queryRes.isTenpaySign()&& "0".equals(retcode)){ 
 			// get buyed order info.
-			int zzzt=0,qy=0,sfzk=0;
+			int zzzt=0,qy=0,sfzk=0,zztype=0,zzr=0;
 		  	double total_fee=0;
 		  	int zzjf=0;
 		  	String zzsj = "";
-		  	String qyid="";
-			strsql="select qy,zzje,zzjf,zzsj,zzzt from tbl_jfzz where zzbh="+out_trade_no +" for update";  	
+			strsql="select qy,zzje,zzjf,zzsj,zzzt,zztype,zzr from tbl_jfzz where zzbh="+out_trade_no +" for update";  	
 		  	rs=stmt.executeQuery(strsql);
 		  	if (rs.next())
 		  	{
+				qy=rs.getInt("qy");
 		  		total_fee=rs.getDouble("zzje");
 				zzjf=rs.getInt("zzjf");
 				zzsj=sf.format(rs.getDate("zzsj"));
 				zzzt=rs.getInt("zzzt");
-				qyid=rs.getString("qy");
+				zztype=rs.getInt("zztype");
+				zzr=rs.getInt("zzr");
 		  		rs.close();
 		  	}
 		  	else
@@ -123,13 +124,50 @@ if(resHandler.isTenpaySign()) {
 						}
 						else
 						{
-							//更新企业积分
-							strsql="update tbl_qy set jf=jf+"+String.valueOf(total_fee*10)+" where nid="+qyid;
-							stmt.executeUpdate(strsql);
-							
 							//更新状态					
 							strsql="update tbl_jfzz set zzzt=3,dzjf="+String.valueOf(total_fee*10)+",fksj=now(),zzfs=2 where zzbh='"+out_trade_no+"'";
 							stmt.executeUpdate(strsql);
+							
+							//zztype 0:企业HR和管理员  1:部门leader 2:小组leader 3:员工既是部门leader,又是小组leader
+							if (zztype==0) {
+								strsql="update tbl_qy set jf=jf+"+zzjf+" where nid="+qy;
+								stmt.executeUpdate(strsql);
+							} else {
+								String ffh=zzr+String.valueOf(Calendar.getInstance().getTimeInMillis());
+								strsql="insert into tbl_jfff (qy,ffjf,ffr,ffsj,ffzt,ffh,fftype) values("+qy+","+zzjf+","+zzr+",now(),1,'"+ffh+"',"+zztype+")";
+								stmt.executeUpdate(strsql);
+								
+								strsql="select nid from tbl_jfff where qy="+qy+" and ffr="+zzr+" and ffh='"+ffh+"'";
+								rs=stmt.executeQuery(strsql);
+								String jfffId="";
+								if (rs.next())
+								{
+									jfffId=rs.getString("nid");
+								}
+								rs.close();
+								
+								//1:部门 2:小组
+								int fflx=1;
+								if (zztype==2) {
+									fflx=2;
+									strsql="select nid,xzmc as mc from tbl_qyxz where ld="+zzr;
+								} else {
+									fflx=1;
+									strsql="select nid,bmmc as mc from tbl_qybm where ld="+zzr;
+								}
+								rs=stmt.executeQuery(strsql);
+								String nid="0";
+								String mc="";
+								if (rs.next())
+								{
+									nid=rs.getString("nid");
+									mc=rs.getString("mc");
+								}
+								rs.close();
+								
+								strsql="insert into tbl_jfffxx (qy,jfff,fflx,lxbh,jf,ldbh,jsmc) values("+qy+","+jfffId+","+fflx+","+nid+","+zzjf+","+zzr+",'"+mc+"')";
+								stmt.executeUpdate(strsql);
+							}
 						}
 					}
 					

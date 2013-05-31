@@ -70,10 +70,13 @@ function ckzjjf()
 		return false;
 	}
 }
-
+function removeInputValue() {
+	document.getElementById("zjjf").value="";
+	document.getElementById("ffmm").value="";
+}
 </script>
 <link rel="shortcut icon" href="<%=request.getContextPath() %>/images/favicon.ico" type="image/x-icon" /></head>
-<body>
+<body onload="removeInputValue()">
 <%
 String  menun="1001";
 Fun fun=new Fun();
@@ -137,14 +140,14 @@ try{
 		rs.close();
 		
 		//明细
-		strsql="insert into tbl_syqyjf (qy,yg,jf,zjr,zjsj,bz) values("+qyid+","+ygid+","+zjjf+","+session.getAttribute("xtyh")+",now(),'"+bz+"')";
+		strsql="insert into tbl_syqyjf (qy,yg,jf,zjr,zjsj,bz,sflq) values("+qyid+","+ygid+","+zjjf+","+session.getAttribute("xtyh")+",now(),'"+bz+"',0)";
 		stmt.executeUpdate(strsql);
 		
-		
+		/* 
 		//修改员工积分
 		strsql="update tbl_qyyg set jf=jf+" +zjjf+" where nid="+ygid;
 		stmt.executeUpdate(strsql);
-		
+		 */
 		out.print("<script type='text/javascript'>");
 		out.print("alert('发放成功');"); 
 		out.print("location.href='shiyongqiye.jsp';");
@@ -246,12 +249,12 @@ try{
                         <tr>
                           <td width="30" align="center"><span class="star">*</span></td>
                           <td width="90">发放积分：</td>
-                          <td><input type="text" name="zjjf" id="zjjf" class="input3" onchange="ckzjjf()" maxlength="8" /></td>
+                          <td><input type="text" name="zjjf" id="zjjf" class="input3" autocomplete="off" onchange="ckzjjf()" maxlength="8" /></td>
                         </tr>
                         <tr>
                           <td align="center"><span class="star">*</span></td>
                           <td>发放密码：</td>
-                          <td><input type="password" type="text" name="ffmm" id="ffmm" class="input3" maxlength="8" /></td>
+                          <td><input type="password" type="text" name="ffmm" id="ffmm" autocomplete="off" class="input3" maxlength="8" /></td>
                         </tr>                       
                         <tr>
                           <td valign="top" align="center"><span class="star">*</span></td>

@@ -106,25 +106,66 @@ try{
 	{
 		
 		//积分账户加上积分，修改充值单 数据
-		int nzzzt=0,qyid=0;
+		int nzzzt=0,qy=0,zztype=0,zzr=0;
 		Double nzzje=0.0;
-		strsql="select qy,zzje,zzzt from tbl_jfzz where nid="+zzid;		
+		strsql="select qy,zzje,zzzt,zztype,zzr from tbl_jfzz where nid="+zzid;		
 		rs=stmt.executeQuery(strsql);
 		if (rs.next())
 		{
-			qyid=rs.getInt("qy");
+			qy=rs.getInt("qy");
 			nzzzt=rs.getInt("zzzt");
 			nzzje=rs.getDouble("zzje");
+			zztype=rs.getInt("zztype");
+			zzr=rs.getInt("zzr");
 		}
 		rs.close();
 		
 		if (nzzzt==1)
 		{
+			String zzjf=String.valueOf(nzzje*10);
 			strsql="update tbl_jfzz set zzzt=3,dzjf=zzje*10,fksj=now(),far="+session.getAttribute("xtyh")+",fasj=now() where nid="+zzid;
 			stmt.executeUpdate(strsql);
 			
-			strsql="update tbl_qy set jf=jf+"+String.valueOf(nzzje*10)+" where nid="+qyid;
-			stmt.executeUpdate(strsql);
+			//zztype 0:企业HR和管理员  1:部门leader 2:小组leader 3:员工既是部门leader,又是小组leader
+			if (zztype==0) {
+				strsql="update tbl_qy set jf=jf+"+zzjf+" where nid="+qy;
+				stmt.executeUpdate(strsql);
+			} else {
+				String ffh=zzr+String.valueOf(Calendar.getInstance().getTimeInMillis());
+				strsql="insert into tbl_jfff (qy,ffjf,ffr,ffsj,ffzt,ffh,fftype) values("+qy+","+zzjf+","+zzr+",now(),1,'"+ffh+"',"+zztype+")";
+				stmt.executeUpdate(strsql);
+				
+				strsql="select nid from tbl_jfff where qy="+qy+" and ffr="+zzr+" and ffh='"+ffh+"'";
+				rs=stmt.executeQuery(strsql);
+				String jfffId="";
+				if (rs.next())
+				{
+					jfffId=rs.getString("nid");
+				}
+				rs.close();
+				
+				//1:部门 2:小组
+				int fflx=1;
+				if (zztype==2) {
+					fflx=2;
+					strsql="select nid,xzmc as mc from tbl_qyxz where ld="+zzr;
+				} else {
+					fflx=1;
+					strsql="select nid,bmmc as mc from tbl_qybm where ld="+zzr;
+				}
+				rs=stmt.executeQuery(strsql);
+				String nid="0";
+				String mc="";
+				if (rs.next())
+				{
+					nid=rs.getString("nid");
+					mc=rs.getString("mc");
+				}
+				rs.close();
+				
+				strsql="insert into tbl_jfffxx (qy,jfff,fflx,lxbh,jf,ldbh,jsmc) values("+qy+","+jfffId+","+fflx+","+nid+","+zzjf+","+zzr+",'"+mc+"')";
+				stmt.executeUpdate(strsql);
+			}
 		}
 		
 	}

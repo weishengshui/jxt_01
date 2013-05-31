@@ -58,7 +58,13 @@ public class UserjAction extends JsonAction {
 	public String getqy(){
 		TblQyyg tyg = (TblQyyg) session.get("user");	
 		Map<String,Object> map = new HashMap<String,Object>();
-		map.put("rs", qyyg.getQyinfo(tyg.getQy()));
+		if (tyg != null) {
+			map.put("rs", qyyg.getQyinfo(tyg.getQy()));
+		} else if (session.get("hrygid") != null) {
+			int nid = Integer.parseInt(session.get("hrygid").toString());
+			TblQyyg user = qyyg.findById(Integer.valueOf(nid));
+			map.put("rs", qyyg.getQyinfo(user.getQy().intValue()));
+		}
 		JSON res = JSONObject.fromObject(map);
 		setResult(res);
 		return SUCCESS;

@@ -30,7 +30,16 @@
 			var nowpay=function(){
 				addShopCar('<s:property value="sp"/>',$("#num").val(),$("#zffs").val());
 				window.location="dd!confirm.do";
-			}
+			};
+			var hrnowpay=function(){
+				addShopCar('<s:property value="sp"/>',$("#num").val(),$("#zffs").val());
+				window.location="dd!hrconfirm.do";
+			};
+			var toLogin = function() {
+				if (confirm("您未登录，请回到登录页登录后再操作!")) {
+					window.location = "login.action";
+				}
+			};
 			var createxjtp = function(num){
 				var xjtp = "";
 				for(var i=0;i<num;i++){
@@ -154,7 +163,7 @@
 						$("#spmc").html(row.spmc);
 						$("#qbjf").html(row.qbjf);
 						$("#cpjssp").html(row.spnr);
-						if(row.cxjf!=''&&row.csjf!=0){
+						if(row.cxjf!=''&&row.cxjf!=0){
 							$("#cxjf").html('<strong class="bisque">'+row.cxjf+'</strong>积分');
 							spjf = row.cxjf;
 						}
@@ -166,6 +175,7 @@
 						}
 						else $("#wcdsl").html(row.wcdsl);
 						$("#prostates2").html(row.shfw);
+						checkInQyList();
 						var sl = document.getElementById("zffs");
 						sl.options[sl.length] = new Option(spjf+" 积分", spjf);
 						var timeParam = Math.round(new Date().getTime()/1000);		
@@ -192,7 +202,23 @@
 						});
 						}
 					});
-			};								
+			};
+			
+			var checkInQyList=function(){
+				$.ajax({
+					type : 'POST',datatype : 'json',cache : false,
+					url : 'spj!checkInQyList.do',
+					data : {param:'<s:property value="sp"/>'},
+					async: false,
+					success : function(data){
+							var isIn = data.result;
+							if (!isIn) {
+								$("#canbuy").hide();
+								$("#cannotbuy").hide();
+							}
+						}
+					});
+			};
 							
 			var sptp = function(){
 				var timeParam = Math.round(new Date().getTime()/1000);				
@@ -377,7 +403,8 @@
 <body>
 	<div id="main">
 		<div class="main2">
-			<%@ include file="/jsp/base/headsc.jsp" %>
+			<s:if test="#session.hrqyjf!=null"><%@ include file="/jsp/base/hrheadsc.jsp" %></s:if>
+			<s:else><%@ include file="/jsp/base/headsc.jsp" %></s:else>
 			<div id="wrap">
 				<div id="wrap-left">
 					<div class="local">您正在看：福利商城 &gt; <span id="lbmc1"></span>&gt; <span id="lbmc2"></span>&gt; <span id="lbmc3"></span> </div>
@@ -409,7 +436,10 @@
 									<input id="num"  maxlength="3" onkeyup="checkspnum()" type="text" value="1" class="tb-pro-num" /> 
 								<a id="addicon" onclick="addsp();" style="cursor:pointer"><img src="common/images/icon-add.jpg" /></a></li>
 							<li><label>剩余数量：</label><span id="wcdsl"></span>&nbsp;&nbsp;&nbsp;<span style="display:none" id="kcjg">抱歉，该商品已缺货。</span></li>
-							<li id="canbuy"><a style="cursor:pointer" onclick="nowpay();" class="nowbuy"></a><a style="cursor:pointer" onclick="addsptocar();" class="takein"></a></li>
+							<li id="canbuy">
+								<a style="cursor:pointer" onclick="<s:if test='%{#session.user.nid!=0}'>nowpay();</s:if><s:elseif test="#session.hrqyjf!=null">hrnowpay();</s:elseif><s:else>toLogin();</s:else>" class="nowbuy"></a>
+								<a style="cursor:pointer" onclick="<s:if test='%{#session.user.nid!=0}'>addsptocar();</s:if><s:elseif test="#session.hrqyjf!=null">addsptocar();</s:elseif><s:else>toLogin();</s:else>" class="takein"></a>
+							</li>
 							<li id="cannotbuy" style="display:none"><a class="nonowbuy"></a><a class="notakein"></a></li>
 						</ul>
 					</div>
@@ -472,12 +502,14 @@
 							</ul>
 						</div>						
 					</div>
-					<div class="zthd">
+				    <s:if test="%{#session.user.nid!=0}">
+					  <div class="zthd">
 						<div class="zthd-title"><img src="common/images/title-icon2.gif" width="27" height="25" />
-					  <h1>最近浏览</h1></div> 
+					    <h1>最近浏览</h1></div> 
 						<ul class="zjllin" id="lljllist">
 						</ul>
-					</div>
+					  </div>
+					</s:if>
 				</div>
 			</div>
 			<%@ include file="/jsp/base/bottomnav.jsp" %>

@@ -119,7 +119,7 @@
 						if(row.je!=''&&row.je>0) dhfs = '<p class="scpro-money"><span class="bisque">￥ <strong>'
 							+row.je+'</strong> </span>元+ '+row.jf+' </p>';
 						var str = '<li><a href="sp!detail.do?spl='+row.nid+'"><img src="'+row.lj+'210x210.jpg" title=\"'+ row.mc +'\" /></a>'
-							+'<p class="scpro-title">'+row.mc+'</p>'+dhfs+'<div class="scpro-money2">'
+							+'<p class="scpro-title">'+'<span class="scpro-title-content">'+row.mc+'</span></p>'+dhfs+'<div class="scpro-money2">'
 							+'<label><span class="bisque">'+row.qbjf+'</span> 积分</label></div></li>';
 					  	$("#ffqdlist").append(str);
 					});
@@ -135,7 +135,7 @@
 						if(row.je!=''&&row.je>0) dhfs = '<p class="scpro-money"><span class="bisque">￥ <strong>'
 							+row.je+'</strong> </span>元+ '+row.jf+' </p>';
 						var str = '<li><a href="sp!detail.do?spl='+row.nid+'"><img src="'+row.lj+'210x210.jpg" title=\"'+ row.mc +'\"/></a>'
-							+'<p class="scpro-title">'+row.mc+'</p>'+dhfs+'<div class="scpro-money2">'
+							+'<p class="scpro-title">'+'<span class="scpro-title-content">'+row.mc+'</span></p>'+dhfs+'<div class="scpro-money2">'
 							+'<label><span class="bisque">'+row.qbjf+'</span> 积分</label></div></li>';
 					  	$("#zxsjlist").append(str);
 					});
@@ -163,7 +163,8 @@
 						$("#womanlikelist").append(str);
 					});
 				});
-			};					
+			};		
+			<s:if test="%{#session.user.nid!=0}">
 			var tszk = function(){
 				var timeParam = Math.round(new Date().getTime()/1000);				
 				$.getJSON("spj!tszk.do?time="+timeParam,function(data){
@@ -176,7 +177,8 @@
 						$("#tszklist").append(str);
 					});
 				});
-			};					
+			};	
+			
 			var zjll = function(){
 				var timeParam = Math.round(new Date().getTime()/1000);				
 				$.getJSON("lljlj!profile.do?time="+timeParam, function(data){
@@ -193,7 +195,8 @@
 						$("#zjlllist").append(str);
 					});
 				});
-			};			
+			};
+			</s:if>
 			var splm = function(){
 				var timeParam = Math.round(new Date().getTime()/1000);				
 				$.getJSON("spj!splm.do?time="+timeParam, function(data){
@@ -227,15 +230,18 @@
 				cxhdimg();
 				splm();
 				zshy();
+				<s:if test="%{#session.user.nid!=0}">
 				tszk();
 				zjll();
+				</s:if>
 			});
 		</script>
 	<link rel="shortcut icon" href="<%=request.getContextPath() %>/common/images/favicon.ico" type="image/x-icon" /></head>
 <body>
 	<div id="main">
 		<div class="main2">
-			<%@ include file="/jsp/base/headsc.jsp" %>
+			<s:if test="#session.hrqyjf!=null"><%@ include file="/jsp/base/hrheadsc.jsp" %></s:if>
+			<s:else><%@ include file="/jsp/base/headsc.jsp" %></s:else>
 			<div id="wrap">
 				<div id="wrap-left">
 					<div class="banner">
@@ -281,7 +287,9 @@
 						</div>
 						<div class="hotpro" style="float:right">
 							<div class="hotpro-title"><h1>您的同事正在看...</h1></div>
-							<ul class="hotproin" id="tszklist"></ul>
+							<s:if test="%{#session.user.nid!=0}">
+							  <ul class="hotproin" id="tszklist"></ul>
+							</s:if>
 							<a href="sp!list.do?param=tszk" class="hotmore">更多&gt;&gt;</a>
 						</div>
 					</div>
@@ -294,11 +302,13 @@
 							</ul>
 						</div>
 					</div>
-					<div class="zthd">
+				    <s:if test="%{#session.user.nid!=0}">
+					  <div class="zthd">
 						<div class="zthd-title"><img src="common/images/title-icon2.gif" width="27" height="25" />
-					  <h1>最近浏览</h1></div> 
+					    <h1>最近浏览</h1></div> 
 						<ul class="zjllin" id="zjlllist"></ul>
-					</div>
+					  </div>
+				    </s:if>
 				</div>
 			</div>
 			<%@ include file="/jsp/base/footer.jsp" %>

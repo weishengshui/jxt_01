@@ -77,35 +77,35 @@ try{%>
 	  	<div class="main2">
   		  	<div class="box">
 				<ul class="local2">
-					<li class="local2-ico2"><h1 class="current-local">选择积分券</h1><h2><%=sf.format(Calendar.getInstance().getTime())%></h2></li>
+					<li class="local2-ico2"><h1 class="current-local">选择福利券</h1><h2><%=sf.format(Calendar.getInstance().getTime())%></h2></li>
 					<li class="local2-ico3"><h1>选择发放对象</h1></li>
 					<li class="local2-ico3"><h1>确认发放信息</h1></li>
 					<li><h1>确认发放</h1></li>
 				</ul>
 				<div class="selectsend-top">
-					<h1>您拥有的积分券</h1><div class="selectsend-top-r"><span class="floatleft txtsize14">关键字：</span><input type="text" class="cxinput" name="jfqmc" id="jfqmc" /><span class="floatleft"><span class="caxun" onclick="showbwlist(1)">查 询</span></span></div>
+					<h1>您拥有的福利券</h1><div class="selectsend-top-r"><span class="floatleft txtsize14">关键字：</span><input type="text" class="cxinput" name="jfqmc" id="jfqmc" /><span class="floatleft"><span class="caxun" onclick="showbwlist(1)">查 询</span></span></div>
 				</div>
 				<div class="jftable" style="margin:3px 0 0 8px;"  id="bwlist">
 					<div class="jftable-t">
-						<div class="jf1">积分券</div>
+						<div class="jf1">福利券</div>
 						<div class="jf2">数量(张)</div>
 						<div class="jf2">冻结(张)</div>
 						<div class="jf3">单价(积分)</div>
 						<div class="jf5">有效期</div>
-						<div class="jf4"></div>
+						<div class="jf4">操作</div>
 					</div>
 					<ul class="jfin">
 						<%
 					int ln=0,pages=0;
 					//strsql="select count(*) as hn from (select m.jfq from tbl_jfqddmc m inner join tbl_jfq q on m.jfq=q.nid where m.qy="+session.getAttribute("qy")+" and m.zt=1 and (m.sl<>m.ffsl or m.djsl>0) group by m.jfq,q.mc,q.jf) abc";
-					strsql="select count(*) as hn from (select m.jfq from tbl_jfqddmc m inner join tbl_jfq q on m.jfq=q.nid where m.qy="+session.getAttribute("qy")+" and m.zt=1 and m.sl<>m.ffsl and q.yxq >= curdate() group by m.jfq,q.mc,q.jf) abc";					
+					strsql="select count(*) as hn from (select m.jfq from tbl_jfqddmc m inner join tbl_jfq q on m.jfq=q.nid where m.qy="+session.getAttribute("qy")+" and m.ddtype=0 and m.zt=1 and m.sl<>m.ffsl and q.yxq >= curdate() group by m.jfq,q.mc,q.jf) abc";					
 					rs=stmt.executeQuery(strsql);
 					if (rs.next())
 					{ln=rs.getInt("hn");}
 					rs.close();
 					pages=(ln-1)/10+1;
 					//strsql="select m.jfq,sum(m.sl-m.ffsl) as sysl,sum(m.djsl) as djsl,q.mc,q.jf from tbl_jfqddmc m inner join tbl_jfq q on m.jfq=q.nid where m.qy="+session.getAttribute("qy")+" and m.zt=1 and (m.sl<>m.ffsl or m.djsl>0) group by m.jfq,q.mc,q.jf order by m.nid desc limit 10";					
-					strsql="select m.jfq,sum(m.sl-m.ffsl) as sysl,sum(m.djsl) as djsl,q.nid sid,q.hd hid,q.mc,q.jf, q.yxq as yxq from tbl_jfqddmc m inner join tbl_jfq q on m.jfq=q.nid where m.qy="+session.getAttribute("qy")+" and m.zt=1 and m.sl<>m.ffsl and q.yxq >= curdate() group by m.jfq,q.mc,q.jf order by m.nid desc limit 10";
+					strsql="select m.jfq,sum(m.sl-m.ffsl) as sysl,sum(m.djsl) as djsl,q.nid sid,q.hd hid,q.mc,q.jf, q.yxq as yxq from tbl_jfqddmc m inner join tbl_jfq q on m.jfq=q.nid where m.qy="+session.getAttribute("qy")+" and m.ddtype=0 and m.zt=1 and m.sl<>m.ffsl and q.yxq >= curdate() group by m.jfq,q.mc,q.jf order by m.nid desc limit 10";
 					rs=stmt.executeQuery(strsql);
 					System.out.println(strsql);
 					while(rs.next())
@@ -135,7 +135,7 @@ try{%>
 					<div class="pages-r">
 					<%if (pages>1) out.print("<h2><a href='javascript:void(0);' onclick='showbwlist(2)'>下一页</a></h2>");%>					
 					</div>
-					<div style="clear: both; height: 25px; padding-top:10px; font-weight: bold;"><a href="welfaresendlist.jsp" style="color:#2ea6d7;">积分券发放记录>></a></div>				
+					<div style="clear: both; height: 25px; padding-top:10px; font-weight: bold;"><a href="welfaresendlist.jsp" style="color:#2ea6d7;">福利券发放记录>></a></div>				
 				</div>
 				
 				</div>

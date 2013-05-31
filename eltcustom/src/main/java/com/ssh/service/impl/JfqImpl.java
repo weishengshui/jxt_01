@@ -11,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ssh.dao.JfqDao;
 import com.ssh.dao.JfqmcDao;
+import com.ssh.dao.SyqyjfqDao;
 import com.ssh.entity.TblJfqmc;
+import com.ssh.entity.TblSyqyjfq;
 import com.ssh.service.JfqService;
 import com.ssh.util.SecurityUtil;
 @Service
@@ -21,14 +23,21 @@ public class JfqImpl implements JfqService{
 	private JfqDao jfqDao;
 	@Resource
 	private JfqmcDao jfqmcDao;
-	public List<Map<String, Object>> getJfqbyUid(String userid, int limit){
-		if(SecurityUtil.sqlCheck(userid)) return null;
-		return jfqDao.getJfqbyUid(userid, limit);
-	};
 
-	public List<Map<String,Object>> page(String param,String page,String rp) {
-		if(SecurityUtil.sqlCheck(param)) return null;
-		return jfqDao.page(jfqDao.pageSql(param), page, rp, this.count(param));
+	@Resource
+	private SyqyjfqDao syqyjfqDao;
+
+	public List<Map<String, Object>> getJfqbyUid(String userid, int limit) {
+		if (SecurityUtil.sqlCheck(userid))
+			return null;
+		return this.jfqDao.getJfqbyUid(userid, limit);
+	}
+
+	public List<Map<String, Object>> page(String param, String page, String rp) {
+		if (SecurityUtil.sqlCheck(param))
+			return null;
+		return this.jfqDao.page(this.jfqDao.pageSql(param), page, rp,
+				count(param));
 	}
 	
 	public String count (String param) {
@@ -95,6 +104,15 @@ public class JfqImpl implements JfqService{
 	public List<Map<String, Object>> getJfqs(int yg) {
 		String param = " AND t.qyyg = " + yg ;
 		return  jfqDao.getJfqs(param);
+	}
+
+	public List<Map<String, Object>> getylqmrjfq(String uid) {
+		return this.syqyjfqDao.getylqmrjfq(uid);
+	}
+
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public boolean syqylqjfq(TblSyqyjfq syqyjfq) {
+		return this.syqyjfqDao.save(syqyjfq);
 	}
 	
 }

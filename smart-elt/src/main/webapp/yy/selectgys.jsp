@@ -38,7 +38,7 @@ try
 		<div class="workers" id="dspllist">
 			<div class="workers-t">
 				<div class="workers1">&nbsp;</div>
-				<div class="workers4">供应商品称</div>
+				<div class="workers4">供应商名称</div>
 				<div class="workers1">联系人</div>
 				<div class="workers1">联系电话</div>
 			</div>

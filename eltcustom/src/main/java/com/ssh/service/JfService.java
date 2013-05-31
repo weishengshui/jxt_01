@@ -18,4 +18,10 @@ public interface JfService {
     public boolean[] save(TblJfffmc[] jfffmc);
     public TblJfffmc findById(Integer id);
     public TblJfffmc[] findByIds(Integer[] ids);
+
+	public List<Map<String, Object>> getJfbyUidForSy(String paramString, int paramInt);
+	public boolean sylq(Integer paramInteger);
+	public List<Map<String, Object>> getJfLjsjForSy(String paramString);
+	public List<Map<String, Object>> pagelyForSy(String paramString1, String paramString2, String paramString3);
+	public String countlyForSy(String paramString);
 }

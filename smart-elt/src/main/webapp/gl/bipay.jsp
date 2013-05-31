@@ -13,7 +13,7 @@
 <%@ include file="../common/hrlogcheck.jsp" %>
 <%@page import="jxt.elt.common.DbPool"%>
 <%
-if (session.getAttribute("glqx").toString().indexOf(",10,")==-1) 
+if (!isAuth && !isLeader) 
 	response.sendRedirect("main.jsp");
 
 %>
@@ -146,7 +146,44 @@ try
 	  {
 	  	zzbh=zzbh.substring(0,8)+String.valueOf(Integer.valueOf(zzbh.substring(8))+1);
 	  }
-	  strsql="insert into tbl_jfzz (zzbh,qy,zzjf,zzje,zzbz,zzr,zzsj,gmh) values('"+zzbh+"',"+session.getAttribute("qy")+","+zzjf+","+zzje+",'"+bz+"',"+session.getAttribute("ygid")+",now(),'"+gmh+"')";
+	  
+	  int zztype=0;
+	  int bmxz=0;
+		if (session.getAttribute("glqx").toString().indexOf(",10,")!=-1) {
+			zztype=0;
+			bmxz=0;
+		} else if (isLeader) {
+			String bm="";
+			String xz="";
+			if (session.getAttribute("ffbm") != null) {
+				bm=session.getAttribute("ffbm").toString();
+			}
+			if (session.getAttribute("ffxz") != null) {
+				xz=session.getAttribute("ffxz").toString();
+			}
+			boolean isBm = bm!=null && bm.length()>0 && !"''".equals(bm);
+			boolean isXz = xz!=null && xz.length()>0 && !"''".equals(xz);
+			if (isBm && isXz) {
+				zztype=3;
+				bmxz=0;
+			} else if (isBm) {
+				zztype=1;
+				if (bm.indexOf(',')==-1) {
+					bmxz=Integer.valueOf(bm);
+				} else {
+					bmxz=Integer.valueOf(bm.substring(0, bm.indexOf(',')));
+				}
+			} else if (isXz) {
+				zztype=2;
+				if (xz.indexOf(',')==-1) {
+					bmxz=Integer.valueOf(xz);
+				} else {
+					bmxz=Integer.valueOf(xz.substring(0, xz.indexOf(',')));
+				}
+			}
+		}
+	  
+	  strsql="insert into tbl_jfzz (zzbh,qy,zzjf,zzje,zzbz,zzr,zzsj,gmh,zztype,bmxz) values('"+zzbh+"',"+session.getAttribute("qy")+","+zzjf+","+zzje+",'"+bz+"',"+session.getAttribute("ygid")+",now(),'"+gmh+"',"+zztype+","+bmxz+")";
 	  
 	  stmt.executeUpdate(strsql);
   }
@@ -168,8 +205,9 @@ try
 				</ul>
 				<div class="jfstate">
 					<ul class="jfstate-in">
+					    <%if (isAuth) {%>
 						<li>尊敬的<%=session.getAttribute("qymc")%>，您目前公司账户积分：<em class="yellowtxt txtsize16"><%=session.getAttribute("qyjf")%></em><%if (session.getAttribute("djjf")!=null && !session.getAttribute("djjf").equals("0")) {%>，冻结积分：<em class="yellowtxt txtsize16"><%=session.getAttribute("djjf")%></em><%} %></li>
-						
+						<%} %>
 						<li class="bold">订单<%=zzbh%> 购买 <%=zzjf%>积分，需要支付 <span class="yellowtxt txtsize"><%=zzje%></span> 元</li>
 						<li>备注：<%=bz%></li>
 					</ul>

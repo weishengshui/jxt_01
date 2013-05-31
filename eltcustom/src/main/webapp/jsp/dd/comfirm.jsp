@@ -31,7 +31,7 @@
 				numstr = numstr.substring(0,numstr.length-1);
 				var zjfstr = $("#alljf").html();
 				if($(":radio:checked").length!=1){			
-					$("#ddtip").html("请选择收获地址。");
+					$("#ddtip").html("请选择收货地址。");
 					$("#ddtip").show();
 					var tiptime = setTimeout(tiphide,2000);
 					return false;
@@ -231,7 +231,7 @@
 				if(subtotaljfq == 0){					
 					$("#xj"+sp).html(subtotaljf+"积分 + "+subtotalje+"元");
 				}
-				else $("#xj"+sp).html("积分券 × "+subtotaljfq);
+				else $("#xj"+sp).html("福利券 × "+subtotaljfq);
 			}
 			var listdhl = function(sps){
 				var timeParam = Math.round(new Date().getTime()/1000);				
@@ -364,7 +364,7 @@
 					<p style="display:none" id="bztip"><label style="color:red" class="error">备注最大长度为100个汉字,请减少备注字数。</label></p>
 					<%--<p  id="bzreadbtn"><input class="savebtn" value="" onclick="bzsubmit();" type="submit"/></p>
 				--%></div>
-			</div>
+			</div> 
 			<div class="con-states-title"><h1>商品信息</h1><span class="blue"><a href="#" onclick="returndhl();">【返回购物车修改】</a></span></div>
 			<div class="con-statesin">
 				<table width="100%" border="0" cellspacing="0" cellpadding="0" class="pro-table">
@@ -381,7 +381,7 @@
 						<div class="sum-states">
 						使用积分：<strong class="bisque" id="alljf">0</strong><br />
 						商品金额：<strong class="bisque" id="allje">￥0</strong><br />
-						使用积分券：<strong class="bisque" id="alljfq">0</strong><br />
+						使用福利券：<strong class="bisque" id="alljfq">0</strong><br />
 						运　　费：<strong class="bisque">￥0</strong><br /><br />
 						<strong>使用现金：</strong><strong class="bisque"  id="alljeyf">￥0</strong>
 						</div>

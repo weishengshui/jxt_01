@@ -41,7 +41,7 @@ try{%>
 						<div class="ljf2">名目</div>
 						<div class="ljf3">发放对象</div>
 						<div class="ljf41">发放备注</div>
-						<div class="ljf42">积分券名称</div>
+						<div class="ljf42">福利券名称</div>
 						<div class="ljf5">总数量</div>
 						<div class="ljf6">已发数量</div>										
 						<div class="ljf7"></div>
@@ -49,19 +49,37 @@ try{%>
 					<ul class="jfin">
 						<%
 					int ln=0,pages=0;
-										
-					strsql="select x.nid,x.jsmc,f.ffsj,f.jfq,f.bz,m1.mmmc as mc1,m2.mmmc as mc2,x.jf,x.fflx,x.lxbh,x.yffjf,q.mc from tbl_jfqffxx x inner join tbl_jfqff f on x.jfqff=f.nid left join tbl_jfq q on f.jfq=q.nid left join tbl_jfmm m1 on f.mm1=m1.nid left join tbl_jfmm m2 on f.mm2=m2.nid where ((x.fflx=1 and x.lxbh in ("+session.getAttribute("ffbm")+")) or (x.fflx=2 and x.lxbh in ("+session.getAttribute("ffxz")+"))) and x.jf<>x.yffjf  and f.ffzt=1  order by x.nid desc";
+						String ffbm = session.getAttribute("ffbm").toString();
+					    if ("''".equals(ffbm)) {
+					    	ffbm = "-1";
+					    }
+					    String ffxz = session.getAttribute("ffxz").toString();
+					    if ("''".equals(ffxz)) {
+					    	ffxz = "-1";
+					    }
+					strsql="select x.nid,x.jsmc,f.ffsj,f.jfq,f.bz,m1.mmmc as mc1,m2.mmmc as mc2,x.jf,x.fflx,x.lxbh,x.yffjf,q.mc from tbl_jfqffxx x inner join tbl_jfqff f on x.jfqff=f.nid left join tbl_jfq q on f.jfq=q.nid left join tbl_jfmm m1 on f.mm1=m1.nid left join tbl_jfmm m2 on f.mm2=m2.nid where ((x.fflx=1 and x.lxbh in ("+ffbm+")) or (x.fflx=2 and x.lxbh in ("+ffxz+"))) and x.jf<>x.yffjf  and f.ffzt=1  order by x.nid desc";
 					
 					rs=stmt.executeQuery(strsql);
 					
+					String mmmc="";
+					String bz="";
 					while(rs.next())
-					{						
+					{
+						if (rs.getString("mc2")!=null) {
+							mmmc=rs.getString("mc2");
+						} else if (rs.getString("mc1")!=null) {
+							mmmc=rs.getString("mc1");
+						} else {
+							mmmc="购买福利券";
+						}
+						
+						bz=rs.getString("bz")==null?"":rs.getString("bz");
 					%>
 					<li>
 						<div class="ljfin1"><%=sf.format(rs.getDate("ffsj"))%></div>
-						<div class="ljfin2"><%if (rs.getString("mc2")!=null) out.print(rs.getString("mc2")); else out.print(rs.getString("mc1"));%></div>
+						<div class="ljfin2"><%=mmmc%></div>
 						<div class="ljfin3"><%=rs.getString("jsmc")%></div>
-						<div class="ljfin41" title="<%=rs.getString("bz")%>">&nbsp;<%=rs.getString("bz")%></div>
+						<div class="ljfin41" title="<%=bz%>">&nbsp;<%=bz%></div>
 						<div class="ljfin42"><%=rs.getString("mc")%></div>
 						<div class="ljfin5"><%=rs.getInt("jf")%></div>
 						<div class="ljfin6"><%=rs.getInt("yffjf")%></div>							
@@ -73,7 +91,7 @@ try{%>
 					</ul>
 					
 				</div>
-				<div style="clear: both; height: 25px; padding-top:10px; font-weight: bold;"><a href="leaderwsendlist.jsp" style="color:#2ea6d7;">积分券发放记录>></a></div>
+				<div style="clear: both; height: 25px; padding-top:10px; font-weight: bold;"><a href="leaderwsendlist.jsp" style="color:#2ea6d7;">福利券发放记录>></a></div>
 				</div>
 				
 		  	</div>

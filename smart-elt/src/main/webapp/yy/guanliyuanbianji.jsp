@@ -203,14 +203,14 @@ try{
                           			</tr>
                           			<tr><td colspan="11">
                           				<label style="line-height:12px">
-                          					<input type="checkbox" onclick="checkall(this,'jfqgl')" style="vertical-align: top;" <%if (czqx.indexOf("3001")>-1 ||czqx.indexOf("3002")>-1 || czqx.indexOf("3003")>-1) out.print(" checked='checked'");%>/>&nbsp;积分券管理
+                          					<input type="checkbox" onclick="checkall(this,'jfqgl')" style="vertical-align: top;" <%if (czqx.indexOf("3001")>-1 ||czqx.indexOf("3002")>-1 || czqx.indexOf("3003")>-1) out.print(" checked='checked'");%>/>&nbsp;福利券管理
                           				</label>
                           			</td></tr>
                           			<tr>
                           				<td>&nbsp;</td>
                           				<td><input type="checkbox" class="jfqgl" name="czqxc" id="czqxc" value="3001" <%if (czqx.indexOf("3001")>-1) out.print(" checked='checked'");%> /> 活动类目管理</td>
-                          				<td><input type="checkbox" class="jfqgl" name="czqxc" id="czqxc" value="3002" <%if (czqx.indexOf("3002")>-1) out.print(" checked='checked'");%> /> 积分券活动管理</td>
-                          				<td><input type="checkbox" class="jfqgl" name="czqxc" id="czqxc" value="3003" <%if (czqx.indexOf("3003")>-1) out.print(" checked='checked'");%> /> 积分券内容管理</td>                          				                     				
+                          				<td><input type="checkbox" class="jfqgl" name="czqxc" id="czqxc" value="3002" <%if (czqx.indexOf("3002")>-1) out.print(" checked='checked'");%> /> 福利券活动管理</td>
+                          				<td><input type="checkbox" class="jfqgl" name="czqxc" id="czqxc" value="3003" <%if (czqx.indexOf("3003")>-1) out.print(" checked='checked'");%> /> 福利券内容管理</td>                          				                     				
                           				<td colspan="2"></td>
                           			</tr>
                           			
@@ -258,7 +258,12 @@ try{
                           				<td><input type="checkbox" class="xtgl" name="czqxc" id="czqxc" value="9002" <%if (czqx.indexOf("9002")>-1) out.print(" checked='checked'");%> /> 奖励名目管理</td>
                           				<td><input type="checkbox" class="xtgl" name="czqxc" id="czqxc" value="9003" <%if (czqx.indexOf("9003")>-1) out.print(" checked='checked'");%> /> 参数设置</td>
                           				<td><input type="checkbox" class="xtgl" name="czqxc" id="czqxc" value="9004" <%if (czqx.indexOf("9004")>-1) out.print(" checked='checked'");%> /> 帮助中心管理</td>                           				                     				
-                          				<td colspan="3"></td>
+                          				<td><input type="checkbox" class="xtgl" name="czqxc" id="czqxc" value="9005" <%if (czqx.indexOf("9005")>-1) out.print(" checked='checked'");%> /> 发送邮件设置</td> 
+                          			</tr>
+                          			<tr>
+                          				<td>&nbsp;</td>                        			
+                          				<td><input type="checkbox" class="xtgl" name="czqxc" id="czqxc" value="9007" <%if (czqx.indexOf("9007")>-1) out.print(" checked='checked'");%> /> 邮箱模板设置</td>
+                          				<td colspan="4"><input type="checkbox" class="xtgl" name="czqxc" id="czqxc" value="9006" <%if (czqx.indexOf("9006")>-1) out.print(" checked='checked'");%> /> 企业汇总表</td>
                           			</tr>
                           			</table>
                           </td>

@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import jxt.elt.common.DbPool;
+import jxt.elt.common.EmailTemplate;
 import jxt.elt.common.SendEmailBean;
 
 import org.apache.velocity.Template;
@@ -29,7 +30,7 @@ public class ExpireNotification {
 	public ExpireNotification() throws SQLException {
 		connection = DbPool.getInstance().getConnection();
 		connection.setAutoCommit(false);
-		sendEmailBean = new SendEmailBean();
+		sendEmailBean = new SendEmailBean(0);
 	}
 
 	public void saveNotify(int i, String refId, String jfq, String content)
@@ -219,9 +220,9 @@ public class ExpireNotification {
 					email = staff.getString("email");
 				}
 
-				if (expires != null && expires.size() > 0) {
-					sendMail(email, "0", ygId,
-							"templates/mail/jfqstaffexpirenotify.vm", name,
+				if ((expires != null) && (expires.size() > 0)) {
+					sendMailByNew(email, "0", ygId,
+							"jfqstaffexpirenotify.vm", name,
 							expires);
 				}
 			}
@@ -325,6 +326,30 @@ public class ExpireNotification {
 		}
 	}
 
+
+public void sendMailByNew(String mailTo, String qyId, String ygId, String tempalte, String name, List<ExpireJfqVO> expiryList)
+  {
+    try {
+      VelocityContext context = new VelocityContext();
+      context.put("name", name);
+      context.put("expiryList", expiryList);
+
+      SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+      context.put("fmt", fmt);
+
+      Template template = EmailTemplate.getTemplate(tempalte);
+      StringWriter sw = new StringWriter();
+      template.merge(context, sw);
+      String mailContent = sw.toString();
+
+      this.sendEmailBean.sendHtmlEmail(mailTo, mailContent, "福利券到期提醒");
+    }
+    catch (Exception e)
+    {
+      throw new IllegalStateException(e);
+    }
+  }
+
 	public void jiqExpireHrNofify(Date runningDate) {
 
 		//System.out.println("Entrying jiqExpireHrNofify!");
@@ -402,9 +427,9 @@ public class ExpireNotification {
 					name = staff.getString("lxr");
 					email = staff.getString("lxremail");
 				}
-				if (expirejfqs != null && expirejfqs.size() > 0) {
-					sendMail(email, qy, "0",
-							"templates/mail/jfqhrexpirenotify.vm", name,
+				if ((expirejfqs != null) && (expirejfqs.size() > 0)) {
+					sendMailByNew(email, qy, "0",
+							"jfqhrexpirenotify.vm", name,
 							expirejfqs);
 				}
 			}

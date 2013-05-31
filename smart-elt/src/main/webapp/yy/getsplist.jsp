@@ -53,7 +53,7 @@ if (!fun.sqlStrCheck(pno) || !fun.sqlStrCheck(lb1)  || !fun.sqlStrCheck(ssplmc) 
 	<div class="workers4">商品名</div>
 	<div class="workers1">类目1</div>
 	<div class="workers1">类目2</div>
-	<div class="workers1">类目3</div>
+	<div class="workers1">库存</div>
 </div>
 <ul class="workersin">
 <%

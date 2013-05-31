@@ -63,7 +63,7 @@ function searchit(p)
 }
 function delit(lid)
 {
-	if (confirm("确认删除此库存中的积分券，删除后无法恢复"))
+	if (confirm("确认删除此库存中的福利券，删除后无法恢复"))
 	{
 		location.href="jifenjuan.jsp?naction=del&jfjid="+lid+"&hdmc="+encodeURI(escape(document.getElementById("hdmc").value))+"&jfjmc="+encodeURI(escape(document.getElementById("jfjmc").value))+"&pno=<%=pno%>";
 	}
@@ -91,7 +91,7 @@ try{
 	{		
 		int jhd=0;
 		int jfqn=1;
-		//判断积分券活动是否有效
+		//判断福利券活动是否有效
 		strsql="select j.hd from tbl_jfq j inner join tbl_jfqhd h on j.hd=h.nid where j.nid="+jfjid+" and h.zt=1 and now()>=h.kssj and now()<=h.jssj";
 		rs=stmt.executeQuery(strsql);
 		if (rs.next())
@@ -100,7 +100,7 @@ try{
 		}
 		rs.close();
 		
-		//对应活动还有效，则判断此活动是否还有其他积分券
+		//对应活动还有效，则判断此活动是否还有其他福利券
 		if (jhd>0)
 		{
 			strsql="select count(nid) as hn from tbl_jfq where hd="+jhd+" and nid<>"+jfjid+" and zt=1";
@@ -116,7 +116,7 @@ try{
 		{
 		%>	
 			<script type="text/javascript">
-	   		if (confirm('该积分券对应的活动中没有其他有效积分券了，请下架此对应活动！'))
+	   		if (confirm('该福利券对应的活动中没有其他有效福利券了，请下架此对应活动！'))
 	   			location.href="jifenjuan.jsp?naction=xiajia2&jfjid=<%=jfjid%>";
 	   		else
 	   			locaton.href="jifenjuan.jsp";
@@ -155,18 +155,18 @@ try{
          <td width="10">&nbsp;</td>
         <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td><div class="local"><span>积分券管理&gt; 积分券内容管理</span></div></td>
+            <td><div class="local"><span>福利券管理&gt; 福利券内容管理</span></div></td>
           </tr>
           <tr>
             <td>
 					<div class="caxunbox">
 					<div class="caxun">
 						<span>活动名称：</span><input type="text" class="inputbox" style="width: 80px;" name="hdmc" id="hdmc" value="<%=hdmc%>" />
-						<span>积分券名称：</span><input type="text" class="inputbox" style="width: 80px;" name="jfjmc" id="jfjmc" value="<%=jfjmc%>" />
+						<span>福利券名称：</span><input type="text" class="inputbox" style="width: 80px;" name="jfjmc" id="jfjmc" value="<%=jfjmc%>" />
 								
 						<input name="" type="button"  onclick="searchit(1)" class="findbtn"/>
 					</div>
-					<div class="caxun-r"><a href="jifenjuanbianji.jsp" class="daorutxt">增加积分券</a></div>
+					<div class="caxun-r"><a href="jifenjuanbianji.jsp" class="daorutxt">增加福利券</a></div>
 				</div>
 			</td>
           </tr>
@@ -197,7 +197,7 @@ try{
                 <td><table width="100%" border="0" cellspacing="1" cellpadding="1" class="maintable">
                   <tr>
                    <th width="8%">券编号</th>
-                   <th width="20%">积分券名称</th>            
+                   <th width="20%">福利券名称</th>            
                    <th width="20%">所属活动</th>
                    <th width="10%">有效期</th>                   
                    <th width="8%">积分</th>

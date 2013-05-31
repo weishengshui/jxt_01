@@ -91,6 +91,7 @@ try
 		ffjf=rs.getString("ffjf");
 		ffmm=rs.getString("mc1");
 		if (rs.getString("mc2")!=null) ffmm=ffmm+","+rs.getString("mc2");
+		ffmm=(ffmm==null)?"部门或项目组奖励":ffmm;
 		ffsj=sf.format(rs.getDate("ffsj"));
 		bz=rs.getString("bz");
 		ffzt=rs.getString("ffzt");
@@ -101,8 +102,10 @@ try
 	<%@ include file="head.jsp" %>
 	<div id="main">
 	  	<div class="main2">
-	  		<div class="box">				
+	  		<div class="box">
+	  		    <%if (isAuth) {%>
 				<div class="gsjf-states">尊敬的<%=session.getAttribute("qymc")%>，您目前公司账户积分：<em class="yellowtxt txtsize16"><%=session.getAttribute("qyjf")%></em><%if (session.getAttribute("djjf")!=null && !session.getAttribute("djjf").equals("0")) {%>，冻结积分：<em class="yellowtxt txtsize16"><%=session.getAttribute("djjf")%></em><%} %></div>
+				<%} %>
 				<div class="ffjfbox">
 					<div class="ffjfbox-top">订单  <%=ffbh %> 详细信息</div>
 					<div class="jf-ffmm" style="margin:0"><strong>发放名目</strong>&nbsp;&nbsp;<%=ffmm%></div>

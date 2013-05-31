@@ -4,29 +4,49 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<title>IRewards</title>
-		<meta http-equiv="pragma" content="no-cache">
-		<meta http-equiv="cache-control" content="no-cache">
-		<meta http-equiv="expires" content="0">
-		<link type="text/css" rel="stylesheet" href="common/css/style.css">
+		<meta http-equiv="pragma" content="no-cache" />
+		<meta http-equiv="cache-control" content="no-cache" />
+		<meta http-equiv="expires" content="0" />
+		<link type="text/css" rel="stylesheet" href="common/css/style.css" />
 		<script type="text/javascript" src="common/js/jquery-1.7.min.js"></script>	
 		<script type="text/javascript" src="common/js/jquery.page.js"></script>	
-		<script type="text/javascript" src="common/js/common.js"></script>			
-		<script type="text/javascript">		
+		<script type="text/javascript" src="common/js/common.js"></script>
+		<s:if test="%{#session.userQy.zt==1}">
+		  <script type="text/javascript" src="common/js/defaultWelfare.js"></script>
+		</s:if>	
+		
+		<script type="text/javascript">
 			var jfqsl = function(){
-				var timeParam = Math.round(new Date().getTime()/1000);
-				$.getJSON("jfqj!lqsj.do?time="+timeParam,{param:'<s:property value="yg"/>'}, function(data){
-					if(typeof(data.rows[2])!="undefined"&&data.rows[2].jfqsl!=""){
-						$("#sdjfq").html(data.rows[2].jfqsl);
+				<s:if test="%{#session.userQy.zt==1}">
+// 					var data = defaultWelfare.ylqWelfare('<s:property value="yg"/>');
+// 					$("#sdjfq").html(data);
+// 					$("#syjfq").html(data);
+					var jfqs = defaultWelfare.defaultFL.rows;
+					$("#sdjfq").html(jfqs.length);
+					var syjfq = jfqs.length;
+					for (var i=0; i<jfqs.length; i++) {
+						if (jfqs[i].yxq < new Date().toformat("")) { //已过期
+							syjfq--;
+						}
 					}
-					if(typeof(data.rows[1])!="undefined"&&data.rows[1].jfqsl!=""){
-						$("#ysyjfq").html(data.rows[1].jfqsl);
-					}
-					if(typeof(data.rows[0])!="undefined"&&data.rows[0].jfqsl!=""){
-						$("#syjfq").html(data.rows[0].jfqsl);
-					}
-				});
+					$("#syjfq").html(syjfq);
+				</s:if>
+				<s:else>
+					var timeParam = Math.round(new Date().getTime()/1000);
+					$.getJSON("jfqj!lqsj.do?time="+timeParam,{param:'<s:property value="yg"/>'}, function(data){
+						if(typeof(data.rows[2])!="undefined"&&data.rows[2].jfqsl!=""){
+							$("#sdjfq").html(data.rows[2].jfqsl);
+						}
+						if(typeof(data.rows[1])!="undefined"&&data.rows[1].jfqsl!=""){
+							$("#ysyjfq").html(data.rows[1].jfqsl);
+						}
+						if(typeof(data.rows[0])!="undefined"&&data.rows[0].jfqsl!=""){
+							$("#syjfq").html(data.rows[0].jfqsl);
+						}
+					});
+				</s:else>
 			};
 			var gopage = function(rp,page){
 				$.ajax({
@@ -74,7 +94,7 @@
 					<div class="wrap-right">
 						<div class="list">
 							<div class="list-title"><h1>福利使用明细</h1>
-								<div class="list-title-r">最近三个月共收到积分券 <span class="bisque"><strong id="sdjfq">0</strong></span>
+								<div class="list-title-r">最近三个月共收到福利券 <span class="bisque"><strong id="sdjfq">0</strong></span>
 								张，已经使用 <span class="bisque"><strong id="ysyjfq">0</strong></span>
 								张，剩余 <span class="bisque"><strong id="syjfq">0</strong></span>张</div>
 							</div>

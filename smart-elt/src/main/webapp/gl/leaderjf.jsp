@@ -47,20 +47,57 @@ try{%>
 					</div>
 					<ul class="jfin">
 						<%
-					int ln=0,pages=0;
-										
-					strsql="select x.nid,x.jsmc,f.ffsj,f.bz,m1.mmmc as mc1,m2.mmmc as mc2,x.jf,x.fflx,x.lxbh,x.yffjf from tbl_jfffxx x inner join tbl_jfff f on x.jfff=f.nid left join tbl_jfmm m1 on f.mm1=m1.nid left join tbl_jfmm m2 on f.mm2=m2.nid where ((x.fflx=1 and x.lxbh in ("+session.getAttribute("ffbm")+")) or (x.fflx=2 and x.lxbh in ("+session.getAttribute("ffxz")+"))) and x.jf<>x.yffjf  and f.ffzt=1 order by f.ffsj desc";
+						String ffbm = session.getAttribute("ffbm").toString();
+					    if ("''".equals(ffbm)) {
+					    	ffbm = "-1";
+					    }
+					    String ffxz = session.getAttribute("ffxz").toString();
+					    if ("''".equals(ffxz)) {
+					    	ffxz = "-1";
+					    }
+					    
+						strsql="select nid,jsmc,ffsj,sum(jf) as zjf,sum(yffjf) as zffjf from (select x.nid,x.jsmc,f.ffsj,x.jf,x.yffjf from tbl_jfffxx x inner join tbl_jfff f on x.jfff=f.nid where (f.mm1 is null or f.mm1=0) and f.mm2=0 and ((x.fflx=1 and x.lxbh in ("+ffbm+")) or (x.fflx=2 and x.lxbh in ("+ffxz+"))) and f.ffzt=1 order by f.ffsj desc) as temp";
+						rs=stmt.executeQuery(strsql);
+						// add "rs.getString("nid") != null" condition because there is one record that all column values are null when the above sub query returns no record
+						if (rs.next() && rs.getString("nid") != null && rs.getInt("zjf") > rs.getInt("zffjf")) {
+						%>
+						<li>
+						<div class="ljfin1"><%=sf.format(rs.getDate("ffsj"))%></div>
+						<div class="ljfin2">购买积分</div>
+						<div class="ljfin3">&nbsp;<%=rs.getString("jsmc")==null?"":rs.getString("jsmc")%></div>
+						<div class="ljfin4">&nbsp;</div>
+						<div class="ljfin5"><%=rs.getInt("zjf")%></div>
+						<div class="ljfin6"><%=rs.getInt("zffjf")%></div>							
+						<div class="ljfin7"><a href="leaderai.jsp?xid=<%=rs.getString("nid")%>"><img src="images/fafang.jpg" /></a></div>					
+					</li>
+						<%
+						}
+						rs.close();
+						
+						
+					strsql="select x.nid,x.jsmc,f.ffsj,f.bz,m1.mmmc as mc1,m2.mmmc as mc2,x.jf,x.fflx,x.lxbh,x.yffjf from tbl_jfffxx x inner join tbl_jfff f on x.jfff=f.nid left join tbl_jfmm m1 on f.mm1=m1.nid left join tbl_jfmm m2 on f.mm2=m2.nid where f.mm1 is not null and f.mm1>0 and ((x.fflx=1 and x.lxbh in ("+ffbm+")) or (x.fflx=2 and x.lxbh in ("+ffxz+"))) and x.jf<>x.yffjf  and f.ffzt=1 order by f.ffsj desc";
 					
 					rs=stmt.executeQuery(strsql);
 					
+					String mmmc="";
+					String bz="";
 					while(rs.next())
-					{						
+					{
+						if (rs.getString("mc2")!=null) {
+							mmmc=rs.getString("mc2");
+						} else if (rs.getString("mc1")!=null) {
+							mmmc=rs.getString("mc1");
+						} else {
+							mmmc="购买积分";
+						}
+						
+						bz=rs.getString("bz")==null?"":rs.getString("bz");
 					%>
 					<li>
 						<div class="ljfin1"><%=sf.format(rs.getDate("ffsj"))%></div>
-						<div class="ljfin2"><%if (rs.getString("mc2")!=null) out.print(rs.getString("mc2")); else out.print(rs.getString("mc1"));%></div>
+						<div class="ljfin2"><%=mmmc%></div>
 						<div class="ljfin3">&nbsp;<%=rs.getString("jsmc")==null?"":rs.getString("jsmc")%></div>
-						<div class="ljfin4" title="<%=rs.getString("bz")%>">&nbsp;<%=rs.getString("bz")%></div>
+						<div class="ljfin4" title="<%=bz%>">&nbsp;<%=bz%></div>
 						<div class="ljfin5"><%=rs.getInt("jf")%></div>
 						<div class="ljfin6"><%=rs.getInt("yffjf")%></div>							
 						<div class="ljfin7"><a href="leaderai.jsp?xid=<%=rs.getString("nid")%>"><img src="images/fafang.jpg" /></a></div>					

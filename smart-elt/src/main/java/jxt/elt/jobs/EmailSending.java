@@ -30,9 +30,10 @@ public class EmailSending implements Job {
 			Statement stmt=conn.createStatement();
 			ResultSet rs=null;
 			
-			String nid="",jsyx="",bt="",nr="";
-			Boolean szt=false;
-			String strsql="select nid,jsyx,bt,nr from tbl_yjdf where ljfs=1 order by fsdj desc limit 1";			
+	      	String nid = ""; String jsyx = ""; String bt = ""; String nr = "";
+	     	int qy = 0;
+	      	Boolean szt = Boolean.valueOf(false);
+	      	String strsql = "select nid,jsyx,bt,nr,qy from tbl_yjdf where ljfs=1 order by fsdj desc limit 1";
 			rs=stmt.executeQuery(strsql);
 			if (rs.next())
 			{				
@@ -41,12 +42,13 @@ public class EmailSending implements Job {
 				jsyx=rs.getString(2);
 				bt=rs.getString(3);
 				nr=rs.getString(4);				
+        		qy = rs.getInt(5);
 			}
 			rs.close();
 			
 			if (jsyx!=null && jsyx.length()>0)
 			{
-				SendEmailBean seb=new SendEmailBean();
+				SendEmailBean seb = new SendEmailBean(qy);
 				szt=seb.sendHtmlEmail(jsyx,nr, bt);				
 				if (szt)
 					strsql="insert into tbl_yjyf (qy,yg,fsyx,jsyx,bt,nr,fssj,fslx,fsdj,fszt) select qy,yg,fsyx,jsyx,bt,nr,now(),fslx,fsdj,1 from tbl_yjdf where nid="+nid;

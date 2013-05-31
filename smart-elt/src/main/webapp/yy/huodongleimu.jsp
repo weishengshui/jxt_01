@@ -93,7 +93,7 @@ try{
          <td width="10">&nbsp;</td>
         <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td><div class="local"><span>积分券管理&gt; 活动类目管理</span></div></td>
+            <td><div class="local"><span>福利券管理&gt; 活动类目管理</span></div></td>
           </tr>
           <tr>
             <td>

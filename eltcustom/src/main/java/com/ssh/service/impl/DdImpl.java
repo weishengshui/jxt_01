@@ -30,6 +30,7 @@ import com.ssh.entity.TblSpl;
 import com.ssh.entity.TblYgddmx;
 import com.ssh.entity.TblYgddzb;
 import com.ssh.service.DdService;
+import com.ssh.service.QyService;
 import com.ssh.util.SecurityUtil;
 @Service
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
@@ -127,113 +128,146 @@ public class DdImpl implements DdService{
 	
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	public int vertify(String ddh) {
-		
-		TblYgddzb zb = this.findZbByDdh(ddh);
-		if (zb == null || zb.getState() != 0)
+		TblYgddzb zb = findZbByDdh(ddh);
+		if ((zb == null) || (zb.getState().intValue() != 0))
 			return 0;
-		TblQyyg user = qyygDao.find(zb.getYg());
-		if (user.getJf() < zb.getZjf())
+		TblQyyg user = (TblQyyg) this.qyygDao.find(zb.getYg());
+		if (user.getJf().longValue() < zb.getZjf().intValue())
 			return 2;
-		Map<String,Integer> jfqyfmap = new HashMap<String,Integer>();
-		Map<String,Long> jfqmap = new HashMap<String,Long>();
+		Map<String, Integer> jfqyfmap = new HashMap<String, Integer>();
+		Map<String, Long> jfqmap = new HashMap<String, Long>();
 		Search mxsearch = new Search(TblYgddmx.class);
 		mxsearch.addFilterEqual("ddh", ddh);
-		List<TblYgddmx> mxlist = ygddmxDao.search(mxsearch);
-		for(TblYgddmx mx : mxlist){
-			TblSp tsp = tspDao.find(mx.getSp());
-			if(tsp.getWcdsl()<mx.getSl()) return 4;
-			if(mx.getJfq()!=null&&mx.getJfq()>0){
-				String yfjfq = Integer.toString(mx.getJfq());
-				if(jfqyfmap.get(yfjfq)==null){
+		List<TblYgddmx> mxlist = this.ygddmxDao.search(mxsearch);
+		for (TblYgddmx mx : mxlist) {
+			TblSp tsp = (TblSp) this.tspDao.find(mx.getSp());
+			if (tsp.getWcdsl().intValue() < mx.getSl().intValue())
+				return 4;
+			if ((mx.getJfq() != null) && (mx.getJfq().intValue() > 0)) {
+				String yfjfq = Integer.toString(mx.getJfq().intValue());
+				if (jfqyfmap.get(yfjfq) == null) {
 					jfqyfmap.put(yfjfq, mx.getSl());
-				}
-				else if(jfqyfmap.get(yfjfq)!=null){
-					jfqyfmap.put(yfjfq, jfqyfmap.get(yfjfq)+mx.getSl());
+				} else if (jfqyfmap.get(yfjfq) != null) {
+					jfqyfmap.put(
+							yfjfq,
+							Integer.valueOf(((Integer) jfqyfmap.get(yfjfq))
+									.intValue() + mx.getSl().intValue()));
 				}
 			}
 		}
 		String param = " AND t.qyyg = " + user.getNid();
-		List<Map<String, Object>> jfqlist = jfqDao.getJfqs(param);
-		for(Map<String, Object> l:jfqlist){
-			jfqmap.put(Long.toString((Long)l.get("jfq")), (Long) l.get("jfqcount"));
+		List<Map<String, Object>> jfqlist = this.jfqDao.getJfqs(param);
+		for (Map<String, Object> l : jfqlist) {
+			jfqmap.put(Long.toString(((Long) l.get("jfq")).longValue()),
+					(Long) l.get("jfqcount"));
 		}
-		for(Map.Entry<String, Integer> entry : jfqyfmap.entrySet()){
-			if(jfqmap.get(entry.getKey())==null||jfqmap.get(entry.getKey())<entry.getValue()){
-				return 3;	
-			}				
+		for (Map.Entry<String, Integer> entry : jfqyfmap.entrySet()) {
+			if ((jfqmap.get(entry.getKey()) == null)
+					|| (((Long) jfqmap.get(entry.getKey())).longValue() < ((Integer) entry
+							.getValue()).intValue())) {
+				return 3;
+			}
+		}
+		return 5;
+	}
+
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int hrvertify(String ddh, int qy) {
+		TblYgddzb zb = findZbByDdh(ddh);
+		if ((zb == null) || (zb.getState().intValue() != 0))
+			return 0;
+		if (QyService.getQyJf(qy) < zb.getZjf().intValue())
+			return 2;
+		Search mxsearch = new Search(TblYgddmx.class);
+		mxsearch.addFilterEqual("ddh", ddh);
+		List<TblYgddmx> mxlist = this.ygddmxDao.search(mxsearch);
+		for (TblYgddmx mx : mxlist) {
+			TblSp tsp = (TblSp) this.tspDao.find(mx.getSp());
+			if (tsp.getWcdsl().intValue() < mx.getSl().intValue())
+				return 4;
+			if ((mx.getJfq() != null) && (mx.getJfq().intValue() > 0)) {
+				return 3;
+			}
 		}
 		return 5;
 	};
 		
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	public int pay(String ddh) {
-		
-		TblYgddzb zb = this.findZbByDdh(ddh);
-		if (zb == null || zb.getState() != 0)
+		TblYgddzb zb = findZbByDdh(ddh);
+		if ((zb == null) || (zb.getState().intValue() != 0))
 			return 0;
-		if(zb.getZje()>0){
-			TblPay p = payDao.find(ddh);
-			if (p == null || p.getStatus() != 1)
-				return 1;			
+		if (zb.getZje().doubleValue() > 0.0D) {
+			TblPay p = (TblPay) this.payDao.find(ddh);
+			if ((p == null) || (p.getStatus().intValue() != 1))
+				return 1;
 		}
-		TblQyyg user = qyygDao.find(zb.getYg());
-		if (user.getJf() < zb.getZjf())
+		TblQyyg user = (TblQyyg) this.qyygDao.find(zb.getYg());
+		if (user.getJf().longValue() < zb.getZjf().intValue())
 			return 2;
-		Map<String,Integer> jfqyfmap = new HashMap<String,Integer>();
-		Map<String,Long> jfqmap = new HashMap<String,Long>();
+		Map<String, Integer> jfqyfmap = new HashMap<String, Integer>();
+		Map<String, Long> jfqmap = new HashMap<String, Long>();
 		Search mxsearch = new Search(TblYgddmx.class);
 		mxsearch.addFilterEqual("ddh", ddh);
-		List<TblYgddmx> mxlist = ygddmxDao.search(mxsearch);
-		for(TblYgddmx mx : mxlist){
-			TblSp tsp = tspDao.find(mx.getSp());
-			if(tsp.getWcdsl()<mx.getSl()) return 4;
-			if(mx.getJfq()!=null&&mx.getJfq()>0){
-				String yfjfq = Integer.toString(mx.getJfq());
-				if(jfqyfmap.get(yfjfq)==null){
+		List<TblYgddmx> mxlist = this.ygddmxDao.search(mxsearch);
+		for (TblYgddmx mx : mxlist) {
+			TblSp tsp = (TblSp) this.tspDao.find(mx.getSp());
+			if (tsp.getWcdsl().intValue() < mx.getSl().intValue())
+				return 4;
+			if ((mx.getJfq() != null) && (mx.getJfq().intValue() > 0)) {
+				String yfjfq = Integer.toString(mx.getJfq().intValue());
+				if (jfqyfmap.get(yfjfq) == null) {
 					jfqyfmap.put(yfjfq, mx.getSl());
-				}
-				else if(jfqyfmap.get(yfjfq)!=null){
-					jfqyfmap.put(yfjfq, jfqyfmap.get(yfjfq)+mx.getSl());
+				} else if (jfqyfmap.get(yfjfq) != null) {
+					jfqyfmap.put(
+							yfjfq,
+							Integer.valueOf(((Integer) jfqyfmap.get(yfjfq))
+									.intValue() + mx.getSl().intValue()));
 				}
 			}
 		}
 		String param = " AND t.qyyg = " + user.getNid();
-		List<Map<String, Object>> jfqlist = jfqDao.getJfqs(param);
-		for(Map<String, Object> l:jfqlist){
-			jfqmap.put(Long.toString((Long)l.get("jfq")), (Long) l.get("jfqcount"));
+		List<Map<String, Object>> jfqlist = this.jfqDao.getJfqs(param);
+		for (Map<String, Object> l : jfqlist) {
+			jfqmap.put(Long.toString(((Long) l.get("jfq")).longValue()),
+					(Long) l.get("jfqcount"));
 		}
-		for(Map.Entry<String, Integer> entry : jfqyfmap.entrySet()){
-			if(jfqmap.get(entry.getKey())==null||jfqmap.get(entry.getKey())<entry.getValue()){
-				return 3;	
-			}				
+		for (Map.Entry<String, Integer> entry : jfqyfmap.entrySet()) {
+			if ((jfqmap.get(entry.getKey()) == null)
+					|| (((Long) jfqmap.get(entry.getKey())).longValue() < ((Integer) entry
+							.getValue()).intValue())) {
+				return 3;
+			}
 		}
-		
+
 		Timestamp tsnow = new Timestamp(System.currentTimeMillis());
 		zb.setJsrq(tsnow);
-		zb.setState(1);
-		user.setJf(user.getJf()-zb.getZjf());
+		zb.setState(Integer.valueOf(1));
+		user.setJf(Long.valueOf(user.getJf().longValue()
+				- zb.getZjf().intValue()));
 		TblYgddmx[] ddmx = new TblYgddmx[mxlist.size()];
 		int mxpos = 0;
-		for(TblYgddmx mx : mxlist){
-			mx.setState(1);
+		for (TblYgddmx mx : mxlist) {
+			mx.setState(Integer.valueOf(1));
 			mx.setJssj(tsnow);
-			ddmx[mxpos++] = mx;
+			ddmx[(mxpos++)] = mx;
 		}
 		List<TblJfqmc> jfqmclist = new ArrayList<TblJfqmc>();
-		for(Map.Entry<String, Integer> entry : jfqyfmap.entrySet()){
-			String jfq = entry.getKey();
-			Integer jfqsl = entry.getValue();
+		for (Map.Entry<String, Integer> entry : jfqyfmap.entrySet()) {
+			String jfq = (String) entry.getKey();
+			Integer jfqsl = (Integer) entry.getValue();
 			Search jfqsearch = new Search(TblJfqmc.class);
 			jfqsearch.addFilterEqual("jfq", jfq);
-			jfqsearch.addFilterEqual("zt", 0);
-			jfqsearch.addFilterEqual("sflq", 1);
+			jfqsearch.addFilterEqual("zt", Integer.valueOf(0));
+			jfqsearch.addFilterEqual("sflq", Integer.valueOf(1));
 			jfqsearch.addFilterEqual("qyyg", user.getNid());
-			jfqsearch.addFilterGreaterOrEqual("yxq", new Timestamp(System.currentTimeMillis()-24*3600*1000));
+			jfqsearch.addFilterGreaterOrEqual("yxq",
+					new Timestamp(System.currentTimeMillis() - 86400000L));
 			jfqsearch.addSortAsc("yxq");
-			jfqsearch.setMaxResults(jfqsl);
-			List<TblJfqmc> tlist = jfqmcDao.search(jfqsearch);
-			for(TblJfqmc tblmc:tlist){
-				tblmc.setZt(1);
+			jfqsearch.setMaxResults(jfqsl.intValue());
+			List<TblJfqmc> tlist = this.jfqmcDao.search(jfqsearch);
+			for (TblJfqmc tblmc : tlist) {
+				tblmc.setZt(Integer.valueOf(1));
 				tblmc.setDdh(ddh);
 				tblmc.setSysj(tsnow);
 				jfqmclist.add(tblmc);
@@ -241,22 +275,81 @@ public class DdImpl implements DdService{
 		}
 		TblJfqmc[] jfqmcs = new TblJfqmc[jfqmclist.size()];
 		int jmcpos = 0;
-		for(TblJfqmc jmc:jfqmclist){
-			jfqmcs[jmcpos++] = jmc;
+		for (TblJfqmc jmc : jfqmclist) {
+			jfqmcs[(jmcpos++)] = jmc;
 		}
-		for(TblYgddmx mx : mxlist){
-			TblSp tsp = tspDao.find(mx.getSp());
-			TblSpl tspl = tsplDao.find(tsp.getSpl());
-			if(mx.getJfq()==null||mx.getJfq()==0){
-				tsp.setWcdsl(tsp.getWcdsl()-mx.getSl());
+		for (TblYgddmx mx : mxlist) {
+			TblSp tsp = (TblSp) this.tspDao.find(mx.getSp());
+			TblSpl tspl = (TblSpl) this.tsplDao.find(tsp.getSpl());
+			if ((mx.getJfq() == null) || (mx.getJfq().intValue() == 0)) {
+				tsp.setWcdsl(Integer.valueOf(tsp.getWcdsl().intValue()
+						- mx.getSl().intValue()));
 			}
-			tsp.setXsl(tsp.getXsl()+mx.getSl());
-			tspl.setYdsl(tspl.getYdsl()+mx.getSl());
+			tsp.setXsl(Integer.valueOf(tsp.getXsl().intValue()
+					+ mx.getSl().intValue()));
+			tspl.setYdsl(Integer.valueOf(tspl.getYdsl().intValue()
+					+ mx.getSl().intValue()));
+			this.tspDao.save(tsp);
+			this.tsplDao.save(tspl);
+		}
+		this.jfqmcDao.save(jfqmcs);
+		this.qyygDao.save(user);
+		this.ygddzbDao.save(zb);
+		this.ygddmxDao.save(ddmx);
+		return 5;
+	}
+
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int hrpay(String ddh, int qy) {
+		TblYgddzb zb = findZbByDdh(ddh);
+		if ((zb == null) || (zb.getState().intValue() != 0))
+			return 0;
+		if (zb.getZje().doubleValue() > 0.0D) {
+			TblPay p = (TblPay) this.payDao.find(ddh);
+			if ((p == null) || (p.getStatus().intValue() != 1))
+				return 1;
+		}
+		int qyjf = QyService.getQyJf(qy);
+		if (qyjf < zb.getZjf().intValue())
+			return 2;
+		Search mxsearch = new Search(TblYgddmx.class);
+		mxsearch.addFilterEqual("ddh", ddh);
+		List<TblYgddmx> mxlist = this.ygddmxDao.search(mxsearch);
+		for (TblYgddmx mx : mxlist) {
+			TblSp tsp = (TblSp) this.tspDao.find(mx.getSp());
+			if (tsp.getWcdsl().intValue() < mx.getSl().intValue())
+				return 4;
+			if ((mx.getJfq() != null) && (mx.getJfq().intValue() > 0)) {
+				return 3;
+			}
+		}
+
+		Timestamp tsnow = new Timestamp(System.currentTimeMillis());
+		zb.setJsrq(tsnow);
+		zb.setState(Integer.valueOf(1));
+		qyjf -= zb.getZjf().intValue();
+		TblYgddmx[] ddmx = new TblYgddmx[mxlist.size()];
+		int mxpos = 0;
+		for (TblYgddmx mx : mxlist) {
+			mx.setState(Integer.valueOf(1));
+			mx.setJssj(tsnow);
+			ddmx[(mxpos++)] = mx;
+		}
+		for (TblYgddmx mx : mxlist) {
+			TblSp tsp = (TblSp) this.tspDao.find(mx.getSp());
+			TblSpl tspl = (TblSpl) this.tsplDao.find(tsp.getSpl());
+			if ((mx.getJfq() == null) || (mx.getJfq().intValue() == 0)) {
+				tsp.setWcdsl(Integer.valueOf(tsp.getWcdsl().intValue()
+						- mx.getSl().intValue()));
+			}
+			tsp.setXsl(Integer.valueOf(tsp.getXsl().intValue()
+					+ mx.getSl().intValue()));
+			tspl.setYdsl(Integer.valueOf(tspl.getYdsl().intValue()
+					+ mx.getSl().intValue()));
 			tspDao.save(tsp);
 			tsplDao.save(tspl);
 		}
-		jfqmcDao.save(jfqmcs);
-		qyygDao.save(user);
+		QyService.updateQyJf(qy, qyjf);
 		ygddzbDao.save(zb);
 		ygddmxDao.save(ddmx);
 		return 5;
@@ -278,7 +371,7 @@ public class DdImpl implements DdService{
 
 	public List<Map<String, Object>> getDdMx(int yg, String ddh) {
 		if(SecurityUtil.sqlCheck(ddh)) return null;
-		String param = " AND t.yg = "+yg +" AND t.ddh = "+ddh;
+		String param = " AND t.yg = " + yg + " AND t.ddh = '" + ddh + "'";
 		return ddDao.getDdsp(param);
 	}
 
@@ -298,19 +391,22 @@ public class DdImpl implements DdService{
 
 	public List<Map<String, Object>> getDdByDdh(int yg,String dds) {
 		if(SecurityUtil.sqlCheck(dds)) return null;
-		String param = " AND t.yg = "+yg +" AND t.dd in (" +dds+") order by ddh desc";
+		String param = " AND t.yg = " + yg + " AND t.dd in (" + dds
+				+ ") order by ddh desc";
 		return ddDao.getDdsp(param);
 	}
 
 	public List<Map<String, Object>> getDdZb(int yg,String query) {
-		if(SecurityUtil.sqlCheck(query)) return null;
-		String param = " AND t.yg = "+yg+" "+query+" order by ddh desc";
+		if (SecurityUtil.sqlCheck(query))
+			return null;
+		String param = " AND t.yg = " + yg + " " + query + " order by ddh desc";
 		return ddDao.getDdZb(param);
 	}
 
 	public List<Map<String, Object>> getDdspl(int yg,String ddh) {
-		if(SecurityUtil.sqlCheck(ddh)) return null;
-		String param = " AND t.yg = "+yg+" AND t.ddh = '"+ddh+"'";
+		if (SecurityUtil.sqlCheck(ddh))
+			return null;
+		String param = " AND t.yg = " + yg + " AND t.ddh = '" + ddh + "'";
 		return ddDao.getDdspl(param);
 	}
 
@@ -397,7 +493,7 @@ public class DdImpl implements DdService{
 	}
 
 	public List<Map<String, Object>> getDdCount(int yg) {
-		String param = " AND yg = "+yg;
+		String param = " AND yg = " + yg + " AND ddtype IS NULL";
 		return ddDao.getDdCount(param);
 	}
 }

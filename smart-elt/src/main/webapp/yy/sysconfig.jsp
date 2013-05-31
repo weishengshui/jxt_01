@@ -8,6 +8,20 @@
 <%@page import="jxt.elt.common.SendEmailBean"%>
 <%@ include file="../common/yylogcheck.jsp" %>
 <%@page import="jxt.elt.common.DbPool"%>
+
+<%@page import="org.quartz.CronScheduleBuilder"%>
+<%@page import="org.quartz.CronTrigger"%>
+<%@page import="org.quartz.Job"%>
+<%@page import="org.quartz.JobBuilder"%>
+<%@page import="org.quartz.JobDetail"%>
+<%@page import="org.quartz.JobExecutionContext"%>
+<%@page import="org.quartz.JobExecutionException"%>
+<%@page import="org.quartz.JobKey"%>
+<%@page import="org.quartz.Scheduler"%>
+<%@page import="org.quartz.SchedulerFactory"%>
+<%@page import="org.quartz.TriggerBuilder"%>
+<%@page import="org.quartz.impl.StdSchedulerFactory"%>
+
 <%request.setCharacterEncoding("UTF-8");
 if (session.getAttribute("xtczqx")==null || session.getAttribute("xtczqx").toString().indexOf("9003")==-1)
 {
@@ -30,22 +44,35 @@ function saveit()
 		alert("库存预警值不能为空！");
 		return false;
 	}
-	if(document.getElementById("sendemailsmtp").value=="")
+	//if(document.getElementById("sendemailsmtp").value=="")
+	//{
+		//alert("邮件发送Smtp不能为空！");
+		//return false;
+	//}
+	//if(document.getElementById("sendemail").value=="")
+	//{
+		//alert("邮件发送账号不能为空！");
+		//return false;
+	//}
+	
+	//if(document.getElementById("sendemailpwd").value=="")
+	//{
+		//alert("邮件发送密码不能为空！");
+		//return false;
+	//}
+	
+	if(document.getElementById("mailnum").value=="")
 	{
-		alert("邮件发送Smtp不能为空！");
-		return false;
-	}
-	if(document.getElementById("sendemail").value=="")
-	{
-		alert("邮件发送账号不能为空！");
+		alert("邮件发送间隔不能为空！");
 		return false;
 	}
 	
-	if(document.getElementById("sendemailpwd").value=="")
+	if(document.getElementById("mailnum").value<1 || document.getElementById("mailnum").value>60 ||!(/^[0-9]*[1-9][0-9]*$/.test(document.getElementById("mailnum").value)))
 	{
-		alert("邮件发送密码不能为空！");
-		return false;
+		alert("邮件发送间隔范围为1-60整数！");
+		return false;	
 	}
+	
 	document.getElementById("naction").value="save";
 	document.getElementById("cform").submit();
 }
@@ -62,6 +89,7 @@ ResultSet rs=null;
 String strsql="";
 SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 String spkcyj="",sendemail="",sendemailpwd="",sendemailsmtp="";
+String mailnum="";
 
 try{
 	
@@ -72,7 +100,8 @@ try{
 		sendemailsmtp=request.getParameter("sendemailsmtp");
 		sendemail=request.getParameter("sendemail");
 		sendemailpwd=request.getParameter("sendemailpwd");
-		if (!fun.sqlStrCheck(spkcyj)||!fun.sqlStrCheck(sendemail)||!fun.sqlStrCheck(sendemailpwd)||!fun.sqlStrCheck(sendemailsmtp))
+		mailnum=request.getParameter("mailnum");
+		if (!fun.sqlStrCheck(spkcyj)||!fun.sqlStrCheck(sendemail)||!fun.sqlStrCheck(sendemailpwd)||!fun.sqlStrCheck(sendemailsmtp)||!fun.sqlStrCheck(mailnum))
 		{
 			out.print("<script type='text/javascript'>");
 	   		out.print("alert('提交的数据格式不对，请修改后重新提交');"); 
@@ -143,6 +172,35 @@ try{
 			stmt.executeUpdate(strsql);
 		}
 		
+		// update email sending interval
+		String mailnumUpdate=String.format("0/%s * * * * ?", mailnum);
+		strsql="update tbl_task set pl='"+mailnumUpdate+"' where mc='emailsending'";
+		stmt.executeUpdate(strsql);
+		
+		// update java quartz scheduled job while scheduled email was enabled.
+	    strsql="select nid,mc,pl,zc,zt,lm from tbl_task where mc='emailsending' and zt='1'";
+	    rs=stmt.executeQuery(strsql);
+		if (rs.next())
+		{	
+			SchedulerFactory taskFactory = new StdSchedulerFactory();
+			Scheduler tasksched = taskFactory.getScheduler();
+			JobKey jk = new JobKey(rs.getString("mc"));
+			if (tasksched.checkExists(jk))
+			{					
+				tasksched.deleteJob(jk);
+				Class c = Class.forName(rs.getString("lm"));
+				JobDetail job = JobBuilder.newJob(c).withIdentity(
+						rs.getString("mc")).build();
+				CronTrigger trigger = TriggerBuilder.newTrigger()
+						.withIdentity("T_" + rs.getString("mc"))
+						.withSchedule(
+								CronScheduleBuilder.cronSchedule(rs
+										.getString("pl"))).startNow().build();
+				tasksched.scheduleJob(job, trigger);				
+			}
+		}
+		rs.close();
+			
 		out.print("<script type='text/javascript'>");
    		out.print("alert('参数设置成功！');");    		
    		out.print("</script>");
@@ -164,6 +222,24 @@ try{
 				sendemailpwd=rs.getString("pvalue");
 		}
 		rs.close();
+		
+		try
+		{
+			strsql="select pl from tbl_task where mc='emailsending'";
+			rs=stmt.executeQuery(strsql);
+			if (rs.next())
+			{
+				mailnum=rs.getString("pl");
+				int startIndex=mailnum.indexOf("/");
+				int endIndex=mailnum.indexOf(" ");
+				mailnum=mailnum.substring(startIndex+1, endIndex-startIndex+1);
+			}
+			rs.close();
+		}
+		catch (Exception e)
+		{		
+			mailnum = "60";
+		}
 	}
 	
 %>
@@ -192,16 +268,21 @@ try{
                           <td><input type="text" name="spkcyj" id="spkcyj" value="<%=spkcyj%>" maxlength="5" class="input3" />&nbsp;个别商品可以到商品内容管理中个别设置</td>
                         </tr>
                         <tr>
+                          <td width="30" align="center"><span class="star">*</span></td>
+                          <td width="90">邮件发送间隔(秒)：</td>
+                          <td><input type="text" name="mailnum" id="mailnum" value="<%=mailnum%>" maxlength="5" class="input3" />&nbsp;每发送一封邮件后的等待时间，系统支持范围为1秒至60秒</td>
+                        </tr>
+                        <tr style="display:none">
                           <td align="center"><span class="star">*</span></td>
                           <td>邮件发送Smtp：</td>
                           <td><input type="text" name="sendemailsmtp" id="sendemailsmtp" class="input3" value="<%=sendemailsmtp%>" maxlength="50" /></td>
                         </tr>
-                       <tr>
+                       <tr style="display:none">
                           <td align="center"><span class="star">*</span></td>
                           <td>邮件发送账号：</td>
                           <td><input type="text" name="sendemail" id="sendemail" class="input3" value="<%=sendemail%>" maxlength="50" /></td>
                         </tr>
-                      <tr>
+                      <tr style="display:none">
                           <td align="center"><span class="star">*</span></td>
                           <td>邮件发送密码：</td>
                           <td><input type="text" name="sendemailpwd" id="sendemailpwd" class="input3" value="<%=sendemailpwd%>" maxlength="50" /></td>

@@ -139,15 +139,18 @@ public class UserAction extends BaseAction {
 		String userFloder = dirphoto+"/"+userid;
 		File dir = new File(userFloder);
 		if (!dir.exists()) {
-		    dir.mkdir();
+			dir.mkdir();
 		}
 		if (getUpload() != null) {
-			this.filecopy(userFloder + "/temp.jpg", this.getUpload());
-			Thumbnails.of(new File(userFloder + "/temp.jpg")).size(116, 116)
+			this.filecopy(userFloder + "/temp.jpg", getUpload());
+			Thumbnails.of(new File[] { new File(userFloder + "/temp.jpg") })
+					.size(116, 116)
 					.toFile(new File(userFloder + "/normal.jpg"));
-			Thumbnails.of(new File(userFloder + "/temp.jpg")).size(67, 67)
-			.toFile(new File(userFloder + "/little.jpg"));
-		    fu.delFile(userFloder, "temp.jpg");
+
+			Thumbnails.of(new File[] { new File(userFloder + "/temp.jpg") })
+					.size(67, 67).toFile(new File(userFloder + "/little.jpg"));
+
+			fu.delFile(userFloder, "temp.jpg");
 		}
 		TblQyyg tyg = qyyg.findById(user.getNid());
 		tyg.setXb(user.getXb());

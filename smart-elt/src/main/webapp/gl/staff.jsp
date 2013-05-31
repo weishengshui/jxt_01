@@ -34,7 +34,12 @@ function searchit()
 }
 function inputyg()
 {
-	openLayer("<div class=\"findyg\"><div class=\"findyg-title\">导入员工信息</div><div  style=\"margin: 10px 0;\">格式为Excel文件，请先下载导入模板，<a href=\"ygdr/template.xls\" class=\"blue\" target=\"_blank\">去下载>></a></div><form action=\"staffinput.jsp\" enctype=\"multipart/form-data\" name=\"uform\" id=\"uform\" method=\"post\" target=\"_blank\"><div class=\"find-top\"><li><input type=\"file\" name=\"yginfo\" id=\"yginfo\" /></li><li style=\"margin: 10px 0;\"> <a href=\"javascript:void(0);\" onclick=\"yginput()\" class=\"caxun2\">开始导入</a></span>　　<a href=\"javascript:void(0);\" onclick=\"closeLayer()\" class=\"caxun2\">取消关闭</a></li></div></form></div>");
+	openLayer("<div class=\"findyg\"><div class=\"findyg-title\">导入员工信息</div><div style=\"margin: 10px 0;\">格式为Excel文件，请先下载导入模板，<a href=\"ygdr/template.xls\" class=\"blue\" target=\"_blank\">去下载>></a></div><form action=\"staffinput.jsp\" enctype=\"multipart/form-data\" name=\"uform\" id=\"uform\" method=\"post\" target=\"_blank\"><div class=\"find-top\"><li><input type=\"file\" name=\"yginfo\" id=\"yginfo\" /></li><li style=\"margin: 10px 0;\"> <a href=\"javascript:void(0);\" onclick=\"yginput()\" class=\"caxun2\">开始导入</a></span>　　<a href=\"javascript:void(0);\" onclick=\"closeLayer()\" class=\"caxun2\">取消关闭</a></li></div></form></div>");
+}
+
+function exportyg()
+{
+	openLayer("<div class=\"findyg\"><div class=\"findyg-title\">导出员工信息</div><form action=\"staffexport.jsp\" enctype=\"multipart/form-data\" name=\"exportform\" id=\"exportform\" method=\"post\" target=\"_blank\"><div class=\"find-top\"><li style=\"margin: 10px 0;\"> <a href=\"javascript:void(0);\" onclick=\"ygexport()\" class=\"caxun2\">开始导出</a><span/>　　<a href=\"javascript:void(0);\" onclick=\"closeLayer()\" class=\"caxun2\">取消关闭</a></li></div></form>");
 }
 
 function yginput()
@@ -52,6 +57,11 @@ function yginput()
 		return;
 	}
 	document.getElementById("uform").submit();
+}
+
+function ygexport()
+{
+    document.getElementById("exportform").submit();
 }
 
 function audit(id)
@@ -163,7 +173,7 @@ if (naction!=null && naction.equals("admin"))
 				<div class="zhszwrap">
 					<div class="zhsz-up"><span><strong>员工信息管理：</strong>用于设置员工基本信息，开展后续员工奖励</span>	</div>
 					<div class="zhsz-up2">
-						<div style="float: left;margin-top: 10px;"><a href="staffedit.jsp"><img src="images/addbut.jpg" /></a> <a href="javascript:void(0);" onclick="inputyg()"><img src="images/inputbut.jpg" /></a></div>
+						<div style="float: left;margin-top: 10px;"><a href="staffedit.jsp"><img src="images/addbut.jpg" /></a> <a href="javascript:void(0);" onclick="inputyg()"><img src="images/inputbut.jpg" /></a> <a href="javascript:void(0);" onclick="exportyg()"><img src="images/exportbut.jpg" /></a></div>
 						<div style="float: right;">
 						姓名：<input class="input0" type="text" name="sxm" id="sxm" value="<%=sxm%>" style="width:80px;" />&nbsp;&nbsp;邮箱：<input class="input0" type="text" name="semail" id="semail"  value="<%=semail%>"/>&nbsp;&nbsp;
 						  	部门：
@@ -196,7 +206,8 @@ if (naction!=null && naction.equals("admin"))
                           <td width="80">姓名</td>
                           <td width="80">部门</td>
                           <td width="180">邮箱</td>
-                          <td width="50">状态</td>                         
+                          <td width="50">状态</td>
+                          <td width="140">工作性质</td>                          
                           <td>操作</td>
                         </tr>
                       </table>
@@ -221,7 +232,7 @@ if (naction!=null && naction.equals("admin"))
 				  	rs.close();
 				  	int pages=(tn-1)/psize+1;
 				  	
-				  	strsql="select y.nid,y.ygbh,y.ygxm,y.bm,y.email,y.zt,y.xtzt,y.gly,y.dlmm from tbl_qyyg y where y.qy="+session.getAttribute("qy")+" and xtzt<>3";
+				  	strsql="select y.nid,y.ygbh,y.ygxm,y.bm,y.email,y.zt,y.xtzt,y.gly,y.dlmm,y.gzxz from tbl_qyyg y where y.qy="+session.getAttribute("qy")+" and xtzt<>3";
 				  	if (sxm!=null && !sxm.equals(""))
 				  	strsql+=" and (ygxm like '%"+sxm+"%' or ygbh like '%"+sxm+"%')";
 				  	if (semail!=null && !semail.equals(""))
@@ -274,7 +285,10 @@ if (naction!=null && naction.equals("admin"))
 						  		out.print("离职");
 						  	  else if (rs.getInt("zt")==1)
 						  	  	out.print("在职");
-						  	%></td>                          
+						  	%></td>                         
+                          <td width="140">
+                          		&nbsp;<%=rs.getString("gzxz")==null?"":rs.getString("gzxz")%>
+                          </td>
                           <td>
   	  					<%if (rs.getInt("zt")==1){%>
                           <span class="floatleft"><a href="staffedit.jsp?ygid=<%=rs.getInt("nid") %>"><img src="images/editbut.jpg" /></a></span>
@@ -364,7 +378,7 @@ if (naction!=null && naction.equals("admin"))
 					<ul>
 						<li>注:操作列中的名词释义:</li>
 						<li>冻结：暂时让该员工登陆账号失效，员工无法登陆员工端系统</li>
-						<li>解冻：将“冻结”的账号还原，员工可再次登陆员工端系统并使用账号内的积分和积分券</li>						
+						<li>解冻：将“冻结”的账号还原，员工可再次登陆员工端系统并使用账号内的积分和福利券</li>						
 						<li>设为管理员：让特定的员工拥有一定HR端的权限，参与HR端的管理</li>
 					</ul>
 				</div>

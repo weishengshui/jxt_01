@@ -18,7 +18,7 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 	    height: 100%-150px;
 	    margin: 0 auto;
 	    width: 100%;
-	    height: 1050px;
+	    height: 1070px;
 	}
 	
 	.about{width:999px; height:100%; margin:0 auto;}
@@ -70,12 +70,15 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <link rel="shortcut icon" href="<%=request.getContextPath() %>/images/favicon.ico" type="image/x-icon" /></head>
 <body>
 	<div class="head">
-		<div class="logo"><img src="../images/IRewardLOGO.jpg" /></div>
+		<div class="logo"><img src="../images/IReward-logo-black.jpg" /></div>
 	</div>	
 	<div class="aboutmain">
 		<div class="about" style="background-color: white;">
 			<div class="aboutleft">
 				<ul class="leftnav">
+				    <li>
+						<a href="../index.jsp">首页</a>
+					</li>
 					<li>
 						<a href="aboutus.jsp">关于我们</a>
 					</li>
@@ -161,6 +164,9 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 							</li>
 							<li>企业可通过IRewards平台将各类型商品进行任意组合</li>
 							<li>IRewards平台能够降低企业福利采购成本、运营成本</br>和时间成本</li>
+							<div align="left" style="padding-top: 10px;padding-left: 60px;">
+								<a href="/eltcustom/sp!base.do"><img src="../images/aboutelt/aboutus07.jpg"/></a>
+							</div>
 						</ul>
 					</div>
 					<div>
@@ -174,7 +180,7 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 				</div>
 				</br>
 				<p> 
-					&nbsp;&nbsp;&nbsp;&nbsp;公司成立于2012年7月，是国内领先的专注于员工忠诚度管理的专业服务公司。公司由一支专业的、长期从事员工忠诚度管理的资深人士组成，公司总部位于上海，凭借快速发展，目前公司已在深圳、重庆设立分公司。
+					&nbsp;&nbsp;&nbsp;&nbsp;IRewards是国内领先的专注于员工忠诚度管理的专业服务公司。公司由一支专业的、长期从事员工忠诚度及薪酬福利管理的资深人士组成，公司为金融、IT及咨询、零售快消、能源医药等多个行业的企事业客户，提供员工弹性福利管理及忠诚度奖励方面的专业服务，积累了丰富的经验。公司总部位于上海，凭借快速发展，目前公司已在深圳设立分公司。
 				</p>
 				
 				<table style="font-size: 14px;margin-top: 25px;">
@@ -194,8 +200,26 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 			</div>
 		</div>
 	</div>
+
 	<div class="bottom">
-		<a href="aboutus.jsp">关于我们</a><a href="joinus.jsp">商户加盟</a><a href="recruit.jsp">招贤纳士</a><a href="contactus.jsp">联系我们</a>　　　　<a href="http://weibo.com/yuangongfuli" style="padding:0 10px 0 0"><img src="../images/weibo-sina.jpg" /></a><a href="http://t.qq.com/tanxingfuli" style="padding:0 10px 0 0"><img src="../images/weibo-qq.jpg" /></a>
+	  <div style="margin:0 auto;width:860px;overflow:hidden;">
+	    <div style="width:440px; margin:0px 30px;float:left;">
+			<a target="_blank"  href="aboutus.jsp">关于我们</a><a target="_blank" href="joinus.jsp">商户加盟</a><a target="_blank" href="recruit.jsp">招贤纳士</a><a target="_blank" href="contactus.jsp">联系我们</a><a target="_blank" href="http://blog.IRewards.cn">Blog</a>
+			<div style="margin-top:10px;"><a target="_blank" href="http://www.miibeian.gov.cn">沪ICP备12045301号</a></div>
+	    </div>
+	    <div style="text-align:left;line-height:0;margin:0px 30px;float:left;width:300px;">
+	        <a target="_blank" href="http://blog.IRewards.cn" style="text-decoration:underline;position:relative;top:-33px;"></a>
+	    	<span style="height:78px;float:left;width:78px;">
+	    		<a target="_blank" href="http://weibo.com/yuangongfuli" style="padding:0px;float:left;height:15px;line-height:16px;margin-bottom:5px;">新浪微博</a>
+		    	<a target="_blank" href="http://weibo.com/yuangongfuli" style="float:left;padding:0px;"><img src="../images/weibo-sina2.jpg" style="height:55px;width:55px;" /></a>
+	    	</span>
+	    	<span style="height: 78px; float: left; width: 78px;">
+	    		<a target="_blank" href="http://t.qq.com/tanxingfuli" style="padding:0px;float:left;height:15px;line-height:16px;margin-bottom:5px;">腾讯微博</a>
+		    	<a target="_blank" href="http://t.qq.com/tanxingfuli" style="float: left;padding:0px;"><img src="../images/weibo-qq2.jpg" style="height:55px;width:55px;" /></a>
+	    	</span>
+	    	<img src="../images/weixing.jpg" style="width:78px;height:78px;float:left;" />
+	    </div>
+	  </div>
 	</div>
 </body>
 </html>

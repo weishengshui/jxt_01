@@ -7,7 +7,7 @@
 <%@ include file="../common/hrlogcheck.jsp" %>
 <%@page import="jxt.elt.common.DbPool"%>
 <%
-if (session.getAttribute("glqx").toString().indexOf(",12,")==-1) 
+if (session.getAttribute("glqx").toString().indexOf(",12,")==-1 && !isLeader) 
 	response.sendRedirect("main.jsp");
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -100,8 +100,46 @@ try{
 		{			
 			ddbh=ddbh.substring(0,8)+String.valueOf(Integer.valueOf(ddbh.substring(8))+1);			
 		}
+		
+		//0:HR 购买, 1:部门leader购买, 2:小组leader购买, 3:部门leader(也是小组leader)购买
+		int ddtype=0;
+		int bmxz=0;
+		if (session.getAttribute("glqx").toString().indexOf(",12,")!=-1) {
+			ddtype=0;
+			bmxz=0;
+		} else if (isLeader) {
+			String bm="";
+			String xz="";
+			if (session.getAttribute("ffbm") != null) {
+				bm=session.getAttribute("ffbm").toString();
+			}
+			if (session.getAttribute("ffxz") != null) {
+				xz=session.getAttribute("ffxz").toString();
+			}
+			boolean isBm = bm!=null && bm.length()>0 && !"''".equals(bm);
+			boolean isXz = xz!=null && xz.length()>0 && !"''".equals(xz);
+			if (isBm && isXz) {
+				ddtype=3;
+				bmxz=0;
+			} else if (isBm) {
+				ddtype=1;
+				if (bm.indexOf(',')==-1) {
+					bmxz=Integer.valueOf(bm);
+				} else {
+					bmxz=Integer.valueOf(bm.substring(0, bm.indexOf(',')));
+				}
+			} else if (isXz) {
+				ddtype=2;
+				if (xz.indexOf(',')==-1) {
+					bmxz=Integer.valueOf(xz);
+				} else {
+					bmxz=Integer.valueOf(xz.substring(0, xz.indexOf(',')));
+				}
+			}
+		}
+		
 		//保存订单
-		strsql="insert into tbl_jfqdd (ddbh,qy,xdr,ddsj,gmh) values('"+ddbh+"',"+session.getAttribute("qy")+","+session.getAttribute("ygid")+",now(),'"+gmh+"')";
+		strsql="insert into tbl_jfqdd (ddbh,qy,xdr,ddsj,gmh,ddtype,bmxz) values('"+ddbh+"',"+session.getAttribute("qy")+","+session.getAttribute("ygid")+",now(),'"+gmh+"',"+ddtype+","+bmxz+")";
 		stmt.executeUpdate(strsql);
 		
 		strsql="select nid from tbl_jfqdd where ddbh='"+ddbh+"'";
@@ -120,14 +158,13 @@ try{
 			{
 				if (i%2==0)
 				{
-					strsql="insert into tbl_jfqddmc (qy,jfqdd,jfq,sl) values("+session.getAttribute("qy")+","+jfqdd+","+bwarr[i]+","+bwarr[i+1]+")";
+					strsql="insert into tbl_jfqddmc (qy,jfqdd,jfq,sl,ddtype,xdr,bmxz) values("+session.getAttribute("qy")+","+jfqdd+","+bwarr[i]+","+bwarr[i+1]+","+ddtype+","+session.getAttribute("ygid")+","+bmxz+")";
 					stmt.executeUpdate(strsql);
 				}
 			}
 		}
 		
 		//取订单金额和数量并保存
-		
 		strsql="select sum(q.jf*m.sl) as wjf,sum(sl) as wsl from tbl_jfqddmc m inner join tbl_jfq q on m.jfq=q.nid where m.jfqdd="+jfqdd;
 		rs=stmt.executeQuery(strsql);
 		if (rs.next())
@@ -166,12 +203,44 @@ try{
 				</ul>
 				<div class="jfqdetail">
 					<ul class="jfqdetail-in">
-						<li><h1>您的账户积分余额</h1><h2><%=session.getAttribute("qyjf")%></h2></li>
+					    <%
+					    int kyjf=0;
+						String errMessage="";
+						String prompt = "";
+						String jf = "";
+						if (session.getAttribute("glqx").toString().indexOf(",12,")!=-1) {
+							kyjf=Integer.valueOf(session.getAttribute("qyjf").toString());
+							errMessage="您的账户积分余额不足，请立即";
+							prompt = "您的账户积分余额";
+							jf = session.getAttribute("qyjf").toString();
+						} else if (isLeader){
+							String ffbm = session.getAttribute("ffbm").toString();
+						    if ("''".equals(ffbm)) {
+						    	ffbm = "-1";
+						    }
+						    String ffxz = session.getAttribute("ffxz").toString();
+						    if ("''".equals(ffxz)) {
+						    	ffxz = "-1";
+						    }
+							strsql="select sum(x.jf-x.yffjf) from tbl_jfffxx x inner join tbl_jfff f on x.jfff=f.nid where ((x.fflx=1 and x.lxbh in ("+ffbm+")) or (x.fflx=2 and x.lxbh in ("+ffxz+"))) and x.jf<>x.yffjf  and f.ffzt=1 and f.fftype>0";			
+							
+							rs=stmt.executeQuery(strsql);
+							if (rs.next())
+							{
+								kyjf=rs.getInt(1);
+							}
+							rs.close();
+							errMessage="您的账户自购积分余额不足，请立即";
+							prompt = "您的账户自购积分余额";
+							jf = String.valueOf(kyjf);
+						}
+					    %>
+						<li><h1><%=prompt %></h1><h2><%=jf%></h2></li>
 						<li><h3>订单<%=ddbh%> 共需要支付 <span><%=wjf%></span> 积分</h3></li>
 					</ul>
 				</div>
-				<%if (Integer.valueOf(session.getAttribute("qyjf").toString())<Integer.valueOf(wjf)) {%>
-				<div class="buyjf">您的账户积分余额不足，请立即 <a href="buyintegral.jsp">购买积分&gt;&gt; </a></div>
+				<%if (kyjf<wjf) {%>
+				<div class="buyjf"><%=errMessage %> <a href="buyintegral.jsp">购买积分&gt;&gt; </a></div>
 				<a href="#" class="buybtn2"></a>
 				<%}%><%else {%><div class="buyjf">&nbsp;</div><a href="bwpayed.jsp?jid=<%=jfqdd%>" class="buybtn"></a><%} %>
 			</div>

@@ -79,7 +79,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#eaeaea', endC
 .input4{width:40px; padding-left:10px; height:27px; line-height:27px; border:1px #a9a9a9 solid;}
 .read{color:#666}
 .submit{width:131px; height:42px; background:url(../../gl/images/submit.jpg) no-repeat 0 0; margin-right:12px; display:inline-block; }
-
+.reset{width:131px; height:42px; background:url(../../gl/images/reset.jpg) no-repeat 0 0; margin-right:12px; display:inline-block; }
 
 .findyg{width:562px; padding:10px 15px; border:8px #C0C0C0 solid; background:#FFFFFF; margin:0 auto; overflow:hidden}
 .findyg .findyg-title{width:162px; font-size:14px; font-weight:bold; float:left}
@@ -120,3 +120,5 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#eaeaea', endC
 .loginbtn:hover{background-position:0 -45px;}
 .textbreak{word-break:break-all}
 .outdate td{color:red}
+
+.superlineOnFirstItem{color: blue; font-size: 14px; font-weight: bold; text-decoration: underline;}

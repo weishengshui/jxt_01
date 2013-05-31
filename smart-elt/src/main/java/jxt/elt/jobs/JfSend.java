@@ -103,40 +103,41 @@ public class JfSend implements Job {
 				String[] ffjfa = ffjf.toString().split(",");
 				int nid = 0, djsl = 0, oneffjf = 0;
 				for (int i = 0; i < qya.length; i++) {
-					if (jfqa[i] != null && jfqa.length > 0) {
+					if ((jfqa[i] == null) || (jfqa.length <= 0))
+						continue;
+					oneffjf = Integer.valueOf(ffjfa[i]).intValue();
+					while (oneffjf > 0) {
+						nid = 0;
+						djsl = 0;
+						strsql = "select nid,sl,ffsl,djsl from tbl_jfqddmc where qy="
+								+ qya[i]
+								+ " and jfq="
+								+ jfqa[i]
+								+ " and zt=1 and djsl>0 order by nid limit 1";
 
-						oneffjf = Integer.valueOf(ffjfa[i]);
-						while (oneffjf > 0) {
-							nid = 0;
-							djsl = 0;
-							strsql = "select nid,sl,ffsl,djsl from tbl_jfqddmc where qy="
-									+ qya[i]
-									+ " and jfq="
-									+ jfqa[i]
-									+ " and zt=1 and djsl>0 order by nid limit 1";
-							rs = stmt.executeQuery(strsql);
-							if (rs.next()) {
-								nid = rs.getInt("nid");
-								djsl = rs.getInt("djsl");
-							}
-							rs.close();
+						rs = stmt.executeQuery(strsql);
+						if (rs.next()) {
+							nid = rs.getInt("nid");
+							djsl = rs.getInt("djsl");
+						}
+						rs.close();
 
-							if (djsl >= oneffjf) {
-								strsql = "update tbl_jfqddmc set djsl=djsl-"
-										+ ffjfa[i] + " where nid=" + nid;
-								stmt.executeUpdate(strsql);
+						if (djsl >= oneffjf) {
+							strsql = "update tbl_jfqddmc set djsl=djsl-"
+									+ ffjfa[i] + " where nid=" + nid;
 
-							} else {
-								strsql = "update tbl_jfqddmc set djsl=0 where nid="
-										+ nid;
-								stmt.executeUpdate(strsql);
+							stmt.executeUpdate(strsql);
+						} else {
+							strsql = "update tbl_jfqddmc set djsl=0 where nid="
+									+ nid;
 
-							}
+							stmt.executeUpdate(strsql);
+						}
 
-							oneffjf = oneffjf - djsl;
-							// 防止死循环，数据不对称时
-							if (djsl == 0)
-								break;
+						oneffjf -= djsl;
+
+						if (djsl == 0) {
+							break;
 						}
 					}
 				}
@@ -195,61 +196,55 @@ public class JfSend implements Job {
 				String[] jfqarr = jfqstr.toString().split(",");
 				String[] jfqnarr = jfqnstr.toString().split(",");
 				for (int i = 0; i < jfqarr.length; i++) {
-					if (jfqarr[i] != null && jfqarr[i].length() > 0) {
-//						System.out.println("#######jfq:" + jfqarr[i]
-//								+ " kusl: " + jfqnarr[i]);
-
-						List<Spvo> sps = new ArrayList<Spvo>();
-						ResultSet sprs = stmt
-								.executeQuery("select sp.nid,sp.kcsl,sp.wcdsl from tbl_jfqspref ref right join tbl_sp sp on sp.nid=ref.sp where ref.jfq="
-										+ jfqarr[i] + "");
-
-						while (sprs.next()) {
-							sps.add(new Spvo(sprs.getInt("nid"), sprs
-									.getInt("kcsl"), sprs.getInt("wcdsl")));
-						}
-
-						for (Spvo sp : sps) {
-							// 库存回收
-							strsql = "update tbl_sp set kcsl=?,wcdsl=? where nid=?";
-
-							PreparedStatement pstatmt = conn
-									.prepareStatement(strsql);
-							pstatmt.setInt(1,
-									(Integer.parseInt(jfqnarr[i]) + sp
-											.getKcsl()));
-							pstatmt.setInt(2,
-									(Integer.parseInt(jfqnarr[i]) + sp
-											.getWcdsl()));
-							pstatmt.setInt(3, sp.getSpId());
-
-							pstatmt.executeUpdate();
-						}
-
-						// 修改积分券库存
-						
-						strsql = "select kcsl from tbl_jfq where nid ="+jfqarr[i];
-						ResultSet jfqrs = stmt.executeQuery(strsql);
-						int kcsl = 0 ;
-						while(jfqrs.next()){
-							kcsl = jfqrs.getInt("kcsl");
-						}
-						PreparedStatement updateJFQSt = conn.prepareStatement("update tbl_jfq set kcsl=? where nid =?");
-						
-						int newkcsl = (kcsl-Integer.parseInt(jfqnarr[i]))<0?0:(kcsl-Integer.parseInt(jfqnarr[i]));
-						updateJFQSt.setInt(1, newkcsl);
-						updateJFQSt.setInt(2, Integer.parseInt(jfqarr[i]));
-						updateJFQSt.executeUpdate();
-						
-						// strsql = "update tbl_jfq set kcsl=kcsl-" + jfqnarr[i]
-						// + " where nid=" + jfqarr[i];
-						// stmt.executeUpdate(strsql);
-
-						// 修改积分券明细中的状态
-						strsql = "update tbl_jfqmc set zt=7 where zt=0 and qy=0 and jfq="
-								+ jfqarr[i];
-						stmt.executeUpdate(strsql);
+					if ((jfqarr[i] == null) || (jfqarr[i].length() <= 0)) {
+						continue;
 					}
+					List<Spvo> sps = new ArrayList<Spvo>();
+					ResultSet sprs = stmt
+							.executeQuery("select sp.nid,sp.kcsl,sp.wcdsl from tbl_jfqspref ref right join tbl_sp sp on sp.nid=ref.sp where ref.jfq="
+									+ jfqarr[i] + "");
+
+					while (sprs.next()) {
+						sps.add(new Spvo(sprs.getInt("nid"), sprs
+								.getInt("kcsl"), sprs.getInt("wcdsl")));
+					}
+
+					for (Spvo sp : sps) {
+						strsql = "update tbl_sp set kcsl=?,wcdsl=? where nid=?";
+
+						PreparedStatement pstatmt = conn
+								.prepareStatement(strsql);
+
+						pstatmt.setInt(1,
+								Integer.parseInt(jfqnarr[i]) + sp.getKcsl());
+
+						pstatmt.setInt(2,
+								Integer.parseInt(jfqnarr[i]) + sp.getWcdsl());
+
+						pstatmt.setInt(3, sp.getSpId());
+
+						pstatmt.executeUpdate();
+					}
+
+					strsql = "select kcsl from tbl_jfq where nid =" + jfqarr[i];
+					ResultSet jfqrs = stmt.executeQuery(strsql);
+					int kcsl = 0;
+					while (jfqrs.next()) {
+						kcsl = jfqrs.getInt("kcsl");
+					}
+					PreparedStatement updateJFQSt = conn
+							.prepareStatement("update tbl_jfq set kcsl=? where nid =?");
+
+					int newkcsl = kcsl - Integer.parseInt(jfqnarr[i]) < 0 ? 0
+							: kcsl - Integer.parseInt(jfqnarr[i]);
+					updateJFQSt.setInt(1, newkcsl);
+					updateJFQSt.setInt(2, Integer.parseInt(jfqarr[i]));
+					updateJFQSt.executeUpdate();
+
+					strsql = "update tbl_jfqmc set zt=7 where zt=0 and qy=0 and jfq="
+							+ jfqarr[i];
+
+					stmt.executeUpdate(strsql);
 				}
 			}
 

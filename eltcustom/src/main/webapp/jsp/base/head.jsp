@@ -44,7 +44,7 @@
 		var key = encodeURI(escape($("#headkey").val()));
 		window.location="sp!list.do?key="+key;
 	};
-	var initqylogo = function(){
+	var initqyinfo = function(){
 		// var timeParam = Math.round(new Date().getTime()/1000);	
 		$.ajax({
 			url:'userj!getqy.do',
@@ -52,9 +52,12 @@
 			//async:false,
 			success:function(data){
 				if(data.rs == undefined || data.rs[0].log == ""){
-					$("#qylogo").attr("src",'<%=request.getContextPath() %>/common/images/IReward_LOGO-black.jpg');
+					$("#qylogo").attr("src",'<%=request.getContextPath() %>/common/images/IReward-logo-white2.jpg');
 				}else{
 					$("#qylogo").attr("src",data.rs[0].log);
+				}
+				if (data.rs != undefined && data.rs[0].qymc != "") {
+					$("#qymc").html(data.rs[0].qymc);
 				}
 			},
 			error:function(data){
@@ -69,9 +72,12 @@
 	   else if (window.sidebar){
 	      window.sidebar.addPanel('IRewards', 'http://www.irewards.cn', "");
 	   }
+	   else {
+           alert("加入收藏失败，请使用Ctrl+D进行添加");
+       }
 	};
 	$(function() {
-		initqylogo();
+		initqyinfo();
 		refreshygjf();
 		refreshHeadDhlCount();
 		refreshYgxxCount();
@@ -81,7 +87,7 @@
 	<div class="headmain">
 		<div class="head">
 			<div class="top">
-				<p>你好，<a href="user!list.do">${sessionScope.user.ygxm}</a>！欢迎来到员工积分平台！【<a onclick="logout()" href="#">退出</a>】</p>
+				<p>你好，<a href="user!list.do">${sessionScope.user.ygxm}</a>！欢迎来到<span id="qymc" style="font-weight: bold;"></span>弹性福利与奖励平台！【<a onclick="logout()" href="#">退出</a>】</p>
 				<div class="top-right">
 					<span><img src="common/images/ico2.jpg" /></span>
 					<h1>兑换篮（<label class="bisque"><a id="headhdltotal" href="dhl!list.do">0</a></label>）</h1>
@@ -89,12 +95,12 @@
 					<h1>消息：（<label class="blue"><a id="headxxtotal" href="gb!list.do">0</a></label>）</h1>
 					<span><img src="common/images/ico1.jpg" /></span>
 					<h1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h1>
-					<span><img src="common/images/ico2.jpg" /></span>
+					<span><img src="common/images/markit.gif" /></span>
 					<h1><a href="#" onclick="markit()">收藏本站</a></h1>
 				</div>
 			</div>	
 			<div class="logo">
-				<img id="qylogo" style="width:200px;height:75px;border:0px" src=""/>
+				<img id="qylogo" src="/eltcustom/common/images/IReward-logo-white2.jpg" style="width:200px;height:75px;border:0px" src=""/>
 				<img src="common/images/logo3.jpg" />
 				<img src="common/images/logo2.jpg" />
 				<div class="myjf">

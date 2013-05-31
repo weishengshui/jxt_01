@@ -60,9 +60,14 @@ function ckzjjf()
 	}
 }
 
+function removeInputValue() {
+	document.getElementById("zjjf").value="";
+	document.getElementById("ffmm").value="";
+}
+
 </script>
 <link rel="shortcut icon" href="<%=request.getContextPath() %>/images/favicon.ico" type="image/x-icon" /></head>
-<body>
+<body onload="removeInputValue()">
 <%
 String  menun="2004";
 Fun fun=new Fun();
@@ -228,12 +233,12 @@ try{
                         <tr>
                           <td width="30" align="center"><span class="star">*</span></td>
                           <td width="90">追加积分：</td>
-                          <td><input type="text" name="zjjf" id="zjjf" class="input3" onchange="ckzjjf()" maxlength="8" /></td>
+                          <td><input type="text" name="zjjf" id="zjjf" class="input3" autocomplete="off" onchange="ckzjjf()" maxlength="8" value=""/></td>
                         </tr>
                         <tr>
                           <td align="center"><span class="star">*</span></td>
                           <td>追加密码：</td>
-                          <td><input type="password" type="text" name="ffmm" id="ffmm" class="input3" maxlength="8" /></td>
+                          <td><input type="password" name="ffmm" id="ffmm" class="input3" autocomplete="off" maxlength="8" value=""/></td>
                         </tr>                       
                         <tr>
                           <td valign="top" align="center"><span class="star">*</span></td>

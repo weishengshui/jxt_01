@@ -33,7 +33,9 @@ if (session.getAttribute("glqx").toString().indexOf(",11,")==-1)
 <title>IRewards 领先的员工奖励，弹性福利，忠诚度管理平台</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
  <link href="css/style.css" type="text/css" rel="stylesheet" />
+ <link rel="shortcut icon" href="<%=request.getContextPath() %>/images/favicon.ico" type="image/x-icon" />
 <script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/jquery-1.7.min.js" ></script>
 <script type="text/javascript" src="js/calendar3.js"></script>
 <script type="text/javascript">
 	var staffn=0;
@@ -42,12 +44,16 @@ if (session.getAttribute("glqx").toString().indexOf(",11,")==-1)
 	var thisp=1;
 	var havejf=0;
 	var ifsubmit=1;
-	function showmm(id)
+	function showmm(id, number)
 	{
 		var timeParam = Math.round(new Date().getTime()/1000);
 		var url = "selectitem.jsp?mid="+id+"&time="+timeParam;	
 		xmlHttp.open("GET", url, true);
-		xmlHttp.onreadystatechange=mmshow;
+		if (number == 0) {
+			xmlHttp.onreadystatechange=mmshow;
+		} else if (number == 1) {
+			xmlHttp.onreadystatechange=batchmmshow;
+		}
 		xmlHttp.send(null);
 	}
 	function mmshow()
@@ -57,9 +63,24 @@ if (session.getAttribute("glqx").toString().indexOf(",11,")==-1)
 			var response = xmlHttp.responseText;
 			try
 			{	
-				document.getElementById("mm2span").innerHTML="";
-				document.getElementById("mm2span").innerHTML=response;
-								
+				var mm2spans = document.getElementsByName("mm2span");
+				mm2spans[0].innerHTML="";
+				mm2spans[0].innerHTML=response;
+			}
+			catch(exception){}
+		}
+	}
+	
+	function batchmmshow()
+	{
+		if (xmlHttp.readyState == 4)
+		{
+			var response = xmlHttp.responseText;
+			try
+			{	
+				var mm2spans = document.getElementsByName("mm2span");
+				mm2spans[1].innerHTML="";
+				mm2spans[1].innerHTML=response;
 			}
 			catch(exception){}
 		}
@@ -499,15 +520,21 @@ if (session.getAttribute("glqx").toString().indexOf(",11,")==-1)
 		}
 	}
 	
-	function addmm()
+	function addmm(id)
 	{
-		if (document.getElementById("mmmcadd").value=="")
+		var itemId = "";
+		if (id) {
+			itemId = id;
+		} else {
+			itemId = "mmmcadd"
+		}
+		if (document.getElementById(itemId).value=="")
 		{
 			alert("请填写要自定义的名目!");
 			return;
 		}
 		var timeParam = Math.round(new Date().getTime()/1000);
-		var url = "itemsave.jsp?mmmc="+encodeURI(escape(document.getElementById("mmmcadd").value))+"&time="+timeParam;
+		var url = "itemsave.jsp?mmmc="+encodeURI(escape(document.getElementById(itemId).value))+"&time="+timeParam;
 		
 		xmlHttp.open("GET", url, true);
 		xmlHttp.onreadystatechange=newmm;
@@ -521,21 +548,28 @@ if (session.getAttribute("glqx").toString().indexOf(",11,")==-1)
 			var response = xmlHttp.responseText;
 			try
 			{
-				response=response.replace(new RegExp("","g"),"");			    
+				response=response.replace(new RegExp("\n","g"),"");			    
 				if (response=="")
 				{				
 					alert("添加出错！");
 					return;
 				}
 				
-				if (response=="0")
+				if (response==0)
 				{
 					alert("此名目已经存在，请不要重复添加！");
 					return;
 				}
-				document.getElementById("mm1span").innerHTML=response;
-				document.getElementById("mm2span").innerHTML="";
 				document.getElementById("mmmcadd").value="";
+				
+				document.getElementById("batchmmmcadd").value="";
+				
+				var mm1s = document.getElementsByName("mm1");
+				mm1s[0].innerHTML=response;
+				mm1s[1].innerHTML=response;
+				var mm2spans = document.getElementsByName("mm2span");
+				mm2spans[0].innerHTML="";
+				mm2spans[1].innerHTML="";
 			}
 			catch(exception){}
 		}
@@ -586,9 +620,54 @@ function fitm(obj)
 			    }
 		}
    }
+function down(){
+	document.getElementById("batchTemplate").submit();
+}; 
+
+function batchImport(){
+	var ffmc = document.getElementsByName("mm1")[1].value;
+	if (null == ffmc || "" == ffmc) {
+		alert("请选择发放名目!");
+		return;
+	};
+	var ffwj = document.getElementById("pldr").value;
+	if (null == ffwj || "" == ffwj) {
+		alert("请选择上传的文件!");
+		return;
+	};
 	
+	var bathcfssj = document.getElementById("batchffsj").value;
+	if (null == bathcfssj || "" == bathcfssj) {
+		alert("请选择发放的时间!");
+		return;
+	};
+	if (document.getElementById("batchbz").value=="您可以在这里输入发放的备注内容,比如[ELT项目最佳完成奖]")
+		document.getElementById("batchbz").value="";
+	document.getElementById("batchGrant").submit();
+}
+
+window.onload=function() {
+  var tag=document.getElementById("tag").children;
+  var content=document.getElementById("tagContent").children;
+  content[0].style.display = "block";
+  var len= tag.length; 
+  for(var i=0; i<len; i++)
+    {
+    tag[i].index=i;
+    tag[i].onclick = function() {
+               for(var n=0; n<len; n++)
+               {
+                  tag[n].className="";
+                  content[n].style.display="none"; 
+                }
+            tag[this.index].className = "off2"; 
+            content[this.index].style.display = "block"; 
+      }
+   }
+
+}
 </script> 
-<link rel="shortcut icon" href="<%=request.getContextPath() %>/images/favicon.ico" type="image/x-icon" /></head>
+</head>
 
 <body>
 <div id="bodybackdiv" style="display:none"></div>
@@ -638,6 +717,12 @@ try
 					</li>
 				</ul>
 				<div class="gsjf-states">尊敬的<%=session.getAttribute("qymc")%>，您目前公司账户积分：<em class="yellowtxt txtsize16"><%=session.getAttribute("qyjf")%></em><%if (session.getAttribute("djjf")!=null && !session.getAttribute("djjf").equals("0")) {%>，冻结积分：<em class="yellowtxt txtsize16"><%=session.getAttribute("djjf")%></em><%} %></div>
+			    <div id="tag">
+			    <h2 id="barh1" class="off2">普通发放</h2>
+			    <h2 id="barh2" class="">批量发放</h2>
+			    </div>
+			    <div id="tagContent">
+			    <div>
 				<form action="aiconfirm.jsp" name="aiform" id="aiform" method="post">
 				<input type="hidden" name="listn" id="listn"/>
 				<div class="hjr-ffmm" style="border-bottom:1px #cccccc dashed; padding-bottom:8px">
@@ -645,7 +730,7 @@ try
 						<tr>
 							<td width="90" height="30" class="tdtitle"><span class="star">*</span> 发放名目</td>
 							<td width="350"><span id="mm1span">
-								<select name="mm1" id="mm1" onchange="showmm(this.value)" style="height: 30px;"><option value="">请选择</option>
+								<select name="mm1" id="mm1" onchange="showmm(this.value,0)" style="height: 30px;"><option value="">请选择</option>
 									<%
 									strsql="select nid,mmmc from tbl_jfmm where (qy="+session.getAttribute("qy")+" or qy=0) and fmm=0";
 							  		rs=stmt.executeQuery(strsql);
@@ -658,7 +743,7 @@ try
 							  		}
 							  		rs.close();
 									%>
-								</select>&nbsp;<span style="font-size: 20px;" title="可在”账户设置“栏目中的”发放名目管理“项进行设置">？</span></span><span id="mm2span">
+								</select>&nbsp;<span style="font-size: 20px;" title="可在”账户设置“栏目中的”发放名目管理“项进行设置">？</span></span><span id="mm2span" name="mm2span">
 								<%
 								if (mm2!=null && !mm2.equals("0") && !mm2.equals(""))
 								{
@@ -905,7 +990,7 @@ try
 					  </tr>
 					</table>
 				</div>
-				<div class="hjr-box1">
+				<div class="hjr-box1" style="padding-bottom: 8px; margin-bottom: 0px; height: 65px;">
 					<table width="100%" border="0" cellspacing="0" cellpadding="0">
 					  <tr>
 						<td width="20" height="30"></td>
@@ -915,6 +1000,97 @@ try
 					</table>
 				</div>
 				</form>
+				</div>
+				<div style="display:none">
+				<form name="batchGrant" id="batchGrant" action="batchGrant.jsp" method="post" enctype="multipart/form-data">
+					<div class="hjr-ffmm" style="border-bottom:1px #cccccc dashed; padding-bottom:8px;">
+					<table width="100%" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td width="90" height="30" class="tdtitle"><span class="star">*</span> 发放名目</td>
+							<td width="350">
+							<span id="batchmm1span">
+								<select name="mm1" id="mm1" onchange="showmm(this.value,1)" style="height: 30px;"><option value="">请选择</option>
+									<%
+									strsql="select nid,mmmc from tbl_jfmm where (qy="+session.getAttribute("qy")+" or qy=0) and fmm=0";
+							  		rs=stmt.executeQuery(strsql);
+							  		while (rs.next())
+							  		{
+							  			if (mm1!=null && mm1.equals(rs.getString("nid")))
+							  				out.print("<option value='"+rs.getString("nid")+"' selected='selected'>"+rs.getString("mmmc")+"</option>");
+							  			else
+							  				out.print("<option value='"+rs.getString("nid")+"'>"+rs.getString("mmmc")+"</option>");
+							  		}
+							  		rs.close();
+									%>
+								</select>&nbsp;<span style="font-size: 20px;" title="可在”账户设置“栏目中的”发放名目管理“项进行设置">？</span></span><span id="mm2span" name="mm2span">
+								<%
+								if (mm2!=null && !mm2.equals("0") && !mm2.equals(""))
+								{
+									out.print("<select name=\"mm2\" id=\"mm2\" style=\"height: 30px;\"><option value=\"\">请选择</option>");
+									strsql="select nid,mmmc from tbl_jfmm where (qy="+session.getAttribute("qy")+" or qy=0) and fmm="+mm1;
+							  		rs=stmt.executeQuery(strsql);
+							  		while (rs.next())
+							  		{
+							  			if (mm2!=null && mm2.equals(rs.getString("nid")))
+							  				out.print("<option value='"+rs.getString("nid")+"' selected='selected'>"+rs.getString("mmmc")+"</option>");
+							  			else
+							  				out.print("<option value='"+rs.getString("nid")+"'>"+rs.getString("mmmc")+"</option>");
+							  		}
+							  		rs.close();
+							  		out.print("</select>");
+								}
+								%>
+								</span></td>
+							<td width="163">没有适合的名目?新增</td>
+							<td width="114"><span class="floatleft">
+							  <input name="batchmmmcadd" id="batchmmmcadd" type="text" class="input7"  maxlength="25" style="margin-top:0; width:90px"/>
+							</span></td>
+							<td><div class="floatleft"><span onclick="addmm('batchmmmcadd')" class="caxun" style="margin:3px;">保 存</span></div></td>
+					  </tr>
+					</table>
+				</div>
+				<div class="hjr-box1" style="padding-top: 8px">
+					<table width="100%" border="0" cellspacing="0" cellpadding="0">
+					  <tr>
+						<td width="20" height="30"><span class="star">*</span></td>
+						<td width="70" valign="top" class="tdtitle">导入</td>
+						<td><input type="file" name="pldr" id="pldr" />
+						<a href="batchTemplate.jsp?type=jf" class="" style="text-decoration: underline;color: #3399CC;">模板下载</a>
+					    </td>
+					  </tr>
+					</table>
+				</div>
+				<div class="hjr-box1" style="border-bottom:1px #cccccc dashed; padding-bottom:8px">
+					<table width="100%" border="0" cellspacing="0" cellpadding="0">
+					  <tr>
+						<td width="20" height="30"><span class="star">*</span></td>
+						<td width="70" class="tdtitle">发放日期</td>
+						<td width="100"><input type="text" class="input7" name="ffsj" id="batchffsj" value="<%=ffsj==null?sf.format(Calendar.getInstance().getTime()):ffsj%>"  onclick="new Calendar().show(this);" readonly="readonly"  /></td>
+						<td class="grey2">发放的时间也可自行设置，系统会根据您设置的时间将积分发放到指定账户中,该时间前积分暂时处于冻结状态</td>
+					  </tr>
+					</table>
+				</div>
+				<div class="hjr-box1">
+					<table width="100%" border="0" cellspacing="0" cellpadding="0">
+					  <tr>
+						<td width="20" height="30"></td>
+						<td width="70" valign="top" class="tdtitle">备注信息</td>
+						<td><textarea cols="" rows="" class="inputarea1" name="bz" id="batchbz"  onFocus="javascript:if(this.value=='您可以在这里输入发放的备注内容,比如[ELT项目最佳完成奖]') this.value='';" onBlur="javascript:if(this.value=='') this.value='您可以在这里输入发放的备注内容,比如[ELT项目最佳完成奖]';"><%if (bz!=null && bz.length()>0) out.print(bz); else out.print("您可以在这里输入发放的备注内容,比如[ELT项目最佳完成奖]"); %></textarea></td>
+					  </tr>
+					</table>
+				</div>
+				<div class="hjr-box1" style="padding-bottom: 8px; margin-bottom: 0px; height: 65px;">
+					<table width="100%" border="0" cellspacing="0" cellpadding="0">
+					  <tr>
+					  	<td width="20" height="30"></td>
+						<td width="70" valign="top"></td>
+						<td><a id="batchImport" href="javascript:void(0);" class="submit" onclick="batchImport()" /><a href="assignintegral.jsp" class="reset"></a></td>
+					  </tr>
+					</table>
+				</div>
+				</form>
+				</div>
+				</div>
 				<%out.print("<script type='text/javascript'>staffn="+staffn+";havejf="+session.getAttribute("qyjf")+";");
 				if (ffsj!=null && ffsj.length()>0)
 				{					
@@ -960,7 +1136,7 @@ try
 					<ul class="jfqffjlin">
 					<%
 					int ln=0,pages=1;
-					strsql="select count(nid) as hn from tbl_jfff where qy="+session.getAttribute("qy")+" and ffxx=0";
+					strsql="select count(nid) as hn from tbl_jfff where qy="+session.getAttribute("qy")+" and fftype=0 and ffxx=0";
 					rs=stmt.executeQuery(strsql);
 					if (rs.next())
 					{
@@ -969,7 +1145,7 @@ try
 					rs.close();
 					pages=(ln-1)/10+1;
 					
-					strsql="select f.nid,f.ffsj,m1.mmmc as mc1,m2.mmmc as mc2,f.hjr,ffjf,ffzt,f.srsj from tbl_jfff f left join tbl_jfmm m1 on f.mm1=m1.nid left join tbl_jfmm m2 on f.mm2=m2.nid where f.qy="+session.getAttribute("qy")+" and ffxx=0 order by f.nid desc limit 10";
+					strsql="select f.nid,f.ffsj,m1.mmmc as mc1,m2.mmmc as mc2,f.hjr,ffjf,ffzt,f.srsj from tbl_jfff f left join tbl_jfmm m1 on f.mm1=m1.nid left join tbl_jfmm m2 on f.mm2=m2.nid where f.qy="+session.getAttribute("qy")+" and ffxx=0 and fftype=0 order by f.nid desc limit 10";
 					rs=stmt.executeQuery(strsql);
 					while (rs.next())
 					{

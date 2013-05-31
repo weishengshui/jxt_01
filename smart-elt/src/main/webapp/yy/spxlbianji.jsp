@@ -37,6 +37,16 @@ function saveit()
 		alert("请选择类目！");
 		return false;
 	}
+	if(document.getElementById("xswz").value.trim()=="")
+	{
+		alert("请填写显示位置！");
+		return false;
+	}
+	if(!CheckNumber(document.getElementById("xswz").value))
+	{
+		alert("显示位置只能填写数字！");
+		return false;
+	}
 	if (cpjsedit.document.getBody().getText()=="")
 	{
 		alert("商品介绍不能为空！");
@@ -79,9 +89,136 @@ function showlb()
 	}
 }
 
+function showqyl()
+{
+	if (xmlHttp.readyState == 4)
+	{
+		var response = xmlHttp.responseText;
+		try
+		{			
+			openLayer(response);
+			var qyyxlist = document.getElementById("qylist").value;
+// 			var qylist = document.getElementsByName("qyid");
+			var qylist = getElementsByModifiedId("qyid");
+			if (qylist != null && qylist != "") {
+				var qyyxidList = qyyxlist.split(",");
+				for (var qyyxid in qyyxidList) {
+					for (var qy in qylist) {
+						if (qyyxidList[qyyxid] == qylist[qy].value) {
+							qylist[qy].checked = true;
+						}
+					}
+				}
+			}
+		}
+		catch(exception){}
+	}
+}
+
+function selectqyfy(pageNum) {
+	var num = pageNum-1;
+// 	var divs = document.getElementsByName("qyfyTitle");
+	var divs = getElementsByModifiedId("qyfyTitle");
+	var divsLength = divs.length;
+	for (var i = 0; i < divsLength; i++) {
+		divs[i].style.display="none";
+	}
+	divs[num].style.display="";
+// 	var uls = document.getElementsByName("qyfy");
+	var uls = getElementsByModifiedId("qyfy");
+	var ulsLength = uls.length;
+	for (var i = 0; i < ulsLength; i++) {
+		uls[i].style.display="none";
+	}
+	uls[num].style.display="";
+// 	var fytags = document.getElementsByName("fytag");
+	var fytags = getElementsByModifiedId("fytag");
+	var fytagsLength = fytags.length;
+	for (var i = 0; i < fytagsLength; i++) {
+		fytags[i].className="";
+	}
+	fytags[num].className="psel";
+	var currentPage = document.getElementById("currentPage");
+	currentPage.value=pageNum;
+}
+
+function nextqyfy() {
+	var currentPage = parseInt(document.getElementById("currentPage").value);
+	var pagesNum = parseInt(document.getElementById("pagesNum").value);
+	if ((currentPage + 1) <= pagesNum) {
+		selectqyfy(currentPage+1);
+	}
+	document.getElementById("currentPage").value=currentPage + 1;
+}
+
+function getQyList() {
+// 	var checkBoxes = document.getElementsByName("qyid");
+	var checkBoxes = getElementsByModifiedId("qyid");
+	var length = checkBoxes.length;
+	var idList="";
+	var tileList="";
+	for (var i = 0; i < length; i++) {
+		if(checkBoxes[i].checked) {
+			if (idList.length == 0) {
+				idList+=checkBoxes[i].value;
+				tileList+=checkBoxes[i].title;
+			} else {
+				idList+=","+checkBoxes[i].value;
+				tileList+=";"+checkBoxes[i].title;
+			}
+		}
+	}
+	document.getElementById("qylist").value=idList;
+	document.getElementById("qymclist").innerHTML=tileList;
+	closeLayer();
+}
+
+function showQySelect() {
+	var timeParam = Math.round(new Date().getTime()/1000);
+	var url = "selectqy.jsp?time="+timeParam;		
+	xmlHttp.open("GET", url, true);
+	xmlHttp.onreadystatechange=showqyl;
+	xmlHttp.send(null);
+}
+
+function selectAllqy(ele) {
+	var toBe = false;
+	if (ele.checked) {
+		toBe = true;
+	}
+	var currentPage = parseInt(document.getElementById("currentPage").value);
+	var lis = document.getElementById("qyfy" + (currentPage-1)).children;
+	var length = lis.length;
+	for (var i = 0; i < length; i++) {
+		lis[i].children[0].children[0].checked=toBe;
+	}
+}
+
+function searchQyList() {
+	var timeParam = Math.round(new Date().getTime()/1000);
+	var qymc = document.getElementById("qymc").value;
+	var jlmc = document.getElementById("jlmc").value;
+	var url = "selectqy.jsp?time="+timeParam+"&qymc="+qymc+"&jlmc="+jlmc;
+	var encodeUrl = encodeURI(url);
+	xmlHttp.open("GET", encodeUrl, true);
+	xmlHttp.onreadystatechange=showqyl;
+	xmlHttp.send(null);
+}
+
+function getElementsByModifiedId(baseIdentifier) {
+    var allWantedElements = [];
+    var idMod = 0;
+    while(document.getElementById(baseIdentifier + idMod)) {
+        allWantedElements.push(document.getElementById(baseIdentifier + idMod++));
+    }
+    return allWantedElements;
+}
+
 </script>
 <link rel="shortcut icon" href="<%=request.getContextPath() %>/images/favicon.ico" type="image/x-icon" /></head>
 <body>
+<div id="bodybackdiv" style="display:none"></div>
+<div id="logdiv" style="display:none"></div>
 <%
 String  menun="4001";
 Fun fun=new Fun();
@@ -90,7 +227,7 @@ Statement stmt=conn.createStatement();
 ResultSet rs=null;
 String strsql="";
 SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-String mc="",lb1="",lb2="",lb3="",cpjs="",shfw="";
+String mc="",lb1="",lb2="",lb3="",cpjs="",shfw="", xswz="",qykj="",qymc="",qylist="";
 String lid=request.getParameter("lid");
 String lb1_ = request.getParameter("lb1_");
 
@@ -104,7 +241,7 @@ if (!fun.sqlStrCheck(lid))
 	return;
 }
 try{
-	
+    
 	String naction=request.getParameter("naction");
 	if (naction!=null && naction.equals("save"))
 	{
@@ -114,7 +251,11 @@ try{
 		lb3=request.getParameter("lb3");
 		cpjs=request.getParameter("cpjs");
 		shfw=request.getParameter("shfw");
-		
+		xswz=request.getParameter("xswz");
+		qylist=request.getParameter("qylist");
+        if (null == qylist || qylist.isEmpty()) {
+            qylist = null;
+        }
 		
 		if (!fun.sqlStrCheck(mc) || !fun.sqlStrCheck(lb1) || !fun.sqlStrCheck(lb2) || !fun.sqlStrCheck(lb3))
 		{
@@ -139,7 +280,7 @@ try{
 		   }
 		   rs.close();
 			   
-			strsql="update tbl_spl set mc=?,lb1=?,lb2=?,lb3=?,cpjs=?,shfw=? where nid="+lid;
+			strsql="update tbl_spl set mc=?,lb1=?,lb2=?,lb3=?,cpjs=?,shfw=?,xswz=?,qykj=? where nid="+lid;
 			PreparedStatement pstmt=conn.prepareStatement(strsql);
 			pstmt.setString(1,mc);
 			pstmt.setString(2,lb1);
@@ -153,6 +294,8 @@ try{
 			pstmt.setString(4,lb3);
 			pstmt.setString(5,cpjs);
 			pstmt.setString(6,shfw);
+			pstmt.setString(7,xswz);
+			pstmt.setString(8, qylist) ;
 			int result=pstmt.executeUpdate();
 			pstmt.close();
 			
@@ -182,14 +325,16 @@ try{
 		   }
 		   rs.close();
 			   
-			strsql="insert into tbl_spl (mc,lb1,lb2,lb3,cpjs,shfw,zt,rq) values(?,?,?,?,?,?,0,now())";
+			strsql="insert into tbl_spl (mc,lb1,lb2,lb3,cpjs,shfw,zt,rq,xswz,qykj) values(?,?,?,?,?,?,0,now(),?,?)";
 			PreparedStatement  pstmt=conn.prepareStatement(strsql);
 			pstmt.setString(1,mc);
 			pstmt.setString(2,lb1);
 			pstmt.setString(3,lb2);
 			pstmt.setString(4,lb3);
 			pstmt.setString(5,cpjs);
-			pstmt.setString(6,shfw);	
+			pstmt.setString(6,shfw);
+			pstmt.setString(7,xswz);
+			pstmt.setString(8, qylist);
 			int result=pstmt.executeUpdate();			
 			pstmt.close();
 			if (result>0)				
@@ -207,7 +352,7 @@ try{
 	
 	if (lid!=null && lid.length()>0)
 	{
-		strsql="select mc,lb1,lb2,lb3,cpjs,shfw from tbl_spl where nid="+lid;		
+		strsql="select mc,lb1,lb2,lb3,cpjs,shfw,xswz,qykj from tbl_spl where nid="+lid;		
 		rs=stmt.executeQuery(strsql);
 		if (rs.next())
 		{
@@ -217,9 +362,24 @@ try{
 			lb3=rs.getString("lb3");
 			cpjs=rs.getString("cpjs");
 			shfw=rs.getString("shfw");
+			xswz=rs.getString("xswz");
+			qykj=rs.getString("qykj");
 		}
 		rs.close();
 		
+	}
+	
+	if (null != qykj && !qykj.isEmpty()) {
+		strsql = "select qymc from tbl_qy where (zt=2 or zt=4) and nid in ("+qykj+")";
+		rs=stmt.executeQuery(strsql);
+		while (rs.next())
+		{
+		    if (!qymc.isEmpty()) {
+		        qymc += ";";
+		    } 
+	        qymc += rs.getString("qymc");
+		}
+		rs.close();
 	}
 	
 %>
@@ -336,6 +496,16 @@ try{
   	%>
                           </td>
                         </tr>
+                        <tr>
+                          <td width="30" align="center"><span class="star">*</span></td>
+                          <td width="90">显示位置：</td>
+                          <td><input type="text" name="xswz" id="xswz" value="<%=xswz==null?"":xswz%>" maxlength="5" class="input3" />&nbsp;请填写数字，数字越大显示位置越靠前</td>
+                        </tr>
+                        <tr>
+	                      <td align="center"><span class="star"></span></td>
+	                      <td>公司显示</td>
+	                      <td><textarea id="qymclist" readonly style="width: 400px;height: 100px;float: left"><%=qymc%></textarea><input type="button" value="选择" style="float: left" onclick="showQySelect()"  /><input type="hidden" name="qylist" id="qylist" value="<%=qykj==null ? "" : qykj%>"/></td>
+                    	</tr>
                         <tr>
                           <td align="center"><span class="star">*</span></td>
                           <td>商品介绍：</td>

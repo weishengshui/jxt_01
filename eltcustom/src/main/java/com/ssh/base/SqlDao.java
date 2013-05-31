@@ -47,9 +47,11 @@ public class SqlDao {
 					int cols = rsmd.getColumnCount();
 					do {
 						Map<String, Object> map = new HashMap<String, Object>();
-						for (int i = 1; i <= cols; ++i) {
-							String tabName = rsmd.getColumnName(i).toLowerCase();
-							if(namemap.get(i)!=null){tabName=namemap.get(i);}
+						for (int i = 1; i <= cols; i++) {
+							String tabName = rsmd.getColumnName(i)
+									.toLowerCase();
+							if (namemap.get(i) != null)
+								tabName = (String) namemap.get(i);
 							Object txt = rs.getObject(i);
 							if (txt == null) {
 								txt = "";

@@ -47,8 +47,8 @@ span{font-family:"宋体"; font-size:12px;}
 .top .top-right{float:right}
 .top .top-right span{width:23px; float:left}
 .top .top-right h1{padding-right:10px; color:#fe6700; font-weight:normal; font-size:12px; float:left}
-.top .top-right h1 a{color:#fe6700; text-decoration:underline}
-.top .top-right h1 a:hover{color:#fe6700; text-decoration:underline}
+.top .top-right h1 a{text-decoration:underline}
+.top .top-right h1 a:hover{text-decoration:underline}
 
 .logo{width:992px; height:75px; padding:1px 0 2px 0; float:left}
 .logo img{display:block; float:left}

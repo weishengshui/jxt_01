@@ -1,6 +1,7 @@
 <%@page import="org.apache.velocity.Template"%>
 <%@page import="org.apache.velocity.VelocityContext"%>
 <%@page import="org.apache.velocity.app.Velocity"%>
+<%@page import="jxt.elt.common.EmailTemplate"%>
 <%@page import="java.io.StringWriter"%>
 <%@page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@page import="java.sql.Connection"%>
@@ -76,7 +77,7 @@ try
 	if (jfq!=null && jfq.length()>0)
 	{
 		
-		strsql="select sum(sl-ffsl) as haven from tbl_jfqddmc  where qy="+session.getAttribute("qy")+" and zt=1 and sl<>ffsl and jfq="+jfq;
+		strsql="select sum(sl-ffsl) as haven from tbl_jfqddmc  where qy="+session.getAttribute("qy")+" and ddtype=0 and zt=1 and sl<>ffsl and jfq="+jfq;
 		rs=stmt.executeQuery(strsql);
 		if (rs.next())
 		{
@@ -92,11 +93,11 @@ try
 			ffzt=1;
 		
 		
-		//判断积分券是否够		
+		//判断福利券是否够		
 		if (haven<Integer.valueOf(ctjf))
 		{
 			out.print("<script type='text/javascript'>");
-			out.print("alert('该积分券数量不够!');");
+			out.print("alert('该福利券数量不够!');");
 			out.print("history.back(-1);");
 			out.print("</script>");
 			return;
@@ -201,8 +202,8 @@ try
 								bmmc=rs.getString("bmmc");
 								if (rs.getString("email")!=null)
 								{
-									//instead of velocity String mailcon=rs.getString("ygxm")+"<br/>"+session.getAttribute("qymc")+"已于"+ffsj+"以"+jfmm+"的名目发放了"+ojfs[i]+"积分券到您管理的["+bmmc+"]帐户，<a href='http://119.145.4.25:88'>请及时进行发放</a>";
-									//sendemail.sendHtmlEmail(rs.getString("email"),mailcon,"积分券发放通知");
+									//instead of velocity String mailcon=rs.getString("ygxm")+"<br/>"+session.getAttribute("qymc")+"已于"+ffsj+"以"+jfmm+"的名目发放了"+ojfs[i]+"福利券到您管理的["+bmmc+"]帐户，<a href='http://119.145.4.25:88'>请及时进行发放</a>";
+									//sendemail.sendHtmlEmail(rs.getString("email"),mailcon,"福利券发放通知");
 									
 									VelocityContext context = new VelocityContext();
 									context.put("name", rs.getString("ygxm"));
@@ -212,7 +213,8 @@ try
 									context.put("quantity",ojfs[i]);
 									context.put("account", bmmc);
 									
-									Template template = Velocity.getTemplate("templates/mail/jfqassign.vm");
+// 									Template template = Velocity.getTemplate("templates/mail/jfqassign.vm");
+									Template template = EmailTemplate.getTemplate("jfqassign.vm");
 									StringWriter sw = new StringWriter();
 									template.merge(context, sw);
 									String mailContent = sw.toString();
@@ -270,8 +272,8 @@ try
 								xzmc=rs.getString("xzmc");
 								if (rs.getString("email")!=null)
 								{
-									//instead of velocity String mailcon=rs.getString("ygxm")+"<br/>"+session.getAttribute("qymc")+"已于"+ffsj+"以"+jfmm+"的名目发放了"+ojfs[i]+"积分券到您管理的["+xzmc+"]帐户，<a href='http://119.145.4.25:88'>请及时进行发放</a>";
-									//sendemail.sendHtmlEmail(rs.getString("email"),mailcon,"积分券发放通知");
+									//instead of velocity String mailcon=rs.getString("ygxm")+"<br/>"+session.getAttribute("qymc")+"已于"+ffsj+"以"+jfmm+"的名目发放了"+ojfs[i]+"福利券到您管理的["+xzmc+"]帐户，<a href='http://119.145.4.25:88'>请及时进行发放</a>";
+									//sendemail.sendHtmlEmail(rs.getString("email"),mailcon,"福利券发放通知");
 									
 									VelocityContext context = new VelocityContext();
 									context.put("name", rs.getString("ygxm"));
@@ -281,7 +283,8 @@ try
 									context.put("quantity",ojfs[i]);
 									context.put("account", xzmc);
 									
-									Template template = Velocity.getTemplate("templates/mail/jfqassign.vm");
+// 									Template template = Velocity.getTemplate("templates/mail/jfqassign.vm");
+									Template template = EmailTemplate.getTemplate("jfqassign.vm");
 									StringWriter sw = new StringWriter();
 									template.merge(context, sw);
 									String mailContent = sw.toString();
@@ -370,8 +373,8 @@ try
 							showtxt.append("["+rs.getString("ygxm")+"] ");
 							hjr.append(rs.getString("ygxm")+" ");
 							
-								//instead of velocity String mailcon=rs.getString("ygxm")+"<br/>"+session.getAttribute("qymc")+"已于"+ffsj+"以"+jfmm+"的名目发放了"+ojfs[i]+"积分券到您的帐户，<a href='http://119.145.4.25:88'>请及时进行领取</a>";
-								//sendemail.sendHtmlEmail(rs.getString("email"),mailcon,"积分券领取通知");
+								//instead of velocity String mailcon=rs.getString("ygxm")+"<br/>"+session.getAttribute("qymc")+"已于"+ffsj+"以"+jfmm+"的名目发放了"+ojfs[i]+"福利券到您的帐户，<a href='http://119.145.4.25:88'>请及时进行领取</a>";
+								//sendemail.sendHtmlEmail(rs.getString("email"),mailcon,"福利券领取通知");
 								
 								VelocityContext context = new VelocityContext();
 								context.put("name", rs.getString("ygxm"));
@@ -380,7 +383,8 @@ try
 								context.put("catagoryName", jfmm);
 								context.put("quantity",ojfs[i]);
 								
-								Template template = Velocity.getTemplate("templates/mail/jfqreceive.vm");
+// 								Template template = Velocity.getTemplate("templates/mail/jfqreceive.vm");
+								Template template = EmailTemplate.getTemplate("jfqreceive.vm");
 								StringWriter sw = new StringWriter();
 								template.merge(context, sw);
 								String mailContent = sw.toString();
@@ -431,8 +435,8 @@ try
 						{
 							yg.append(rs.getString("nid")+",");
 							
-								//instead of velocity String mailcon=rs.getString("ygxm")+"<br/>"+session.getAttribute("qymc")+"已于"+ffsj+"以"+jfmm+"的名目发放了"+ojfs[i]+"积分券到您的帐户，<a href='http://119.145.4.25:88'>请及时进行领取</a>";
-								//sendemail.sendHtmlEmail(rs.getString("email"),mailcon,"积分券领取通知");
+								//instead of velocity String mailcon=rs.getString("ygxm")+"<br/>"+session.getAttribute("qymc")+"已于"+ffsj+"以"+jfmm+"的名目发放了"+ojfs[i]+"福利券到您的帐户，<a href='http://119.145.4.25:88'>请及时进行领取</a>";
+								//sendemail.sendHtmlEmail(rs.getString("email"),mailcon,"福利券领取通知");
 								
 								VelocityContext context = new VelocityContext();
 								context.put("name", rs.getString("ygxm"));
@@ -441,7 +445,8 @@ try
 								context.put("catagoryName", jfmm);
 								context.put("quantity",ojfs[i]);
 								
-								Template template = Velocity.getTemplate("templates/mail/jfqreceive.vm");
+// 								Template template = Velocity.getTemplate("templates/mail/jfqreceive.vm");
+								Template template = EmailTemplate.getTemplate("jfqreceive.vm");
 								StringWriter sw = new StringWriter();
 								template.merge(context, sw);
 								String mailContent = sw.toString();
@@ -507,7 +512,7 @@ try
 			strsql="update tbl_jfqff set ffjf="+tjf+",hjr='"+savehjr+"' where nid="+jfff;
 			stmt.executeUpdate(strsql);
 			
-			//更新积分券订单表
+			//更新福利券订单表
 			oldtjf=tjf;  //用于下面显示，tjf会变成0
 			int sl=0,ffsl=0,nid=0;
 			//前面一定要做好库存判断,不然这里会有死循环
@@ -553,7 +558,7 @@ try
 	  	<div class="main2" style="padding-bottom:20px">
   		  	<div class="box2">
 		  		<ul class="local2">
-					<li class="local2-ico3"><h1>选择积分券</h1><h2><%=sf.format(Calendar.getInstance().getTime())%></h2></li>
+					<li class="local2-ico3"><h1>选择福利券</h1><h2><%=sf.format(Calendar.getInstance().getTime())%></h2></li>
 					<li class="local2-ico3"><h1>选择发放对象</h1><h2><%=sf.format(Calendar.getInstance().getTime())%></h2></li>
 					<li class="local2-ico1"><h1>确认发放信息</h1><h2><%=sf.format(Calendar.getInstance().getTime())%></h2></li>
 					<li><h1 class="current-local">确认发放</h1><h2><%=sf.format(Calendar.getInstance().getTime())%></h2></li>
@@ -566,7 +571,7 @@ try
 					if (rs.next())
 					{
 					%>
-					<div class="confirm-t"><strong>您选择的积分券</strong></div>
+					<div class="confirm-t"><strong>您选择的福利券</strong></div>
 					<div class="confirm-states">
 						<h1><img src="../hdimg/<%=rs.getString("hdtp")%>" width="121" height="88" /></h1>
 						<dl>
@@ -591,7 +596,7 @@ try
 					 %>
 					</h2></div>
 					<div class="fafang-mark" style="padding-left:10px"><h1>备注信息</h1><span><%=bz%></span></div>
-					<div class="fafang-sum" style="padding-left:10px">总计 <span class="yellowtxt"><%=oldtjf%></span> 份，该积分券您还剩 <%=haven-Integer.valueOf(oldtjf) %> 份，您还可以</div>
+					<div class="fafang-sum" style="padding-left:10px">总计 <span class="yellowtxt"><%=oldtjf%></span> 份，该福利券您还剩 <%=haven-Integer.valueOf(oldtjf) %> 份，您还可以</div>
 					<div class="fafang-confirm" style="margin-top:10px"><a href="mywelfare.jsp" class="jxffbtn"></a></div>
 					<div class="fafang-confirm" style="margin-top:15px"><a href="buywelfare.jsp" class="gmflbtnbtn"></a></div>
 				</div>

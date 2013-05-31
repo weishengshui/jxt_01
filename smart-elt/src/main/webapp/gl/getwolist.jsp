@@ -44,7 +44,19 @@ try
 		stmt.executeUpdate(strsql);
 	}
 	SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
-	strsql="select count(*) as hn from tbl_jfqdd where qy="+session.getAttribute("qy");
+	String ffbm = session.getAttribute("ffbm").toString();
+    if ("''".equals(ffbm)) {
+    	ffbm = "-1";
+    }
+    String ffxz = session.getAttribute("ffxz").toString();
+    if ("''".equals(ffxz)) {
+    	ffxz = "-1";
+    }
+	if (session.getAttribute("glqx").toString().indexOf(",12,")!=-1) {
+		strsql="select count(*) as hn from tbl_jfqdd where qy="+session.getAttribute("qy")+" and ddtype=0";
+	} else if (isLeader) {
+		strsql="select count(*) as hn from tbl_jfqdd where qy="+session.getAttribute("qy")+" and ddtype>0 and ((ddtype=1 and bmxz in ("+ffbm+")) or (ddtype=2 and bmxz in ("+ffxz+")) or (ddtype=3 and xdr="+session.getAttribute("ygid")+"))";
+	}
 	if (sddsj!=null && sddsj.length()>0)
 		strsql+=" and ddsj>='"+sddsj+"'";
 	if (eddsj!=null  && eddsj.length()>0)
@@ -58,8 +70,11 @@ try
 	rs.close();
 	pages=(ln-1)/psize+1;
 	
-	
-	strsql="select nid,ddsj,ddbh,ddsl,ddjf,zt from tbl_jfqdd where qy="+session.getAttribute("qy");	
+	if (session.getAttribute("glqx").toString().indexOf(",12,")!=-1) {
+		strsql="select nid,ddsj,ddbh,ddsl,ddjf,zt from tbl_jfqdd where qy="+session.getAttribute("qy")+" and ddtype=0";
+	} else if (isLeader) {
+		strsql="select nid,ddsj,ddbh,ddsl,ddjf,zt from tbl_jfqdd where qy="+session.getAttribute("qy")+" and ddtype>0 and ((ddtype=1 and bmxz in ("+ffbm+")) or (ddtype=2 and bmxz in ("+ffxz+")) or (ddtype=3 and xdr="+session.getAttribute("ygid")+"))";
+	}
 	if (sddsj!=null && sddsj.length()>0)
 		strsql+=" and ddsj>='"+sddsj+"'";
 	if (eddsj!=null  && eddsj.length()>0)

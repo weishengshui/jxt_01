@@ -44,4 +44,6 @@ public interface SpService {
     public TblSp findSpById(Integer id);
     public TblSpl findSplById(Integer id);
     public List<Map<String, Object>> getSpBySpl(String spl);
+
+	public Boolean checkInQyList(String paramString);
 }

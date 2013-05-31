@@ -54,14 +54,16 @@ try{%>
 				<%
 				//这里库存数量为零的是否要显示
 				//strsql="select nid,mc,sm,jf,sp from tbl_jfq where hd="+hid+" and kcsl>0";
+				String qyid = session.getAttribute("qy").toString();
 				if(request.getParameter("sid") != null){
-					strsql="select q.yxq,q.nid,q.mc,q.sm,q.jf,q.sp,q.yxq,q.kcsl,h.hdtp2 from tbl_jfq q inner join tbl_jfqhd h on q.hd=h.nid where q.hd="+hid;
+					strsql="select q.yxq,q.nid,q.mc,q.sm,q.jf,q.sp,q.yxq,q.kcsl,h.hdtp2 from tbl_jfq q inner join tbl_jfqhd h on q.hd=h.nid where q.hd="+hid+" and (q.qyid=-1 or q.qyid="+qyid+") and q.kcsl>0";
 				}else{
-					strsql="select q.nid,q.mc,q.sm,q.jf,q.sp,q.yxq,q.kcsl,h.hdtp2 from tbl_jfq q inner join tbl_jfqhd h on q.hd=h.nid where q.zt=1 and q.hd="+hid;
+					strsql="select q.nid,q.mc,q.sm,q.jf,q.sp,q.yxq,q.kcsl,h.hdtp2 from tbl_jfq q inner join tbl_jfqhd h on q.hd=h.nid where q.zt=1 and q.hd="+hid+" and (q.qyid=-1 or q.qyid="+qyid+") and q.kcsl>0";
 				}
 				rs=stmt.executeQuery(strsql);
 				int qn=1;
 				int n = 0;
+				boolean isSingle = false;
 				while(rs.next())
 				{
 					if (rs.isFirst())
@@ -75,16 +77,23 @@ try{%>
 			<div class="bannerbox3" style="margin-top: 10px;">
 			<%} 
 
-				String css = "quan quanbg-";
-				if(rs.isLast() && n==0){
-					css += "0";
-				}else{
-					css += + qn;
-				}
+// 				String css = "quan quanbg-";
+// 				if(rs.isLast() && n==0){
+// 					css += "0";
+// 				}else if (qn < 4){//only has 3 background images
+// 					css += + qn;
+// 				} else {
+// 					css = "quan-n";
+// 				}
+                String css = "quan";
+                if (rs.isLast() && n==0) {
+                    isSingle = true;
+                }
 				n++;
 				if(request.getParameter("sid") == null){
 			%>
 				<div class="<%=css %>" <%if (qn>1) out.print(" style='margin-top:50px'"); %>>
+				    <%if (!isSingle) {%><div class="quanorderbg"><span class="quanorder"><%=qn %></span></div><%} %>
 					<div class="quanbuy"><span class="quan-name" style="font-size=20px;">[<%=rs.getString("mc").length()>15?rs.getString("mc").substring(0,15):rs.getString("mc")%>]</span><span class="quan-num"><%=rs.getString("jf")%></span><span class="quan-jifeng">积分</span><span class="floatleft"><a href="javascript:void(0);" class="ljgmbtn" onclick="addbuycar(<%=rs.getString("nid")%>,1)"></a></span><span class="floatleft"><a href="javascript:void(0);" class="boxcarbtn"  onclick="addbuycar(<%=rs.getString("nid")%>,0)"></a></span></div>
 					<div class="quan-main">
 						<div class="quan-ad-txt" style="width: 850px;">
@@ -100,7 +109,7 @@ try{%>
 						while (rs2.next())
 						{m++;
 						%>
-						<li><a href="pdetail.jsp?sp=<%=rs2.getString("nid")%>" target="_blank"><img src="../<%=rs2.getString("lj")%>" /></a><span><%=rs2.getString("spmc")%></span></li>						
+						<li><a href="pdetail.jsp?sp=<%=rs2.getString("nid")%>" target="_blank"><img src="../<%=rs2.getString("lj")%>" /></a><p><span><%=rs2.getString("spmc")%></span></p></li>						
 						<%
 						}
 						rs2.close();
@@ -115,14 +124,14 @@ try{%>
 								out.println("员工凭此券可免费兑换以上商品");
 							}
 						%>
-						</div>					
+						</div>
 					</div>
 				</div>
 			<%
 				}else{
 					if(rs.getString("nid").equals(request.getParameter("sid"))){
 			%>
-						<div class="quan quanbg-0" <%if (qn>1) out.print(" style='margin-top:50px'"); %>>
+						<div class="quan" <%if (qn>1) out.print(" style='margin-top:50px'"); %>>
 							<div class="quanbuy">
 								<span class="quan-name">[<%=rs.getString("mc").length()>15?rs.getString("mc").substring(0,15):rs.getString("mc")%>]</span>
 								<span class="quan-num"><%=rs.getString("jf")%></span>
@@ -155,7 +164,7 @@ try{%>
 								while (rs2.next())
 								{m++;
 								%>
-								<li><a href="pdetail.jsp?sp=<%=rs2.getString("nid")%>" target="_blank"><img src="../<%=rs2.getString("lj")%>" /></a><span><%=rs2.getString("spmc")%></span></li>						
+								<li><a href="pdetail.jsp?sp=<%=rs2.getString("nid")%>" target="_blank"><img src="../<%=rs2.getString("lj")%>" /></a><p><span><%=rs2.getString("spmc")%></span></p></li>						
 								<%
 								}
 								rs2.close();
@@ -195,7 +204,7 @@ try{%>
 						
 			  	<div class="main2">
 			  		<div class="box">	
-			  		<%out.print("<div class=\"jfqbtnbox\"><span class=\"cancletxt\"><a href=\"buywelfare.jsp\" >&gt;&gt;积分券暂时为空，请选择其他积分券</a></span></div>"); %>			
+			  		<%out.print("<div class=\"jfqbtnbox\"><span class=\"cancletxt\"><a href=\"buywelfare.jsp\" >&gt;&gt;福利券暂时为空，请选择其他福利券</a></span></div>"); %>			
 					</div>
 				</div>
 					

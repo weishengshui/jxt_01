@@ -37,4 +37,5 @@ public interface SpDao extends PageDao{
 	public String countSqlzshy(String param);
 	public String pageSqltszk(String param);
 	public String countSqltszk(String param);
+	public abstract List<Map<String, Object>> getSplb();
 }

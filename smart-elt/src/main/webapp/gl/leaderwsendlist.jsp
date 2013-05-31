@@ -55,7 +55,7 @@ try{%>
 				<div class="hjr-box2">
 					<table width="100%" border="0" cellspacing="0" cellpadding="0">
 					  <tr>
-						<td width="125" height="30" align="center"><strong>积分券发放记录</strong></td>
+						<td width="125" height="30" align="center"><strong>福利券发放记录</strong></td>
 						<td width="100" align="center"></td>
 						<td width="90"></td>
 						<td width="20" height="30" align="center"></td>
@@ -78,7 +78,7 @@ try{%>
 						<div class="jfqffjl1">发放日期</div>						
 						<div class="jfqffjl2">发放名目</div>
 						<div class="jfqffjl3">接收对象</div>
-						<div class="jfqffjl9">积分券</div>
+						<div class="jfqffjl9">福利券</div>
 						<div class="jfqffjl4">数量</div>
 						<div class="jfqffjl5">发放部门</div>
 						<div class="jfqffjl8">发放备注</div>
@@ -86,7 +86,15 @@ try{%>
 					<ul class="jfqffjlin">
 					<%
 					int ln=0,pages=1;
-					strsql="select count(f.nid) as hn from tbl_jfqff f inner join tbl_jfqffxx x on f.ffxx=x.nid where f.ffxx<>0 and ((x.fflx=1 and x.lxbh in ("+session.getAttribute("ffbm")+")) or (x.fflx=2 and x.lxbh in ("+session.getAttribute("ffxz")+")))";
+					String ffbm = session.getAttribute("ffbm").toString();
+				    if ("''".equals(ffbm)) {
+				    	ffbm = "-1";
+				    }
+				    String ffxz = session.getAttribute("ffxz").toString();
+				    if ("''".equals(ffxz)) {
+				    	ffxz = "-1";
+				    }
+					strsql="select count(f.nid) as hn from tbl_jfqff f inner join tbl_jfqffxx x on f.ffxx=x.nid where f.ffxx<>0 and ((x.fflx=1 and x.lxbh in ("+ffbm+")) or (x.fflx=2 and x.lxbh in ("+ffxz+")))";
 					rs=stmt.executeQuery(strsql);
 					if (rs.next())
 					{
@@ -95,7 +103,7 @@ try{%>
 					rs.close();
 					pages=(ln-1)/10+1;
 					
-					strsql="select f.nid,f.ffsj,m1.mmmc as mc1,m2.mmmc as mc2,f.hjr,ffjf,ffzt,f.srsj,x.jsmc,f.bz,q.mc as jfqmc from tbl_jfqff f inner join tbl_jfqffxx x on f.ffxx=x.nid left join tbl_jfmm m1 on f.mm1=m1.nid left join tbl_jfmm m2 on f.mm2=m2.nid left join tbl_jfq q on f.jfq=q.nid where f.ffxx<>0 and ((x.fflx=1 and x.lxbh in ("+session.getAttribute("ffbm")+")) or (x.fflx=2 and x.lxbh in ("+session.getAttribute("ffxz")+"))) order by f.nid desc limit 10";
+					strsql="select f.nid,f.ffsj,m1.mmmc as mc1,m2.mmmc as mc2,f.hjr,ffjf,ffzt,f.srsj,x.jsmc,f.bz,q.mc as jfqmc from tbl_jfqff f inner join tbl_jfqffxx x on f.ffxx=x.nid left join tbl_jfmm m1 on f.mm1=m1.nid left join tbl_jfmm m2 on f.mm2=m2.nid left join tbl_jfq q on f.jfq=q.nid where f.ffxx<>0 and ((x.fflx=1 and x.lxbh in ("+ffbm+")) or (x.fflx=2 and x.lxbh in ("+ffxz+"))) order by f.nid desc limit 10";
 					rs=stmt.executeQuery(strsql);
 					while (rs.next())
 					{
@@ -127,7 +135,7 @@ try{%>
 						</div>		
 					</div>
 				</div>
-				<div style="clear: both; height: 25px; padding-top: 10px; ">您还可以 <a href="leaderw.jsp" style="color: #2ea6d7">查看积分券库存</a></div>
+				<div style="clear: both; height: 25px; padding-top: 10px; ">您还可以 <a href="leaderw.jsp" style="color: #2ea6d7">查看福利券库存</a></div>
 		  </div>
 	  	</div>
 	</div>

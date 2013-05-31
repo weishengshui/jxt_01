@@ -1,6 +1,7 @@
 <%@page import="org.apache.velocity.Template"%>
 <%@page import="org.apache.velocity.VelocityContext"%>
 <%@page import="org.apache.velocity.app.Velocity"%>
+<%@page import="jxt.elt.common.EmailTemplate"%>
 <%@page import="java.io.StringWriter"%>
 <%@page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@page import="java.sql.Connection"%>
@@ -79,7 +80,7 @@ try{
 	}
 	if (naction!=null && (naction.equals("sendpwd")||naction.equals("sendpwd2")||naction.equals("sendpwd3")))
 	{
-		SendEmailBean sendemailB=new SendEmailBean();
+		//SendEmailBean sendemailB=new SendEmailBean();
 		String sendemail="";
 		int dlmm=0;
 		strsql="select dlm from tbl_xtyh where nid="+glyid;
@@ -115,7 +116,8 @@ try{
 			{
 				context.put("loginAccount", sendemail);
 				context.put("loginPassword", dlmm);
-				template = Velocity.getTemplate("templates/mail/managerinitpwd.vm");
+// 				template = Velocity.getTemplate("templates/mail/managerinitpwd.vm");
+				template = EmailTemplate.getTemplate("managerinitpwd.vm");
 				
 				/* instead of velocity 
 				mailc.append("用户名："+sendemail+"<br/>");			
@@ -127,7 +129,8 @@ try{
 			else if (naction.equals("sendpwd2"))
 			{		
 				context.put("password", dlmm);
-				template = Velocity.getTemplate("templates/mail/managerappendpwd.vm");
+// 				template = Velocity.getTemplate("templates/mail/managerappendpwd.vm");
+				template = EmailTemplate.getTemplate("managerappendpwd.vm");
 				// instead of velocity mailc.append("追加密码："+String.valueOf(dlmm)+"<br/>");
 				//sendemailB.sendSimpleEmail(sendemail,mailc.toString(),"ELT系统追加积分密码");
 				mbt="IRewards追加积分密码";
@@ -135,8 +138,8 @@ try{
 			else
 			{
 				context.put("assignPassword", dlmm);
-				template = Velocity.getTemplate("templates/mail/managerinitassignpwd.vm");
-				
+// 				template = Velocity.getTemplate("templates/mail/managerinitassignpwd.vm");
+				template = EmailTemplate.getTemplate("managerinitassignpwd.vm");
 				// instread of velocity mailc.append("试用企业发放积分密码："+String.valueOf(dlmm)+"<br/>");
 				//sendemailB.sendSimpleEmail(sendemail,mailc.toString(),"ELT系统试用企业发放积分密码");
 				mbt="IRewards试用企业发放积分密码";
@@ -236,6 +239,10 @@ try{
 			  			out.print("[参数设置] ");
 			  		if (rs.getString("czqx")!=null && rs.getString("czqx").indexOf("9004")>-1)
 			  			out.print("[帮助中心管理] ");
+			  		if (rs.getString("czqx")!=null && rs.getString("czqx").indexOf("9005")>-1)
+			  			out.print("[发送邮件设置] ");
+			  		if (rs.getString("czqx")!=null && rs.getString("czqx").indexOf("9006")>-1)
+			  			out.print("[企业汇总表] ");
 			  		
 			  		if (rs.getString("czqx")!=null && rs.getString("czqx").indexOf("1001")>-1)
 			  			out.print("[试用企业管理]");					  		
@@ -254,11 +261,11 @@ try{
 			  		if (rs.getString("czqx")!=null && rs.getString("czqx").indexOf("2005")>-1)
 			  			out.print("[交易失败订单]");
 			  		if (rs.getString("czqx")!=null && rs.getString("czqx").indexOf("3001")>-1)
-			  			out.print("[积分券活动类目管理]");
+			  			out.print("[福利券活动类目管理]");
 			  		if (rs.getString("czqx")!=null && rs.getString("czqx").indexOf("3002")>-1)
-			  			out.print("[积分券活动管理]");
+			  			out.print("[福利券活动管理]");
 			  		if (rs.getString("czqx")!=null && rs.getString("czqx").indexOf("3003")>-1)
-			  			out.print("[积分券内容管理]");
+			  			out.print("[福利券内容管理]");
 			  		
           			
 			  		if (rs.getString("czqx")!=null && rs.getString("czqx").indexOf("4004")>-1)

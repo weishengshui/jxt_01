@@ -23,7 +23,7 @@ public class QyygDaoImpl extends BaseDAO<TblQyyg, Integer> implements QyygDao {
 			.getName());
 	
 	public List<Map<String, Object>> getQyinfo(int qy){
-		String sql = "SELECT t.nid,t.qymc,t.qybh,t.qydz,t.qh,t.log FROM tbl_qy t WHERE t.nid = "+qy;
+		String sql = "SELECT t.nid,t.qymc,t.qybh,t.qydz,t.qh,t.log,t.zt FROM tbl_qy t WHERE t.nid = "+ qy;
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		try {
 			list = sqldao.query(sql);

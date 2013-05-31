@@ -1,46 +1,73 @@
 package com.ssh.service;
 
+import com.ssh.entity.TblYgddmx;
+import com.ssh.entity.TblYgddzb;
 import java.util.List;
 import java.util.Map;
 
-import com.ssh.entity.TblYgddmx;
-import com.ssh.entity.TblYgddzb;
+public abstract interface DdService
+{
+  public abstract List<Map<String, Object>> page(String paramString1, String paramString2, String paramString3);
 
-public interface DdService {
+  public abstract String count(String paramString);
 
-	public List<Map<String,Object>> page(String param,String page,String rp);
-	public String count (String param);
-	
-	public List<Map<String, Object>> getJfqdhjl(String yg, int limit);
-	public List<Map<String, Object>> getJfdhjl(String yg, int limit);
-	public List<Map<String, Object>> getXdsp(int yg,int dd, int limit);
-	public List<Map<String, Object>> getTsmsp(int yg,int qy, int limit);
-	public List<Map<String, Object>> getZshy(String param, int limit);
-	public String getSps(String ddh);
-	public List<Map<String, Object>> getDdMx(int yg, String ddh);
-	public List<Map<String, Object>> getDdByDdh(int yg,String dds);
-	public List<Map<String, Object>> getDdZb(int yg,String param);
-	public List<Map<String, Object>> getDdspl(int yg,String ddh);
-	public List<Map<String, Object>> getDdCount(int yg);
-	
-	public int pay(String ddh);
-	public int vertify(String ddh);
-	
-	public boolean save(TblYgddmx mx);
-    public boolean[] save(TblYgddmx[] mx);
-    public TblYgddmx findMxById(Integer id);
-    public TblYgddmx[] findMxByIds(Integer[] ids);
-    public List<TblYgddmx> findMxByDdh(String ddh);
-    
-	public boolean save(TblYgddzb zb);
-    public boolean[] save(TblYgddzb[] zb);
-    public TblYgddzb findZbById(Integer id);
-    public TblYgddzb findZbByDdh(String ddh);
-    public List<TblYgddzb> findZbByYg(Integer yg);
-    public TblYgddzb[] findZbByIds(Integer[] ids);
+  public abstract List<Map<String, Object>> getJfqdhjl(String paramString, int paramInt);
 
-    public int cancel(String ddh);
-    public int remind(String ddh);
-    public int confirm(String ddh);
-    public int pingjia(String ddh);
+  public abstract List<Map<String, Object>> getJfdhjl(String paramString, int paramInt);
+
+  public abstract List<Map<String, Object>> getXdsp(int paramInt1, int paramInt2, int paramInt3);
+
+  public abstract List<Map<String, Object>> getTsmsp(int paramInt1, int paramInt2, int paramInt3);
+
+  public abstract List<Map<String, Object>> getZshy(String paramString, int paramInt);
+
+  public abstract String getSps(String paramString);
+
+  public abstract List<Map<String, Object>> getDdMx(int paramInt, String paramString);
+
+  public abstract List<Map<String, Object>> getDdByDdh(int paramInt, String paramString);
+
+  public abstract List<Map<String, Object>> getDdZb(int paramInt, String paramString);
+
+  public abstract List<Map<String, Object>> getDdspl(int paramInt, String paramString);
+
+  public abstract List<Map<String, Object>> getDdCount(int paramInt);
+
+  public abstract int pay(String paramString);
+
+  public abstract int hrpay(String paramString, int paramInt);
+
+  public abstract int vertify(String paramString);
+
+  public abstract int hrvertify(String paramString, int paramInt);
+
+  public abstract boolean save(TblYgddmx paramTblYgddmx);
+
+  public abstract boolean[] save(TblYgddmx[] paramArrayOfTblYgddmx);
+
+  public abstract TblYgddmx findMxById(Integer paramInteger);
+
+  public abstract TblYgddmx[] findMxByIds(Integer[] paramArrayOfInteger);
+
+  public abstract List<TblYgddmx> findMxByDdh(String paramString);
+
+  public abstract boolean save(TblYgddzb paramTblYgddzb);
+
+  public abstract boolean[] save(TblYgddzb[] paramArrayOfTblYgddzb);
+
+  public abstract TblYgddzb findZbById(Integer paramInteger);
+
+  public abstract TblYgddzb findZbByDdh(String paramString);
+
+  public abstract List<TblYgddzb> findZbByYg(Integer paramInteger);
+
+  public abstract TblYgddzb[] findZbByIds(Integer[] paramArrayOfInteger);
+
+  public abstract int cancel(String paramString);
+
+  public abstract int remind(String paramString);
+
+  public abstract int confirm(String paramString);
+
+  public abstract int pingjia(String paramString);
 }

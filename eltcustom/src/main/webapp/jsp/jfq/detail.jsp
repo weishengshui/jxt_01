@@ -13,19 +13,23 @@
 		<script type="text/javascript" src="common/js/jquery-1.7.min.js"></script>	
 		<script type="text/javascript" src="common/js/common.js"></script>
 		<script type="text/javascript">
+			var sflq = 1;
 			var getJfq = function(){
 				var timeParam = Math.round(new Date().getTime()/1000);
 				$.getJSON("jfqj!detail.do?time="+timeParam,{param:'<s:property value="jfqmc.nid"/>'}, function(data){
+					sflq = data.rows[0].sflq;
 					$("#jfqmc").html(data.rows[0].mc);
 					if(data.rows[0].zt == '1'){
-						$("#jfqzt").html('已使用 （订单号 <span class="blue"><a href="dd!detail.do?crddh='+data.rows[0].ddh+'">'+data.rows[0].ddh+'</a></span>）');
-						$("#jfqsm").html('您已领取：'+data.rows[0].spmc);
-					};
-					if('<s:date name="jfqmc.yxq" format="yyyyMMdd"/>'<new Date().toformat("")){
+						$("#jfqzt").html('已使用 （订单号 <span class="blue"><a href="dd!fldetail.do?crddh='+data.rows[0].ddh+'">'+data.rows[0].ddh+'</a></span>）');
+						$("#lqfllabel").attr("class", "jfqsp");
+						$("#lqfllabel").html('您已领取：'+data.rows[0].spmc);
+						$("#jfqsm").html('');
+					} else if('<s:date name="jfqmc.yxq" format="yyyyMMdd"/>'<new Date().toformat("")){
 						$("#jfqzt").html('<b style="color:red">已过期</b>');
 						$("#jfqsm").html('');
-					}					
+					}
 					$("#jfqmc").html(data.rows[0].mc);
+					getJfqsp();
 				});
 			};
 			var getJfqsp = function(){
@@ -34,27 +38,47 @@
 					if(json.rows == undefined) return false;
 					$("#jfqsplist").empty();								
 					$.each(json.rows, function (i, row) {
-						var btns="";
+						var jfqlist="";
 						if('<s:property value="jfqmc.zt"/>'=='0'&&'<s:date name="jfqmc.yxq" format="yyyyMMdd"/>'>=new Date().toformat("")){
-							btns='<div class="operate"><a class="confirm-sh" onclick="jfqlqsp(\''+row.nid
-							+'\',\'<s:property value="jfqmc.nid"/>\')">领取</a><a class="confirm-sh" onclick="jfqlqck(\''+row.nid+'\',\'<s:property value="jfqmc.nid"/>\')">查看</a></div>';
+							jfqlist = '<li><a class="wrapimg" href="sp!flsp.do?sp='+row.nid+'&jfq=<s:property value="jfqmc.jfq"/>&yxq=<s:date name="jfqmc.yxq" format="yyyy.MM.dd"/>&jfqmcid=<s:property value="jfq"/>&sflq='+sflq+'"><img src=\''+row.lj
+							+'146x146.jpg\'/></a><p class="scpro-title"><span class="scpro-title-content">'+row.spmc+'</span></p><a style="cursor:pointer" onclick="nowpay('+row.nid+');" class="flspnowgetbtn"></a></li>';
+						} else if ('<s:property value="jfqmc.zt"/>'=='1') {
+							jfqlist = '<li><a class="wrapimg" href="dd!fldetail.do?crddh=<s:property value="jfqmc.ddh"/>"><img src=\''+row.lj
+							+'146x146.jpg\'/></a><p class="scpro-title"><span class="scpro-title-content">'+row.spmc+'</span></p><div class="flspnowgetbtndisabled"></div></li>';
+						} else if ('<s:date name="jfqmc.yxq" format="yyyyMMdd"/>'<new Date().toformat("")) {
+							jfqlist = '<li><a class="wrapimgnolink" href="" style="cursor:default" onclick="return false;"><img src=\''+row.lj
+							+'146x146.jpg\'/></a><p class="scpro-title"><span class="scpro-title-content">'+row.spmc+'</span></p><div class="flspnowgetbtndisabled"></div></li>';
 						}
-						btns="";
-						var jfqlist = '<li><a class="wrapimg" href="sp!detail.do?sp='+row.nid+'&jfq=<s:property value="jfqmc.jfq"/>"><img src=\''+row.lj
-								+'146x146.jpg\'/></a><h1>'+row.spmc+'</h1>'+btns+'</li>';	
 						$("#jfqsplist").append(jfqlist);
 					});
 				});				
-			}
-			var jfqlqsp = function(sp,jfqmc){
-				window.location="dd!jfqdh.do?splist="+sp+"&dhlist="+jfqmc;
-			}
-			var jfqlqck = function(sp,jfqmc){
-				window.location="sp!jfqsp.do?sp="+sp+"&jfqmcid="+jfqmc;
-			}
+			};
+			var nowpay=function(sp){
+				if (sflq == 1) {
+					gotoConfirm(sp);
+				} else {
+					var timeParam = Math.round(new Date().getTime()/1000);
+					$.getJSON("jfqj!lq.do?time="+timeParam,{param:<s:property value="jfq"/>}, function(data){
+						gotoConfirm(sp);
+					});
+				}
+			};
+			var gotoConfirm=function(sp){
+				var oldsp = isLqWelfare('<s:property value="jfq"/>');
+				if (oldsp != 0) {
+					if (!confirm("您已经使用此福利券选择了商品，是否重新选择商品？")) {
+						return;
+					}
+				}
+				addWelfareShopCar(sp,1,'jfq<s:property value="jfqmc.jfq"/>','<s:property value="jfq"/>');
+				if (isWelfareCoupons()) {
+				    window.location="dd!flconfirm.do";
+				} else {
+					window.location="dd!confirm.do";
+				}
+			};
 			$(function() {
 				getJfq();
-				getJfqsp();
 			});
 		</script>
 	<link rel="shortcut icon" href="<%=request.getContextPath() %>/common/images/favicon.ico" type="image/x-icon" /></head>
@@ -84,7 +108,7 @@
 						<li><h1>发放理由</h1><h2><s:property value="jfqmc.ffyy" /></h2></li>
 					</ul>
 					<div style="clear:both;"></div>
-					<div class="jfqtitlesp">可领取福利</div><div id="jfqsm" class="jfqtip">您可领取以下福利礼品中任意一个，请选择</div>
+					<div id="lqfllabel" class="jfqtitlesp">可领取福利</div><div id="jfqsm" class="jfqtip">您可领取以下福利礼品中任意一个，请选择</div>
 	            	<ul id="jfqsplist" class="dhcplist">
 	            	</ul>
 	            </div>

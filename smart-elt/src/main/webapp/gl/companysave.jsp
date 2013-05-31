@@ -5,6 +5,7 @@
 <%@page import="org.apache.commons.fileupload.FileItem"%>
 <%@page import="java.sql.Connection"%>
 <%@page import="java.sql.Statement"%>
+<%@page import="java.sql.ResultSet"%>
 <%@page import="jxt.elt.common.Fun"%>
 <%@page import="com.aviyehuda.easyimage.Image"%>
 <%@ include file="../common/hrlogcheck.jsp" %>
@@ -14,8 +15,10 @@ if (session.getAttribute("glqx").toString().indexOf(",2,")==-1)
 	response.sendRedirect("main.jsp");
 
 	String qymc="",qybh="",qydz="",qh="",dh="",yb="",yyzz="",swdj="",zzjg="",qylog="",bz="",strsql="",lxr="",lxremail="";
-    Connection conn=DbPool.getInstance().getConnection();
+    String entmailusername="",entmailpassword="",entmailsmtp="",entmailstatus="0";
+	Connection conn=DbPool.getInstance().getConnection();
 	Statement stmt=conn.createStatement();
+	ResultSet rs=null;
 	Fun fun=new Fun();
 	 
     File uploadPath = new File(getServletContext().getRealPath("qyimg/"));//上传文件目录
@@ -58,6 +61,10 @@ if (session.getAttribute("glqx").toString().indexOf(",2,")==-1)
            	if (fi.getFieldName().equals("bz")) bz=fi.getString("UTF-8");
            	if (fi.getFieldName().equals("lxr")) lxr=fi.getString("UTF-8");
            	if (fi.getFieldName().equals("lxremail")) lxremail=fi.getString("UTF-8");
+           	if (fi.getFieldName().equals("entmailusername")) entmailusername=fi.getString("UTF-8");
+           	if (fi.getFieldName().equals("entmailpassword")) entmailpassword=fi.getString("UTF-8");
+           	if (fi.getFieldName().equals("entmailsmtp")) entmailsmtp=fi.getString("UTF-8");
+           	if (fi.getFieldName().equals("entmailstatus")) entmailstatus=fi.getString("UTF-8");
            	
            	if ( !fun.sqlStrCheck(qymc) || !fun.sqlStrCheck(qybh) || !fun.sqlStrCheck(qydz) || !fun.sqlStrCheck(qh) || !fun.sqlStrCheck(dh) || !fun.sqlStrCheck(yb) || !fun.sqlStrCheck(bz) || !fun.sqlStrCheck(lxr) || !fun.sqlStrCheck(lxremail))
            	{
@@ -80,8 +87,7 @@ if (session.getAttribute("glqx").toString().indexOf(",2,")==-1)
 	        	   return;
 	           }
         	   Calendar nowtime=Calendar.getInstance();
-	          
-	          
+	          	          
 	           if (fi.getName() != null && !fi.getName().equals("") ) {	
 		           	String fileName=fi.getName();	
 		          
@@ -120,7 +126,7 @@ if (session.getAttribute("glqx").toString().indexOf(",2,")==-1)
 	           }
 	       }
        }
-     
+
      strsql="update tbl_qy set qydz='"+qydz+"',qh='"+qh+"',dh='"+dh+"',yb='"+yb+"',lxr='"+lxr+"',lxremail='"+lxremail+"'";
      if (yyzz!=null && !yyzz.equals(""))
      strsql+=",yyzz='/qyimg/"+yyzz+"'";
@@ -133,6 +139,41 @@ if (session.getAttribute("glqx").toString().indexOf(",2,")==-1)
      strsql=strsql+",bz='"+bz+"' where nid="+session.getAttribute("qy");
    
 	 stmt.executeUpdate(strsql);
+	  
+	 // add logic to save or update enterprise mail config.	 
+	 if (!entmailusername.equals("") && entmailusername!=null 
+	 && !entmailpassword.equals("") && entmailpassword!=null
+	 && !entmailsmtp.equals("") && entmailsmtp!=null)
+	 {
+         int count=0;
+		 strsql="select count(*) as hn from tbl_emailconfig where qy="+session.getAttribute("qy");	
+		 rs=stmt.executeQuery(strsql);
+	     if(rs.next())
+         {
+	    	 count=rs.getInt("hn");
+         }
+		 rs.close();
+		 if (count>0)
+		 {
+			 // Update
+		 
+			 strsql="update tbl_emailconfig set username='"+entmailusername+"',password=AES_ENCRYPT('"+entmailpassword+"','e1t'),smtpaddress='"+entmailsmtp+"',status='"+entmailstatus+"' where qy="+session.getAttribute("qy");
+			 stmt.execute(strsql);
+		 }
+		 else
+		 {
+			 // Insert
+			 strsql="insert into tbl_emailconfig (password,username,smtpaddress,status,qy) values(AES_ENCRYPT('"+entmailpassword+"','e1t'),'"+entmailusername+"','"+entmailsmtp+"','"+entmailstatus+"','"+session.getAttribute("qy")+"')";
+			 stmt.executeUpdate(strsql);
+		 } 	 
+	 }
+	 else
+	 {
+		 // Delete
+		 strsql="delete from tbl_emailconfig where qy="+session.getAttribute("qy");
+		 stmt.execute(strsql);
+	 }
+
 	 response.sendRedirect("company.jsp");
     
     } catch (Exception e) {

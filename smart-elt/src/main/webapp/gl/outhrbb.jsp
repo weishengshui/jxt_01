@@ -324,11 +324,11 @@ if (session.getAttribute("glqx").toString().indexOf(",2,")==-1)
 		
 			
 		//
-		HSSFSheet sheet3=workbook.createSheet("积分券购买明细报表");
+		HSSFSheet sheet3=workbook.createSheet("福利券购买明细报表");
 		HSSFRow row3 = sheet3.createRow((short)0);	
 		row3.createCell((short) 0).setCellValue("订单号");
 		row3.createCell((short) 1).setCellValue("购买日期");	
-		row3.createCell((short) 2).setCellValue("积分券名称");	
+		row3.createCell((short) 2).setCellValue("福利券名称");	
 		row3.createCell((short) 3).setCellValue("所属类目");	
 		row3.createCell((short) 4).setCellValue("数量(张)");
 		row3.createCell((short) 5).setCellValue("金额(积分)");
@@ -363,7 +363,7 @@ if (session.getAttribute("glqx").toString().indexOf(",2,")==-1)
 		rs.close();
 		
 		//
-		HSSFSheet sheet4=workbook.createSheet("积分券发放明细报表");
+		HSSFSheet sheet4=workbook.createSheet("福利券发放明细报表");
 		HSSFRow row4 = sheet4.createRow((short)0);
 		row4.createCell((short) 0).setCellValue("发放日期");
 		row4.createCell((short) 1).setCellValue("发放名目");
@@ -564,8 +564,8 @@ if (session.getAttribute("glqx").toString().indexOf(",2,")==-1)
 		row5_1.createCell(0).setCellValue("一级目录");
 		row5_1.createCell(1).setCellValue("二级目录");
 		row5_1.createCell(2).setCellValue("累积奖励积分");
-		row5_1.createCell(4).setCellValue("积分券数量");
-		row5_1.createCell(5).setCellValue("积分券总价值");
+		row5_1.createCell(4).setCellValue("福利券数量");
+		row5_1.createCell(5).setCellValue("福利券总价值");
 		row5_1.createCell(7).setCellValue("名目累积使用积分");
 		row5_1.createCell(8).setCellValue("积分使用占比");
 		
@@ -614,7 +614,7 @@ if (session.getAttribute("glqx").toString().indexOf(",2,")==-1)
 			}
 		}
 		rs.close();
-		//积分券发放表
+		//福利券发放表
 		strsql="select mmmc from tbl_jfmm where nid in (select mm1 from tbl_jfqff where qy="+session.getAttribute("qy")+" and ffzt=1 and ffxx=0 and mm2=0  group by mm1)";
 		rs=stmt.executeQuery(strsql);
 		while(rs.next())
@@ -654,7 +654,7 @@ if (session.getAttribute("glqx").toString().indexOf(",2,")==-1)
 				}
 				rs.close();
 				
-				//积分券数量,积分券总价值
+				//福利券数量,福利券总价值
 				strsql="select sum(x.rs*x.jf),sum(x.rs*x.jf*q.jf) from tbl_jfqffxx x inner join tbl_jfqff f on x.jfqff=f.nid inner join tbl_jfmm m on f.mm2=m.nid inner join tbl_jfq q on x.jfq=q.nid where f.qy="+session.getAttribute("qy")+" and f.ffzt=1 and f.ffxx=0 and m.mmmc='"+getmmmc2+"'";
 				if (soutdate!=null && soutdate.length()>0)
 					strsql+=" and f.ffsj>='"+soutdate+"'";
@@ -687,7 +687,7 @@ if (session.getAttribute("glqx").toString().indexOf(",2,")==-1)
 				}
 				rs.close();
 				
-				//积分券数量,积分券总价值
+				//福利券数量,福利券总价值
 				strsql="select sum(x.rs*x.jf),sum(x.rs*x.jf*q.jf) from tbl_jfqffxx x inner join tbl_jfqff f on x.jfqff=f.nid inner join tbl_jfmm m on f.mm1=m.nid inner join tbl_jfq q on x.jfq=q.nid where f.qy="+session.getAttribute("qy")+" and f.ffzt=1 and f.ffxx=0 and m.mmmc='"+getmmmc1+"'";
 				if (m>=nosum)
 					strsql+=" and f.mm2=0";
@@ -726,9 +726,9 @@ if (session.getAttribute("glqx").toString().indexOf(",2,")==-1)
 		row6.createCell(1).setCellValue("获得总积分");
 		row6.createCell(2).setCellValue("积分获得总次数");
 		row6.createCell(3).setCellValue("剩余积分");
-		row6.createCell(4).setCellValue("获得总积分券");
+		row6.createCell(4).setCellValue("获得总福利券");
 		row6.createCell(5).setCellValue("获得总次数");
-		row6.createCell(6).setCellValue("剩余积分券");
+		row6.createCell(6).setCellValue("剩余福利券");
 		//先获取姓名和剩余积分 
 		StringBuffer ygid=new StringBuffer();
 		i=1;
@@ -762,7 +762,7 @@ if (session.getAttribute("glqx").toString().indexOf(",2,")==-1)
 				}
 				rs.close();
 				
-				//总积分券，积分券次数
+				//总福利券，福利券次数
 				strsql="select sum(c.ffjf),count(c.ffjf) from tbl_jfqffmc c inner join tbl_jfqff f on c.jfqff=f.nid where c.hqr="+ygidarr[m]+" and c.sfff=1";
 				if (soutdate!=null && soutdate.length()>0)
 					strsql+=" and f.ffsj>='"+soutdate+"'";
@@ -776,7 +776,7 @@ if (session.getAttribute("glqx").toString().indexOf(",2,")==-1)
 				}
 				rs.close();
 				
-				//剩余积分券
+				//剩余福利券
 				strsql="select count(nid) from tbl_jfqmc where qyyg="+ygidarr[m]+" and ffzt=1 and zt=0";
 				rs=stmt.executeQuery(strsql);
 				if (rs.next())
@@ -835,7 +835,7 @@ if (session.getAttribute("glqx").toString().indexOf(",2,")==-1)
 				}
 				rs.close();
 				
-				//积分券,因为要显示领取时间，所以只能每张积分券是一条记录
+				//福利券,因为要显示领取时间，所以只能每张福利券是一条记录
 				strsql="select q.ffly,q.lqsj,m1.mmmc as mc1,m2.mmmc as mc2 from tbl_jfqmc q inner join tbl_jfqffmc m on q.jfqffmc=m.nid inner join tbl_jfqff f on m.jfqff=f.nid left join tbl_jfmm m1 on m1.nid=f.mm1 left join tbl_jfmm m2 on m2.nid=f.mm2 where q.qyyg="+ygidarr[m]+" and q.ffzt=1";
 				if (soutdate!=null && soutdate.length()>0)
 					strsql+=" and f.ffsj>='"+soutdate+"'";
@@ -846,7 +846,7 @@ if (session.getAttribute("glqx").toString().indexOf(",2,")==-1)
 				{
 					HSSFRow datarow=sheet7.createRow(i+1);
 					datarow.createCell(0).setCellValue(ygxmarr[m]);
-					datarow.createCell(1).setCellValue("积分券");
+					datarow.createCell(1).setCellValue("福利券");
 					datarow.createCell(2).setCellValue(rs.getString("ffly"));
 					datarow.createCell(3).setCellValue(rs.getString("mc2")==null?rs.getString("mc1"):rs.getString("mc2"));
 					datarow.createCell(4).setCellValue(rs.getString("lqsj")==null?"":sf2.format(rs.getDate("lqsj")));

@@ -10,4 +10,10 @@ public interface JfDao extends PageDao{
 	public List<Map<String, Object>> getJfbyUid(String userid, int limit);
 	public String countSql(String param);
 	public List<Map<String, Object>> getJfLjsj(String yg);
+
+	public List<Map<String, Object>> getJfByUidForSy(
+			String param, int limit);
+	public List<Map<String, Object>> getJfLjsjForSy(String param);
+	public String pagelySqlForSy(String param);
+	public String countlySqlForSy(String param);
 }

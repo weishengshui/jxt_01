@@ -90,13 +90,18 @@ try
 		
 		
 		
-		if (mm1!=null && mm1.length()>0)
+		if (mm1!=null && mm1.length()>0 && !"0".equals(mm1))
 		{
 			strsql="select mmmc from tbl_jfmm where nid="+mm1;
 			rs=stmt.executeQuery(strsql);
 			if (rs.next())
 			{mmmc=rs.getString("mmmc");}
 		}
+		
+		if ("0".equals(mm1)) {
+			mmmc="部门或项目组奖励";
+		}
+		
 		if (mm2!=null && mm2.length()>0)
 		{
 			strsql="select mmmc from tbl_jfmm where nid="+mm2;
@@ -263,8 +268,20 @@ try
 					}
 				}
 				%>
-				<%if (xid!=null && xid.length()>0) {%>
-				<form action="leaderais.jsp" name="aiform" id="aiform" method="post">		
+				<%if (xid!=null && xid.length()>0) {
+					strsql="select m1.mmmc as mc1,m2.mmmc as mc2 from tbl_jfffxx x inner join tbl_jfff f on x.jfff=f.nid left join tbl_jfmm m1 on f.mm1=m1.nid left join tbl_jfmm m2 on f.mm2=m2.nid where x.nid="+xid;
+					rs=stmt.executeQuery(strsql);
+					String formAction = "leaderais.jsp";
+					if (rs.next())
+					{
+						// assign integral purchased by leader
+						if (rs.getString("mc1")==null && rs.getString("mc2")==null) {
+							formAction = "leaderaisgmjf.jsp";
+						}
+					}
+					rs.close();
+				%>
+				<form action="<%=formAction %>" name="aiform" id="aiform" method="post">		
 				<input type="hidden" name="mm1" id="mm1" value="<%=mm1%>"  /><input type="hidden" name="mm2" id="mm2" value="<%=mm2%>"  />
 				<input type="hidden" name="ffsj" id="ffsj" value="<%=ffsj%>"/>
 				<input type="hidden" name="bz" id="bz" value="<%=bz%>"/>

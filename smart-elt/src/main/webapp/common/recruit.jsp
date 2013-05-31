@@ -57,12 +57,18 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <link rel="shortcut icon" href="<%=request.getContextPath() %>/images/favicon.ico" type="image/x-icon" /></head>
 <body>
 	<div class="head">
-		<div class="logo"><img src="../images/IRewardLOGO.jpg" /></div>
+		<div class="logo"><img src="../images/IReward-logo-black.jpg" /></div>
 	</div>	
 	<div class="aboutmain">
 		<div class="about" style="background-color: white;">
 			<div class="aboutleft">
 				<ul class="leftnav">
+				    <li>
+						<a href="../index.jsp">首页</a>
+					</li>
+					<li>
+						<a href="../index.jsp">首页</a>
+					</li>
 					<li>
 						<a href="aboutus.jsp">关于我们</a>
 					</li>
@@ -157,7 +163,24 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 		</div>
 	</div>
 	<div class="bottom">
-		<a href="aboutus.jsp">关于我们</a><a href="joinus.jsp">商户加盟</a><a href="recruit.jsp">招贤纳士</a><a href="contactus.jsp">联系我们</a>　　　　<a href="http://weibo.com/yuangongfuli" style="padding:0 10px 0 0"><img src="../images/weibo-sina.jpg" /></a><a href="http://t.qq.com/tanxingfuli" style="padding:0 10px 0 0"><img src="../images/weibo-qq.jpg" /></a>
+	  <div style="margin:0 auto;width:860px;overflow:hidden;">
+	    <div style="width:440px; margin:0px 30px;float:left;">
+			<a target="_blank"  href="aboutus.jsp">关于我们</a><a target="_blank" href="joinus.jsp">商户加盟</a><a target="_blank" href="recruit.jsp">招贤纳士</a><a target="_blank" href="contactus.jsp">联系我们</a><a target="_blank" href="http://blog.IRewards.cn">Blog</a>
+			<div style="margin-top:10px;"><a target="_blank" href="http://www.miibeian.gov.cn">沪ICP备12045301号</a></div>
+	    </div>
+	    <div style="text-align:left;line-height:0;margin:0px 30px;float:left;width:300px;">
+	        <a target="_blank" href="http://blog.IRewards.cn" style="text-decoration:underline;position:relative;top:-33px;"></a>
+	    	<span style="height:78px;float:left;width:78px;">
+	    		<a target="_blank" href="http://weibo.com/yuangongfuli" style="padding:0px;float:left;height:15px;line-height:16px;margin-bottom:5px;">新浪微博</a>
+		    	<a target="_blank" href="http://weibo.com/yuangongfuli" style="float:left;padding:0px;"><img src="../images/weibo-sina2.jpg" style="height:55px;width:55px;" /></a>
+	    	</span>
+	    	<span style="height: 78px; float: left; width: 78px;">
+	    		<a target="_blank" href="http://t.qq.com/tanxingfuli" style="padding:0px;float:left;height:15px;line-height:16px;margin-bottom:5px;">腾讯微博</a>
+		    	<a target="_blank" href="http://t.qq.com/tanxingfuli" style="float: left;padding:0px;"><img src="../images/weibo-qq2.jpg" style="height:55px;width:55px;" /></a>
+	    	</span>
+	    	<img src="../images/weixing.jpg" style="width:78px;height:78px;float:left;" />
+	    </div>
+	  </div>
 	</div>
 </body>
 </html>

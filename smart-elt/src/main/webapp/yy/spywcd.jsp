@@ -171,7 +171,7 @@ try{
                    <th width="7%">订单号</th>
                    <th width="7%">使用积分</th>
                    <th width="7%">使用金额</th>
-                   <th width="10%">使用积分券(张)</th>          
+                   <th width="10%">使用福利券(张)</th>          
                    <th width="6%">签收</th>
                  </tr>
                   <%

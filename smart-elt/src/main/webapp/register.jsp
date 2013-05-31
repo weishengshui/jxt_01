@@ -265,6 +265,9 @@ try
                           <td>&nbsp;</td>
                           <td><span class="floatleft"><a href="javascript:void(0);" class="submit" onclick="saveit(1)" ></a></span></td>
                         </tr>
+                      </tbody></table>
+                      </form>
+                      <a style="color: #2B9BE1;font-size: 13px;" href="index.jsp">&lt;&lt;返回首页</a>
                        <%}
 						else
 						{
@@ -302,6 +305,9 @@ try
                           <td>&nbsp;</td>
                           <td><span class="floatleft"><a href="javascript:void(0);" class="submit" onclick="saveit(2)" ></a></span></td>
                         </tr>
+                      </tbody></table>
+                      </form>
+                      <a style="color: #2B9BE1;font-size: 13px;" href="index.jsp">&lt;&lt;返回首页</a>
 						<%} %>
                       </table>
                       </form>

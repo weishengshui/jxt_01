@@ -1,6 +1,7 @@
 <%@page import="org.apache.velocity.Template"%>
 <%@page import="org.apache.velocity.VelocityContext"%>
 <%@page import="org.apache.velocity.app.Velocity"%>
+<%@page import="jxt.elt.common.EmailTemplate"%>
 <%@page import="java.io.StringWriter"%>
 <%@page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@page import="java.sql.Connection"%>
@@ -101,11 +102,11 @@ try
 		rs.close();
 		
 		
-		//判断积分券是否够		
+		//判断福利券是否够		
 		if (haven<Integer.valueOf(ctjf))
 		{
 			out.print("<script type='text/javascript'>");
-			out.print("alert('该积分券数量不够!');");
+			out.print("alert('该福利券数量不够!');");
 			out.print("history.back(-1);");
 			out.print("</script>");
 			return;
@@ -126,8 +127,38 @@ try
 		}
 		rs.close();
 		
+		int bmxz=0;
+		if (session.getAttribute("glqx").toString().indexOf(",13,")!=-1) {
+			bmxz=0;
+		} else if (isLeader) {
+			String bm="";
+			String xz="";
+			if (session.getAttribute("ffbm") != null) {
+				bm=session.getAttribute("ffbm").toString();
+			}
+			if (session.getAttribute("ffxz") != null) {
+				xz=session.getAttribute("ffxz").toString();
+			}
+			boolean isBm = bm!=null && bm.length()>0 && !"''".equals(bm);
+			boolean isXz = xz!=null && xz.length()>0 && !"''".equals(xz);
+			if (isBm && isXz) {
+				bmxz=0;
+			} else if (isBm) {
+				if (bm.indexOf(',')==-1) {
+					bmxz=Integer.valueOf(bm);
+				} else {
+					bmxz=Integer.valueOf(bm.substring(0, bm.indexOf(',')));
+				}
+			} else if (isXz) {
+				if (xz.indexOf(',')==-1) {
+					bmxz=Integer.valueOf(xz);
+				} else {
+					bmxz=Integer.valueOf(xz.substring(0, xz.indexOf(',')));
+				}
+			}
+		}
 		
-		strsql="insert into tbl_jfqff (qy,mm1,mm2,bz,ffr,ffsj,srsj,jfq,ffzt,ffxx,ffh) values("+session.getAttribute("qy")+","+mm1+","+mm2+",'"+bz+"',"+session.getAttribute("ygid")+",'"+ffsj+"',now(),"+jfq+","+ffzt+","+xid+",'"+ffh+"')";
+		strsql="insert into tbl_jfqff (qy,mm1,mm2,bz,ffr,ffsj,srsj,jfq,ffzt,ffxx,ffh,bmxz) values("+session.getAttribute("qy")+","+mm1+","+mm2+",'"+bz+"',"+session.getAttribute("ygid")+",'"+ffsj+"',now(),"+jfq+","+ffzt+","+xid+",'"+ffh+"',"+bmxz+")";
 		stmt.executeUpdate(strsql);
 		
 		strsql="select nid from tbl_jfqff where qy="+session.getAttribute("qy")+" and ffr="+session.getAttribute("ygid")+" and ffxx="+xid+" order by nid desc limit 1";
@@ -283,8 +314,8 @@ try
 						{
 							showtxt.append("["+rs.getString("ygxm")+"] ");
 							hjr.append(rs.getString("ygxm")+" ");
-							//instead of velocity String mailcon=rs.getString("ygxm")+"<br/>"+ffrbm+"已于"+ffsj+"以"+jfmm+"的名目发放了"+ojfs[i]+"积分券到您的帐户，<a href='http://119.145.4.25:88'>请及时进行领取</a>";
-							//sendemail.sendHtmlEmail(rs.getString("email"),mailcon,"积分券领取通知");
+							//instead of velocity String mailcon=rs.getString("ygxm")+"<br/>"+ffrbm+"已于"+ffsj+"以"+jfmm+"的名目发放了"+ojfs[i]+"福利券到您的帐户，<a href='http://119.145.4.25:88'>请及时进行领取</a>";
+							//sendemail.sendHtmlEmail(rs.getString("email"),mailcon,"福利券领取通知");
 							
 							VelocityContext context = new VelocityContext();
 							context.put("name", rs.getString("ygxm"));
@@ -293,7 +324,8 @@ try
 							context.put("catagoryName", jfmm);
 							context.put("quantity",ojfs[i]);
 							
-							Template template = Velocity.getTemplate("templates/mail/jfqreceive.vm");
+// 							Template template = Velocity.getTemplate("templates/mail/jfqreceive.vm");
+							Template template = EmailTemplate.getTemplate("jfqreceive.vm");
 							StringWriter sw = new StringWriter();
 							template.merge(context, sw);
 							String mailContent = sw.toString();
@@ -348,8 +380,8 @@ try
 						while(rs.next())
 						{
 							yg.append(rs.getString("nid")+",");
-							//instead of velocity String mailcon=rs.getString("ygxm")+"<br/>"+ffrbm+"已于"+ffsj+"以"+jfmm+"的名目发放了"+ojfs[i]+"积分券到您的帐户，<a href='http://119.145.4.25:88'>请及时进行领取</a>";
-							//sendemail.sendHtmlEmail(rs.getString("email"),mailcon,"积分券领取通知");
+							//instead of velocity String mailcon=rs.getString("ygxm")+"<br/>"+ffrbm+"已于"+ffsj+"以"+jfmm+"的名目发放了"+ojfs[i]+"福利券到您的帐户，<a href='http://119.145.4.25:88'>请及时进行领取</a>";
+							//sendemail.sendHtmlEmail(rs.getString("email"),mailcon,"福利券领取通知");
 							
 							VelocityContext context = new VelocityContext();
 							context.put("name", rs.getString("ygxm"));
@@ -358,7 +390,8 @@ try
 							context.put("catagoryName", jfmm);
 							context.put("quantity",ojfs[i]);
 							
-							Template template = Velocity.getTemplate("templates/mail/jfqreceive.vm");
+// 							Template template = Velocity.getTemplate("templates/mail/jfqreceive.vm");
+							Template template = EmailTemplate.getTemplate("jfqreceive.vm");
 							StringWriter sw = new StringWriter();
 							template.merge(context, sw);
 							String mailContent = sw.toString();
@@ -422,7 +455,7 @@ try
 			strsql="update tbl_jfqff set ffjf="+tjf+",hjr='"+savehjr+"' where nid="+jfff;
 			stmt.executeUpdate(strsql);
 			
-			//更新积分券订单表
+			//更新福利券订单表
 			oldtjf=tjf;  //用于下面显示，tjf会变成0
 			int sl=0,ffsl=0,nid=0;
 			
@@ -441,7 +474,7 @@ try
 	  	<div class="main2" style="padding-bottom:20px">
   		  	<div class="box2">
 		  		<ul class="local2">
-					<li class="local2-ico3"><h1>选择积分券</h1><h2><%=sf.format(Calendar.getInstance().getTime())%></h2></li>
+					<li class="local2-ico3"><h1>选择福利券</h1><h2><%=sf.format(Calendar.getInstance().getTime())%></h2></li>
 					<li class="local2-ico3"><h1>选择发放对象</h1><h2><%=sf.format(Calendar.getInstance().getTime())%></h2></li>
 					<li class="local2-ico1"><h1>确认发放信息</h1><h2><%=sf.format(Calendar.getInstance().getTime())%></h2></li>
 					<li><h1 class="current-local">确认发放</h1><h2><%=sf.format(Calendar.getInstance().getTime())%></h2></li>
@@ -454,7 +487,7 @@ try
 					if (rs.next())
 					{
 					%>
-					<div class="confirm-t"><strong>您选择的积分券</strong></div>
+					<div class="confirm-t"><strong>您选择的福利券</strong></div>
 					<div class="confirm-states">
 						<h1><img src="../hdimg/<%=rs.getString("hdtp")%>" width="121" height="88" /></h1>
 						<dl>
@@ -479,7 +512,7 @@ try
 					 %>
 					</h2></div>
 					<div class="fafang-mark" style="padding-left:10px"><h1>备注信息</h1><span><%=bz%></span></div>
-					<div class="fafang-sum" style="padding-left:10px">总计 <span class="yellowtxt"><%=oldtjf%></span> 份，该积分券您还剩 <%=haven-Integer.valueOf(oldtjf) %> 份，您还可以</div>
+					<div class="fafang-sum" style="padding-left:10px">总计 <span class="yellowtxt"><%=oldtjf%></span> 份，该福利券您还剩 <%=haven-Integer.valueOf(oldtjf) %> 份，您还可以</div>
 					<div class="fafang-confirm" style="margin-top:10px"><a href="leaderw.jsp" class="jxffbtn"></a></div>
 					
 				</div>

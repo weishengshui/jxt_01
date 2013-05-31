@@ -117,39 +117,38 @@ public class PjAction extends BaseAction {
 			setPjrs("评价失败。");
 			return SUCCESS;
 		}
-		else{
-			String[] spls = spl.split(",");
-			int splsize = spls.length;
-			TblPj[] pjarr = new TblPj[splsize];
-			if(splsize == 0){
-				setPjrs("评价失败。");
-				return SUCCESS;
-			}
-			String[] pjs = pj.split(",");
-			String[] fwpfs = fwpf.split(",");
-			String[] fhpfs = fhpf.split(",");
-			String[] wlpfs = wlpf.split(",");
-			String[] pjnrs = pjnr.split(",");
-			for(int i=0;i<splsize;i++){
-				TblPj pjobj = new TblPj();
-				pjobj.setSpl(Integer.parseInt(spls[i].trim()));
-				pjobj.setYg(tyg.getNid());
-				pjobj.setRq(tsnow);
-				pjobj.setPjnr(pjnrs[i].trim());
-				pjobj.setYgxb(tyg.getXb());
-				pjobj.setFhpf(Integer.parseInt(fhpfs[i].trim()));
-				pjobj.setFwpf(Integer.parseInt(fwpfs[i].trim()));
-				pjobj.setWlpf(Integer.parseInt(wlpfs[i].trim()));
-				pjobj.setPj(Integer.parseInt(pjs[i].trim()));
-				Double zpf = (Double.parseDouble(fwpfs[i].trim())+ Double.parseDouble(fhpfs[i].trim())
-					+Double.parseDouble(wlpfs[i].trim()))/3;
-				pjobj.setZpf(zpf);
-				pjobj.setPjxj(zpf.intValue());
-				pjarr[i]=pjobj;
-			}
-			pjserv.save(pjarr);
-			setPjrs("评价成功。");
-			return SUCCESS;			
+
+		String[] spls = spl.split(",");
+		int splsize = spls.length;
+		TblPj[] pjarr = new TblPj[splsize];
+		if(splsize == 0){
+			setPjrs("评价失败。");
+			return SUCCESS;
 		}
+		String[] pjs = pj.split(",");
+		String[] fwpfs = fwpf.split(",");
+		String[] fhpfs = fhpf.split(",");
+		String[] wlpfs = wlpf.split(",");
+		String[] pjnrs = pjnr.split(",");
+		for(int i=0;i<splsize;i++){
+			TblPj pjobj = new TblPj();
+			pjobj.setSpl(Integer.parseInt(spls[i].trim()));
+			pjobj.setYg(tyg.getNid());
+			pjobj.setRq(tsnow);
+			pjobj.setPjnr(pjnrs[i].trim());
+			pjobj.setYgxb(tyg.getXb());
+			pjobj.setFhpf(Integer.parseInt(fhpfs[i].trim()));
+			pjobj.setFwpf(Integer.parseInt(fwpfs[i].trim()));
+			pjobj.setWlpf(Integer.parseInt(wlpfs[i].trim()));
+			pjobj.setPj(Integer.parseInt(pjs[i].trim()));
+			Double zpf = (Double.parseDouble(fwpfs[i].trim())
+				+ Double.parseDouble(fhpfs[i].trim())+Double.parseDouble(wlpfs[i].trim()))/3;
+			pjobj.setZpf(zpf);
+			pjobj.setPjxj(zpf.intValue());
+			pjarr[i]=pjobj;
+		}
+		pjserv.save(pjarr);
+		setPjrs("评价成功。");
+		return SUCCESS;			
 	}
 }

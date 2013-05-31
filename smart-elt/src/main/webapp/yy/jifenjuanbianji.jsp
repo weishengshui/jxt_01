@@ -33,7 +33,7 @@ function saveit()
 {
 	if(document.getElementById("mc").value.trim()=="")
 	{
-		alert("请填写积分券名称！");
+		alert("请填写福利券名称！");
 		return false;
 	}
 	if(document.getElementById("hd").value.trim()=="")
@@ -43,12 +43,12 @@ function saveit()
 	}
 	if(document.getElementById("qz").value.trim()=="")
 	{
-		alert("请填写积分券编号的前缀！");
+		alert("请填写福利券编号的前缀！");
 		return false;
 	}
 	if(!LcNCheck(document.getElementById("qz").value))
 	{
-		alert("积分券编号的前缀只能为数字和小写字母！");
+		alert("福利券编号的前缀只能为数字和小写字母！");
 		return false;
 	}
 	if(document.getElementById("jf").value.trim()=="")
@@ -269,14 +269,14 @@ try{
 			 if (oldkcsl<Integer.valueOf(scsl))
 			 {
 				out.print("<script type='text/javascript'>");
-		   		out.print("alert('修改后的数量不能超过现有积分券库存量');"); 
+		   		out.print("alert('修改后的数量不能超过现有福利券库存量');"); 
 		   		out.print("history.back(-1);");
 		   		out.print("</script>");
 		   		return;
 			 }
 			 else if (oldkcsl>Integer.valueOf(scsl))
 			 {
-				 //回收积分券
+				 //回收福利券
 				 int zfsl=oldkcsl-Integer.valueOf(scsl);
 				 strsql="update tbl_jfqmc set zt=6 where nid in (select nid from (select nid from tbl_jfqmc where jfq="+jfjid+" and qy=0 order by nid limit "+zfsl+") aa)";
 				 stmt.executeUpdate(strsql);
@@ -310,7 +310,7 @@ try{
 			int scsln=Integer.valueOf(scsl);
 			String jfqh="",jfq="";
 			
-			//取到积分券编号
+			//取到福利券编号
 			strsql="select @@identity as jfq";			
 			rs=stmt.executeQuery(strsql);
 			if (rs.next())
@@ -402,7 +402,7 @@ try{
          <td width="10">&nbsp;</td>
         <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td><div class="local"><span>积分券管理 &gt; 积分券内容管理 &gt; <%if (jfjid!=null && jfjid.length()>0) out.print("修改积分券"); else out.print("添加积分券");%></span><a href="jifenjuan.jsp" class="back">返回上一页</a></div></td>
+            <td><div class="local"><span>福利券管理 &gt; 福利券内容管理 &gt; <%if (jfjid!=null && jfjid.length()>0) out.print("修改福利券"); else out.print("添加福利券");%></span><a href="jifenjuan.jsp" class="back">返回上一页</a></div></td>
           </tr>
          
           <tr>
@@ -414,7 +414,7 @@ try{
 					  <table width="100%" border="0" cellspacing="0" cellpadding="0" class="zhsztable">
                         <tr>
                           <td width="30" align="center"><span class="star">*</span></td>
-                          <td width="90">积分券名称：</td>
+                          <td width="90">福利券名称：</td>
                           <td><input type="text" name="mc" id="mc" value="<%=mc%>" maxlength="50" class="input3" /></td>
                         </tr>
                          <tr>
@@ -440,7 +440,7 @@ try{
                         </tr>
                         <tr>
                           <td align="center"></td>
-                          <td>积分券描述：</td>
+                          <td>福利券描述：</td>
                           <td><input type="text" name="sm" id="sm" value="<%=sm%>" maxlength="250" class="input3" />                         
                           </td>
                         </tr>

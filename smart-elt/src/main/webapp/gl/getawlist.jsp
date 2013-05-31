@@ -9,7 +9,7 @@
 <div class="jfqffjl-t">
 	<div class="jfqffjl1">设置日期</div>
 	<div class="jfqffjl2">发放名目</div>
-	<div class="jfqffjl3">积分券名称</div>
+	<div class="jfqffjl3">福利券名称</div>
 	<div class="jfqffjl4">张数</div>
 	<div class="jfqffjl5">状态</div>
 	<div class="jfqffjl6">发放日期</div>
@@ -113,7 +113,23 @@ try
 		
 	}
 	SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
-	strsql="select count(nid) as hn from tbl_jfqff  where qy="+session.getAttribute("qy");
+	strsql="select count(nid) as hn from tbl_jfqff where qy="+session.getAttribute("qy")+" and fftype=0 and ffxx=0";
+	
+	String bmxz = "";
+	String bm = session.getAttribute("ffbm").toString();
+	String xz = session.getAttribute("ffxz").toString();
+	if (bm != null && !"".equals(bm) && !"''".equals(bm)) {
+		bmxz += bm;
+	}
+	if (xz != null && !"".equals(xz) && !"''".equals(xz)) {
+		bmxz = "".equals(bmxz) ? xz : (bmxz + "," + xz);
+	}
+	
+	if (session.getAttribute("glqx").toString().indexOf(",13,")!=-1) {
+		//empty here
+	} else if (isLeader) {
+		strsql+=" bmxz in ("+bmxz+")";
+	}
 	if (sffsj!=null && sffsj.length()>0)
 		strsql+=" and ffsj>='"+sffsj+"'";
 	if (effsj!=null  && effsj.length()>0)
@@ -124,11 +140,6 @@ try
 		strsql+=" and srsj<='"+esrsj+" 23:59:59'";
 	if (ffzt!=null && ffzt.length()>0)
 		strsql+=" and ffzt="+ffzt;
-	//判断是否是hr发放
-	if (session.getAttribute("ffjf")!=null && session.getAttribute("ffjf").equals("1"))
-		strsql+=" and ffr="+session.getAttribute("ygid");
-	else
-		strsql+=" and ffxx=0";
 	rs=stmt.executeQuery(strsql);
 	if (rs.next())
 	{ln=rs.getInt("hn");}
@@ -136,7 +147,12 @@ try
 	pages=(ln-1)/psize+1;
 	
 	
-	strsql="select f.nid,f.ffsj,m1.mmmc as mc1,m2.mmmc as mc2,f.hjr,ffjf,ffzt,f.srsj,q.mc from tbl_jfqff f left join tbl_jfq q on f.jfq=q.nid left join tbl_jfmm m1 on f.mm1=m1.nid left join tbl_jfmm m2 on f.mm2=m2.nid where f.qy="+session.getAttribute("qy");
+	strsql="select f.nid,f.ffsj,m1.mmmc as mc1,m2.mmmc as mc2,f.hjr,ffjf,ffzt,f.srsj,q.mc from tbl_jfqff f left join tbl_jfq q on f.jfq=q.nid left join tbl_jfmm m1 on f.mm1=m1.nid left join tbl_jfmm m2 on f.mm2=m2.nid where f.qy="+session.getAttribute("qy")+" and f.fftype=0 and f.ffxx=0";
+	if (session.getAttribute("glqx").toString().indexOf(",13,")!=-1) {
+		//empty here
+	} else if (isLeader) {
+		strsql+=" and bmxz in ("+bmxz+")";
+	}
 	if (sffsj!=null && sffsj.length()>0)
 		strsql+=" and f.ffsj>='"+sffsj+"'";
 	if (effsj!=null  && effsj.length()>0)
@@ -147,11 +163,6 @@ try
 		strsql+=" and f.srsj<='"+esrsj+" 23:59:59'";
 	if (ffzt!=null && ffzt.length()>0)
 		strsql+=" and f.ffzt="+ffzt;
-	//判断是否是hr发放
-	if (session.getAttribute("ffjf")!=null && session.getAttribute("ffjf").equals("1"))
-		strsql+=" and ffr="+session.getAttribute("ygid");
-	else
-		strsql+=" and ffxx=0";
 	strsql+=" order by f.nid desc limit " + (Integer.valueOf(pno)-1)*psize+","+psize;
 	
 	rs=stmt.executeQuery(strsql);

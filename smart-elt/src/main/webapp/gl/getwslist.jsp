@@ -8,7 +8,7 @@
 <%@page import="jxt.elt.common.DbPool"%>
 <div class="jfqffjl-t">
 	<div class="jfqffjl1">发放时间</div>
-	<div class="jfqffjl22">积分券名称</div>
+	<div class="jfqffjl22">福利券名称</div>
 	<div class="jfqffjl33">发放名目</div>						
 	<div class="jfqffjl44">发放对象/发放授权</div>					
 </div>
@@ -42,17 +42,17 @@ try
 	
 	SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
 	strsql="select count(nid) as hn from tbl_jfqff  where qy="+session.getAttribute("qy");
+	if (session.getAttribute("glqx").toString().indexOf(",13,")!=-1) {
+		strsql+=" and fftype=0 and ffxx=0";
+	} else if (isLeader) {
+		strsql+=" and fftype>0 and ffr="+session.getAttribute("ygid");
+	}
 	if (sffsj!=null && sffsj.length()>0)
 		strsql+=" and ffsj>='"+sffsj+"'";
 	if (effsj!=null  && effsj.length()>0)
 		strsql+=" and ffsj<='"+effsj+" 23:59:59'";	
 	if (ffzt!=null && ffzt.length()>0)
 		strsql+=" and ffzt="+ffzt;
-	//判断是否是hr发放
-	if (session.getAttribute("ffjf")!=null && session.getAttribute("ffjf").equals("1"))
-		strsql+=" and ffr="+session.getAttribute("ygid");
-	else
-		strsql+=" and ffxx=0";
 	rs=stmt.executeQuery(strsql);
 	if (rs.next())
 	{ln=rs.getInt("hn");}
@@ -67,11 +67,12 @@ try
 		strsql+=" and f.ffsj<='"+effsj+" 23:59:59'";	
 	if (ffzt!=null && ffzt.length()>0)
 		strsql+=" and f.ffzt="+ffzt;
-	//判断是否是hr发放
-	if (session.getAttribute("ffjf")!=null && session.getAttribute("ffjf").equals("1"))
-		strsql+=" and ffr="+session.getAttribute("ygid");
-	else
-		strsql+=" and ffxx=0";
+	
+	if (session.getAttribute("glqx").toString().indexOf(",13,")!=-1) {
+		strsql+=" and f.fftype=0 and f.ffxx=0";
+	} else if (isLeader) {
+		strsql+=" and f.fftype>0 and f.ffr="+session.getAttribute("ygid");
+	}
 	strsql+=" order by f.nid desc limit " + (Integer.valueOf(pno)-1)*psize+","+psize;	
 	rs=stmt.executeQuery(strsql);
 	while (rs.next())

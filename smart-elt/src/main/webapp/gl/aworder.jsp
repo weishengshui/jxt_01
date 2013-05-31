@@ -146,7 +146,7 @@ try
 					if (rs.next())
 					{
 					%>
-					<div class="confirm-t">您选择的积分券</div>
+					<div class="confirm-t">您选择的福利券</div>
 					<div class="confirm-states">
 						<h1><img src="../hdimg/<%=rs.getString("hdtp")%>" width="121" height="88" /></h1>
 						<dl>
@@ -189,7 +189,7 @@ try
 								i++;
 							}
 							rs.close();
-							out.print("</li><li><span class=\"floatleft txtsize14\">奖励积分券: 每部门"+jfarr[j]+"张</span><div class=\"sum\">共 <span class=\"yellowtxt\">"+Integer.valueOf(jfarr[j])*i+"</span> 张</div></li></ul>");							
+							out.print("</li><li><span class=\"floatleft txtsize14\">奖励福利券: 每部门"+jfarr[j]+"张</span><div class=\"sum\">共 <span class=\"yellowtxt\">"+Integer.valueOf(jfarr[j])*i+"</span> 张</div></li></ul>");							
 						}
 					}
 					
@@ -218,7 +218,7 @@ try
 								i++;
 							}
 							rs.close();
-							out.print("</li><li><span class=\"floatleft txtsize14\">奖励积分券: 每组"+jfarr2[j]+"张</span><div class=\"sum\">共 <span class=\"yellowtxt\">"+Integer.valueOf(jfarr2[j])*i+"</span> 张</div></li></ul>");							
+							out.print("</li><li><span class=\"floatleft txtsize14\">奖励福利券: 每组"+jfarr2[j]+"张</span><div class=\"sum\">共 <span class=\"yellowtxt\">"+Integer.valueOf(jfarr2[j])*i+"</span> 张</div></li></ul>");							
 						}
 					}
 					
@@ -247,7 +247,7 @@ try
 								i++;
 							}
 							rs.close();
-							out.print("</li><li><span class=\"floatleft txtsize14\">奖励积分券: 每人"+jfarr3[j]+"张</span><div class=\"sum\">共 <span class=\"yellowtxt\">"+Integer.valueOf(jfarr3[j])*i+"</span> 张</div></li></ul>");							
+							out.print("</li><li><span class=\"floatleft txtsize14\">奖励福利券: 每人"+jfarr3[j]+"张</span><div class=\"sum\">共 <span class=\"yellowtxt\">"+Integer.valueOf(jfarr3[j])*i+"</span> 张</div></li></ul>");							
 						}
 					}
 					
@@ -272,7 +272,7 @@ try
 							while(rs.next())
 							{
 								out.print("<ul class=\"jf-ffxx-list\"><li>奖励对象：全体员工");														
-								out.print("</li><li><span class=\"floatleft txtsize14\">奖励积分券: 每人"+jfarr4[j]+"张</span><div class=\"sum\">共 <span class=\"yellowtxt\">"+Integer.valueOf(jfarr4[j])*rs.getInt("rs")+"</span> 张</div></li></ul>");
+								out.print("</li><li><span class=\"floatleft txtsize14\">奖励福利券: 每人"+jfarr4[j]+"张</span><div class=\"sum\">共 <span class=\"yellowtxt\">"+Integer.valueOf(jfarr4[j])*rs.getInt("rs")+"</span> 张</div></li></ul>");
 							}
 							rs.close();
 						}

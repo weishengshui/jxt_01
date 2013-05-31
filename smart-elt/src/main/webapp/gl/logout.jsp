@@ -11,6 +11,8 @@ session.setAttribute("email",null);
 session.setAttribute("ffjf",null);
 session.setAttribute("ffbm",null);
 session.setAttribute("ffxz",null);
+session.setAttribute("hrffjf", null);
+session.setAttribute("gmjf", null);
 response.sendRedirect("../index.jsp");
 
 

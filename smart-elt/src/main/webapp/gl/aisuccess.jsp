@@ -1,6 +1,7 @@
 <%@page import="org.apache.velocity.Template"%>
 <%@page import="org.apache.velocity.VelocityContext"%>
 <%@page import="org.apache.velocity.app.Velocity"%>
+<%@page import="jxt.elt.common.EmailTemplate"%>
 <%@page import="java.io.StringWriter"%>
 <%@page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@page import="java.sql.Connection"%>
@@ -211,7 +212,8 @@ try
 									context.put("quantity",ojfs[i]);
 									context.put("account", bmmc);
 									
-									Template template = Velocity.getTemplate("templates/mail/jfassign.vm");
+// 									Template template = Velocity.getTemplate("templates/mail/jfassign.vm");
+									Template template = EmailTemplate.getTemplate("jfassign.vm");
 									StringWriter sw = new StringWriter();
 									template.merge(context, sw);
 									String mailContent = sw.toString();
@@ -279,7 +281,8 @@ try
 									context.put("quantity",ojfs[i]);
 									context.put("account", xzmc);
 									
-									Template template = Velocity.getTemplate("templates/mail/jfassign.vm");
+// 									Template template = Velocity.getTemplate("templates/mail/jfassign.vm");
+									Template template = EmailTemplate.getTemplate("jfassign.vm");
 									StringWriter sw = new StringWriter();
 									template.merge(context, sw);
 									String mailContent = sw.toString();
@@ -361,7 +364,8 @@ try
 							context.put("catagoryName", jfmm);
 							context.put("quantity",ojfs[i]);
 							
-							Template template = Velocity.getTemplate("templates/mail/jfreceive.vm");
+// 							Template template = Velocity.getTemplate("templates/mail/jfreceive.vm");
+							Template template = EmailTemplate.getTemplate("jfreceive.vm");
 							StringWriter sw = new StringWriter();
 							template.merge(context, sw);
 							String mailContent = sw.toString();
@@ -421,7 +425,8 @@ try
 							context.put("catagoryName", jfmm);
 							context.put("quantity",ojfs[i]);
 							
-							Template template = Velocity.getTemplate("templates/mail/jfreceive.vm");
+// 							Template template = Velocity.getTemplate("templates/mail/jfreceive.vm");
+							Template template = EmailTemplate.getTemplate("jfreceive.vm");
 							StringWriter sw = new StringWriter();
 							template.merge(context, sw);
 							String mailContent = sw.toString();

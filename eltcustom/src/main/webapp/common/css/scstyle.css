@@ -22,8 +22,8 @@ span{font-family:"宋体"; font-size:12px;}
 .nowbuy{width:121px; height:39px; background:url(../images/nowbuy.jpg) no-repeat; border:none; margin-right:12px; display:inline-block;}
 .notakein{width:131px; height:39px; background:url(../images/notakein.jpg) no-repeat; border:none; margin-right:12px; display:inline-block;}
 .nonowbuy{width:121px; height:39px; background:url(../images/nonowbuy.jpg) no-repeat; border:none; margin-right:12px; display:inline-block;}
-.nowgetbtn{margin-top:100px;width:121px; height:39px; background:url(../images/getbtn.jpg) no-repeat; border:none; margin-right:12px; display:inline-block;}
-.nonowgetbtn{margin-top:100px;width:121px; height:39px; background:url(../images/nogetbtn.jpg) no-repeat; border:none; margin-right:12px; display:inline-block;}
+.nowgetbtn{margin-top:30px;width:121px; height:39px; background:url(../images/getbtn.jpg) no-repeat; border:none; margin-right:12px; display:inline-block;}
+.nonowgetbtn{margin-top:30px;width:121px; height:39px; background:url(../images/nogetbtn.jpg) no-repeat; border:none; margin-right:12px; display:inline-block;}
 
 #main{width:980px; margin:0 auto; }
 .main2{width:980px; float:left}
@@ -90,11 +90,12 @@ span{font-family:"宋体"; font-size:12px;}
 .scpro{width:680px; margin-top:8px; float:left;}
 .scpro li{width:159px;height:205px; margin-right:9px; display:inline; border:1px #d1d1d1 solid; float:left}
 .scpro li img{width:159px; height:138px; float:left}
-.scpro li .scpro-title{width:150px; padding-left:5px; float:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.scpro li .scpro-title{width:159px;overflow:hidden;height:42px;padding-top:2px;text-align:center;display:table-cell;vertical-align:middle;}
+.scpro li .scpro-title .scpro-title-content{display:block;max-height:42px;width: 159px;overflow:hidden;};
 .scpro li .scpro-money{padding-left:10px; padding-right:20px;line-height:28px; float:left; display:inline-block}
 .scpro li .scpro-money span{font-size:16px;}
-.scpro li .scpro-money2{text-align:center;width:149px; padding-left:10px; line-height:25px; border-top:1px #d1d1d1 solid; float:left}
-.scpro li .scpro-money2 label{line-height:25px; padding-right:20px;}
+.scpro li .scpro-money2{text-align:center;width:159px; line-height:25px; border-top:1px #d1d1d1 solid; float:left}
+.scpro li .scpro-money2 label{line-height:25px; padding-right:0;}
 
 .hotpro{width:326px; float:left}
 .hotpro-title{width:326px; line-height:28px; border-bottom:4px #2FB3FF solid; float:left}
@@ -119,12 +120,13 @@ span{font-family:"宋体"; font-size:12px;}
 .footer span{padding-right:20px; float:right}
 
 .scpro2{width:680px; float:left}
-.scpro2 li{width:159px; height:200px; margin:8px 5px 0px 4px; display:inline; border:1px solid #d1d1d1; float:left}
+.scpro2 li{width:159px; height:205px; margin:8px 5px 0px 4px; display:inline; border:1px solid #d1d1d1; float:left}
 .scpro2 li img{width:159px; height:138px; float:left;border:0px;}
-.scpro2 li .scpro-title{width:139px; padding-left:10px; float:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.scpro2 li .scpro-title{width:159px;overflow:hidden;height:42px;text-align:center;display:table-cell;vertical-align:middle;}
+.scpro2 li .scpro-title .scpro-title-content{display:block;max-height:42px;width: 159px;overflow:hidden;}
 .scpro2 li .scpro-money{padding-left:10px; padding-right:20px; background:url(../images/jingbi.jpg) no-repeat right center; line-height:28px; float:left; display:inline-block}
 .scpro2 li .scpro-money span{font-size:16px;}
-.scpro2 li .scpro-money2{text-align:center;width:149px; padding-left:10px; line-height:25px; border-top:1px #d1d1d1 solid; float:left}
+.scpro2 li .scpro-money2{text-align:center;width:159px; line-height:25px; border-top:1px #d1d1d1 solid; float:left}
 .scpro2 li .scpro-money2 label{ padding-right:0px; overflow:hidden}
 
 .rmtj{width:273px; padding-left:5px; margin-top:10px; float:left}
@@ -133,7 +135,7 @@ span{font-family:"宋体"; font-size:12px;}
 .rmtj li p{width:212px; padding-top:5px; text-align:center; float:left}
 .rmtj li p strong{color:#FF3000}
 .rmtj li span{width:212px; float:left}
-.rmtj li span a{color:#2AB1FF}
+.rmtj li span a{color:#2AB1FF;text-align:center;}
 .rmtj li span a:hover{color:#2AB1FF; text-decoration:underline}
 
 
@@ -200,6 +202,9 @@ span{font-family:"宋体"; font-size:12px;}
 .scpro-property{width:325px; float:right}
 .scpro-property li{width:325px; padding:4px 0; float:left}
 .scpro-property li label{font-weight:bold; vertical-align:top; float:left}
+.flsp-property{width:325px; float:right}
+.flsp-property li{width:325px; padding:15px 0 0 40px; float:left}
+.flsp-property li label{font-weight:bold; vertical-align:top; float:left}
 .tb-type{border:1px #cccccc solid; padding:3px 10px; margin:0 7px 0 3px; display:inline; float:left}
 .tb-type:hover{border:1px #ff0000 solid; color:#ff0000}
 .tb-color{border:1px #cccccc solid; width:38px; height:38px; margin:0 7px 0 3px; display:inline-block; float:left}
@@ -207,6 +212,10 @@ span{font-family:"宋体"; font-size:12px;}
 .tb-color:hover{border:1px #ff0000 solid; color:#ff0000}
 .tb-color.on{border:1px #ff0000 solid; color:#ff0000}
 .tb-pro-num{width:25px; text-align:center; height:20px; line-height:20px; border:1px #808080 solid;}
+.flsptp{border:1px #cccccc solid; width:55px; height:55px; margin:0 7px 5px 3px; display:inline-block; float:left}
+.flsptp img{width:55px; height:55px; display:block}
+.flsptp:hover{border:1px #ff0000 solid; color:#ff0000}
+.flsptp.on{border:1px #ff0000 solid; color:#ff0000}
 
 .prostates{width:680px; margin-top:10px; float:left}
 .prostates-title{width:680px; border-bottom:4px #2fb3ff solid; line-height:29px; float:left}

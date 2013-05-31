@@ -56,7 +56,8 @@
 	<link rel="shortcut icon" href="<%=request.getContextPath() %>/common/images/favicon.ico" type="image/x-icon" /></head>
 
 	<body>
-	<%@ include file="/jsp/base/head.jsp" %>
+	<s:if test="%{#session.user.nid!=0}"><%@ include file="/jsp/base/head.jsp" %></s:if>
+	<s:elseif test="#session.hrqyjf!=null"><%@ include file="/jsp/base/hrhead.jsp" %></s:elseif>
 	
 <div id="main">
   <div class="main2">

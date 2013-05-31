@@ -10,7 +10,7 @@
 	<div class="jfqffjl1">发放日期</div>						
 	<div class="jfqffjl2">发放名目</div>
 	<div class="jfqffjl3">接收对象</div>
-	<div class="jfqffjl9">积分券</div>
+	<div class="jfqffjl9">福利券</div>
 	<div class="jfqffjl4">数量</div>
 	<div class="jfqffjl5">发放部门</div>
 	<div class="jfqffjl8">发放备注</div>
@@ -41,7 +41,15 @@ try
 {
 	
 	SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
-	strsql="select count(f.nid) as hn from tbl_jfqff f inner join tbl_jfqffxx x on f.ffxx=x.nid where f.ffxx<>0 and ((x.fflx=1 and x.lxbh in ("+session.getAttribute("ffbm")+")) or (x.fflx=2 and x.lxbh in ("+session.getAttribute("ffxz")+")))";	
+	String ffbm = session.getAttribute("ffbm").toString();
+    if ("''".equals(ffbm)) {
+    	ffbm = "-1";
+    }
+    String ffxz = session.getAttribute("ffxz").toString();
+    if ("''".equals(ffxz)) {
+    	ffxz = "-1";
+    }
+	strsql="select count(f.nid) as hn from tbl_jfqff f inner join tbl_jfqffxx x on f.ffxx=x.nid where f.ffxx<>0 and ((x.fflx=1 and x.lxbh in ("+ffbm+")) or (x.fflx=2 and x.lxbh in ("+ffxz+")))";	
 	
 	if (sffsj!=null && sffsj.length()>0)
 		strsql+=" and ffsj>='"+sffsj+"'";
@@ -53,7 +61,7 @@ try
 	rs.close();
 	pages=(ln-1)/psize+1;
 	
-	strsql="select f.nid,f.ffsj,m1.mmmc as mc1,m2.mmmc as mc2,f.hjr,ffjf,ffzt,f.srsj,x.jsmc,f.bz,q.mc as jfqmc from tbl_jfqff f inner join tbl_jfqffxx x on f.ffxx=x.nid left join tbl_jfmm m1 on f.mm1=m1.nid left join tbl_jfmm m2 on f.mm2=m2.nid left join tbl_jfq q on f.jfq=q.nid where f.ffxx<>0 and ((x.fflx=1 and x.lxbh in ("+session.getAttribute("ffbm")+")) or (x.fflx=2 and x.lxbh in ("+session.getAttribute("ffxz")+")))";
+	strsql="select f.nid,f.ffsj,m1.mmmc as mc1,m2.mmmc as mc2,f.hjr,ffjf,ffzt,f.srsj,x.jsmc,f.bz,q.mc as jfqmc from tbl_jfqff f inner join tbl_jfqffxx x on f.ffxx=x.nid left join tbl_jfmm m1 on f.mm1=m1.nid left join tbl_jfmm m2 on f.mm2=m2.nid left join tbl_jfq q on f.jfq=q.nid where f.ffxx<>0 and ((x.fflx=1 and x.lxbh in ("+ffbm+")) or (x.fflx=2 and x.lxbh in ("+ffxz+")))";
 	
 	if (sffsj!=null && sffsj.length()>0)
 		strsql+=" and f.ffsj>='"+sffsj+"'";
@@ -89,9 +97,9 @@ try
 		for (int i=page_no-3;i<=page_no+2;i++)
 		{
 			if (i==page_no)
-				out.print("<a href='javascript:void(0);' class='psel' onclick='showljfslist("+i+")'>"+String.valueOf(i)+"</a>");
+				out.print("<a href='javascript:void(0);' class='psel' onclick='showlwslist("+i+")'>"+String.valueOf(i)+"</a>");
 			else
-				out.print("<a href='javascript:void(0);' onclick='showljfslist("+i+")'>"+String.valueOf(i)+"</a>");
+				out.print("<a href='javascript:void(0);' onclick='showlwslist("+i+")'>"+String.valueOf(i)+"</a>");
 			
 		}
 		out.print("...");
@@ -103,9 +111,9 @@ try
 			for (int i=1;i<=6;i++)
 			{
 				if (i==page_no)
-					out.print("<a href='javascript:void(0);' class='psel' onclick='showljfslist("+i+")'>"+String.valueOf(i)+"</a>");
+					out.print("<a href='javascript:void(0);' class='psel' onclick='showlwslist("+i+")'>"+String.valueOf(i)+"</a>");
 				else
-					out.print("<a href='javascript:void(0);' onclick='showljfslist("+i+")'>"+String.valueOf(i)+"</a>");
+					out.print("<a href='javascript:void(0);' onclick='showlwslist("+i+")'>"+String.valueOf(i)+"</a>");
 			}
 			out.print("...");
 		}
@@ -114,9 +122,9 @@ try
 			for (int i=1;i<=pages;i++)
 			{
 				if (i==page_no)
-					out.print("<a href='javascript:void(0);' class='psel' onclick='showljfslist("+i+")'>"+String.valueOf(i)+"</a>");
+					out.print("<a href='javascript:void(0);' class='psel' onclick='showlwslist("+i+")'>"+String.valueOf(i)+"</a>");
 				else
-					out.print("<a href='javascript:void(0);' onclick='showljfslist("+i+")'>"+String.valueOf(i)+"</a>");
+					out.print("<a href='javascript:void(0);' onclick='showlwslist("+i+")'>"+String.valueOf(i)+"</a>");
 			}
 		}
 	}
@@ -126,9 +134,9 @@ try
 		{
 			if (i==0) i=1;
 			if (i==page_no)
-				out.print("<a href='javascript:void(0);' class='psel' onclick='showljfslist("+i+")'>"+String.valueOf(i)+"</a>");
+				out.print("<a href='javascript:void(0);' class='psel' onclick='showlwslist("+i+")'>"+String.valueOf(i)+"</a>");
 			else
-				out.print("<a href='javascript:void(0);' onclick='showljfslist("+i+")'>"+String.valueOf(i)+"</a>");
+				out.print("<a href='javascript:void(0);' onclick='showlwslist("+i+")'>"+String.valueOf(i)+"</a>");
 		}
 	}
 
@@ -136,8 +144,8 @@ try
 	
 	</div>
 	<div class="pages-r">
-	<%if (page_no>1) out.print("<h1><a href='javascript:void(0);' onclick='showljfslist("+(page_no-1)+")'>上一页</a></h1>");%>
-	<%if (page_no<pages) out.print("<h2><a href='javascript:void(0);' onclick='showljfslist("+(page_no+1)+")'>下一页</a></h2>");%>					
+	<%if (page_no>1) out.print("<h1><a href='javascript:void(0);' onclick='showlwslist("+(page_no-1)+")'>上一页</a></h1>");%>
+	<%if (page_no<pages) out.print("<h2><a href='javascript:void(0);' onclick='showlwslist("+(page_no+1)+")'>下一页</a></h2>");%>					
 	</div>		
 <%
 }

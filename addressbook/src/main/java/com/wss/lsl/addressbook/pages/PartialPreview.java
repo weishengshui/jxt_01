@@ -20,7 +20,9 @@ public class PartialPreview {
 	@Path("context:css/ps/pshow.css")
 	private Asset pshowCss;
 	@Property
-	private final String pshowJS = "js/ps/pshow.js";
+	private final String[] pshowJS = new String[] { "js/ps/base-v1.js",
+			"js/ps/jquery-1.2.6.pack.js", "js/ps/lib-v1.js",
+			"js/ps/iplocation_server.js", "js/ps/product.js" };
 
 	@Environmental
 	private JavaScriptSupport javaScriptSupport;
@@ -28,9 +30,9 @@ public class PartialPreview {
 	@AfterRender
 	void loadCssFile() {
 		javaScriptSupport.importStylesheet(pshowCss);
-//		javaScriptSupport.importStylesheet(new StylesheetLink(baseCss,
-//				new StylesheetOptions("all")));
-//		javaScriptSupport.importStylesheet(new StylesheetLink(pshowCss,
-//				new StylesheetOptions("all")));
+		// javaScriptSupport.importStylesheet(new StylesheetLink(baseCss,
+		// new StylesheetOptions("all")));
+		// javaScriptSupport.importStylesheet(new StylesheetLink(pshowCss,
+		// new StylesheetOptions("all")));
 	}
 }

@@ -14,8 +14,10 @@
 		<script type="text/javascript" src="common/js/common.js"></script>		
 		<script type="text/javascript">			
 				var listmx = function(){
-					var timeParam = Math.round(new Date().getTime()/1000);				
-					$.getJSON("ddj!ddmx.do?time="+timeParam,{param:'<s:property value="ddzb.ddh" />'}, function(data){
+					var timeParam = Math.round(new Date().getTime()/1000);
+					<s:if test="%{#session.user.nid!=0}">var ddmx = "ddmx";</s:if>
+					<s:elseif test="#session.hrqyjf!=null">var ddmx = "hrddmx";</s:elseif>
+					$.getJSON("ddj!"+ddmx+".do?time="+timeParam,{param:'<s:property value="ddzb.ddh" />'}, function(data){
 						var th = '<tr><th width="146">商品编号</th><th width="430">商品名称</th>'+
 							'<th width="127">商品数量</th><th>小计</th></tr>';
 						$("#mxlist").append(th);
@@ -55,7 +57,8 @@
 	<link rel="shortcut icon" href="<%=request.getContextPath() %>/common/images/favicon.ico" type="image/x-icon" /></head>
 
 	<body>
-	<%@ include file="/jsp/base/head.jsp" %>
+	<s:if test="%{#session.user.nid!=0}"><%@ include file="/jsp/base/head.jsp" %></s:if>
+	<s:elseif test="#session.hrqyjf!=null"><%@ include file="/jsp/base/hrhead.jsp" %></s:elseif>
 <div id="main">
   <div class="main2">
     <div class="box2">
@@ -84,7 +87,7 @@
 					<tbody id="mxlist">
 					</tbody>
 				  </table>
-				  <div class="pro-sum">产品数量总计：<span id="zsl">0</span> 件&nbsp;&nbsp;&nbsp;&nbsp;消耗积分券总计：<span id="zjfq">0</span> &nbsp;&nbsp;&nbsp;&nbsp;消耗积分总计：<span id="zjf">0</span> &nbsp;&nbsp;&nbsp;&nbsp;商品金额总额：￥<span id="zje">0</span>&nbsp;&nbsp;&nbsp;&nbsp;</div>
+				  <div class="pro-sum">产品数量总计：<span id="zsl">0</span> 件&nbsp;&nbsp;&nbsp;&nbsp;消耗福利券总计：<span id="zjfq">0</span> &nbsp;&nbsp;&nbsp;&nbsp;消耗积分总计：<span id="zjf">0</span> &nbsp;&nbsp;&nbsp;&nbsp;商品金额总额：￥<span id="zje">0</span>&nbsp;&nbsp;&nbsp;&nbsp;</div>
 			</div>
 		</div>
       </div>

@@ -10,8 +10,12 @@
 		<meta http-equiv="cache-control" content="no-cache"></meta>
 		<meta http-equiv="expires" content="0"></meta>
 		<link type="text/css" rel="stylesheet" href="common/css/style.css"></link>
+		<link type="text/css" rel="stylesheet" href="common/css/scpro.css"></link>
 		<script type="text/javascript" src="common/js/jquery-1.7.min.js"></script>		
 		<script type="text/javascript" src="common/js/common.js"></script>
+		<s:if test="%{#session.userQy.zt==1}">
+		  <script type="text/javascript" src="common/js/defaultWelfare.js"></script>
+		</s:if>
 		<script type="text/javascript">			
 			var hpjfqlq = function(jfqid){
 				var timeParam = Math.round(new Date().getTime()/1000);
@@ -27,34 +31,60 @@
 				});
 			};
 			var jfqAjax = function(){
-				$.ajax({
-					type : 'POST',datatype : 'json',cache : false,
-					url : 'jfqj!profile.do',
-					data : {param:'<s:property value="user.nid"/>'},
-					success : jfqlist,
-					async: true
-				});
+				<s:if test="%{#session.userQy.zt==1}">
+// 					jfqlist(defaultWelfare.listWelfare('<s:property value="user.nid"/>'));
+					$.ajax({
+					    type : 'POST',datatype : 'json',cache : false,
+					    url : 'jfqj!syqylqjl.do',
+					    data : {param:'<s:property value="user.nid"/>'},
+					    success : syqyjfqProcess,
+					    async: true
+				    });
+				</s:if>
+				<s:else>
+				    $.ajax({
+					    type : 'POST',datatype : 'json',cache : false,
+					    url : 'jfqj!profile.do',
+					    data : {param:'<s:property value="user.nid"/>'},
+					    success : jfqlist,
+					    async: true
+				    });
+				</s:else>
 			};
 			var jfqlist = function(data){
 				if(data.rows == undefined) return false;
 				$("#jfqhp").empty();
 				$.each(data.rows, function (i, row) {
-					var lq = '未使用';
-					if (row.yxq < new Date().toformat("")){
-						lq ='已过期';
+					var lq = '已使用';
+					if(row.sflq == 0 && row.yxq >= new Date().toformat("")){
+						lq = '<a onclick="hpjfqlq(\''+row.nid+'\')" href="#">立即领取</a>';
 					}
-					else {
-						if(row.sflq == 0){
-							lq = '<a onclick="hpjfqlq(\''+row.nid+'\')" href="#">立即领取</a>';
-						}
-						else if(row.zt == 1){
-							lq = '已使用';
-						}
+					else if (row.sflq == 1 && row.zt == 0 && row.yxq >= new Date().toformat("")){
+						lq ='未使用';
+					}
+					else if(row.zt == 1){
+						lq = '已使用';
+					}
+					else if (row.yxq < new Date().toformat("")){
+						lq ='已过期';
 					}
 					var str = '<li><span class="btn">'+lq+'</span><h1>'+row.ffsj+'</h1><a href="jfq!detail.do?jfq='+row.nid+'" class="clip">'+row.mc+'</a></li>';
 					$("#jfqhp").append(str);
 				});
 			};
+			var syqyjfqProcess = function(data) {
+				if (!data)
+					return;
+				var jfqs = defaultWelfare.defaultFL.rows;
+				for (var i=0; i<jfqs.length; i++) {
+					for (var j=0; j<data.length; j++) {
+						if (jfqs[i].nid == data[j].jfq) {
+							jfqs[i].sflq = 1;
+						}
+					}
+				}
+				jfqlist({"rows": jfqs});
+			}
 			var jfAjax = function(){
 				$.ajax({
 					type : 'POST',datatype : 'json',cache : false,
@@ -75,8 +105,13 @@
 						lq = '<a onclick="hpjflq(\''+row.nid+'\')" href="#">领取</a>';
 					}
 					var str = '<li><div class="indexjf-top">'+lq
-							+'<img src="common/images/'+jfimg+'" /><h1>'+row.ffjf
-							+'</h1>分</div><h2>'+row.mm+'</h2></li>';
+						+'<img src="common/images/'+jfimg+'" /><h1>';
+					<s:if test="%{#session.userQy.zt==1}">
+					    str += row.jf + '</h1>分</div><h2>'+row.bz+'</h2></li>';
+					</s:if>
+					<s:else>
+						str += row.ffjf + '</h1>分</div><h2>'+row.mm+'</h2></li>';
+					</s:else>
 					$("#jfhp").append(str);
 				});
 			};
@@ -159,8 +194,11 @@
 				if(data.rows == undefined) return false;
 				$("#tjcp").empty();
 				$.each(data.rows, function (i, row) {
-					var str = '<li><a href="sp!detail.do?spl='+row.nid+'"><img src="'+row.lj+'146x146.jpg" title=\"'+ row.mc +'\" /></a><h2>'+row.mc+'</h2><h1><span>'
-					+row.qbjf+'</span> 积分</h1></li>';
+					var dhfs ='';
+					var str = '<li><a href="sp!detail.do?spl='+row.nid+'"><img src="'+row.lj+'146x146.jpg" title=\"'+ row.mc +'\" /></a>'+
+							'<p class="scpro-title">'+'<span class="scpro-title-content">'+row.mc+'</span></p>'+dhfs+
+							'<div class="scpro-money2">'+'<label><span class="bisque">'+row.qbjf+'</span> 积分</label></div>'+
+							'</li>';
 					$("#tjcp").append(str);
 				});
 			};
@@ -177,7 +215,7 @@
 				if(data.rows == undefined) return false;
 				$("#jfqlqjl").empty();
 				var th = '<tr><th width="68">使用时间</th><th width="266">领取的商品'
-					+'</th><th width="176">使用的积分券</th><th width="106">状态</th><th>操作</th></tr>';
+					+'</th><th width="176">使用的福利券</th><th width="106">状态</th><th>操作</th></tr>';
 				$("#jfqlqjl").append(th);
 				$.each(data.rows, function (i, row) {
 					var str = '<tr><td class="gray">'+row.jsrq+'</td><td class="blue"><a class="clip" href="sp!detail.do?sp='+row.sp+'">'
@@ -202,10 +240,20 @@
 						+'</th><th width="106">状态</th><th>操作</th></tr>';
 				$("#jfdhjl").append(th);
 				$.each(data.rows, function (i, row) {
-					var str = '<tr><td class="gray">'+row.jsrq+'</td><td class="blue"><a class="clip" href="sp!detail.do?sp='+row.sp+'">'+row.spmc+
-					'</a></td><td><span class="bisque"><strong>'+row.jf+'</strong></span> 积分';
+					var str = '<tr><td class="gray">'+row.jsrq+'</td><td class="blue">';
+					if(row.spbh != 'CP_001'){// 去掉抵扣券的详细连接
+						str += '<a class="clip" href="sp!detail.do?sp='+row.sp+'">'+row.spmc+
+						'</a>'; 
+					} else {
+						str += row.spmc;
+					}
+					str += '</td><td><span class="bisque"><strong>'+row.jf+'</strong></span> 积分';
 					if(row.je != '') str+='&nbsp;+&nbsp;<strong class="bisque">'+row.je+'</strong>元';
-					str += '</td><td>'+'交易成功'+'</td><td class="blue"><a href="dd!detail.do?crddh='+row.ddh+'">详情</a></td></tr>';
+					str += '</td><td>'+'交易成功'+'</td><td class="blue">';
+					if(row.spbh != 'CP_001'){// 去掉抵扣券"详情"二字
+						str += '<a href="dd!detail.do?crddh='+row.ddh+'">详情</a>'; 
+					}
+					str += '</td></tr>';
 					$("#jfdhjl").append(str);
 				});
 			};
@@ -221,9 +269,11 @@
 				if(data.rows == undefined) return false;
 				$("#rmdh").empty();
 				$.each(data.rows, function (i, row) {
-					var str = '<li class="rmdh-last"><a href="sp!detail.do?spl='+row.nid+'"><img src="'+row.lj
-						+'146x146.jpg" title=\"'+ row.mc +'\" /></a><h1>'+row.mc+'</h1><h2><span class="bisque"><strong>'
-						+row.qbjf+'</strong></span> 积分</h2></li>';
+					var dhfs ='';
+					var str = '<li><a href="sp!detail.do?spl='+row.nid+'"><img src="'+row.lj+'146x146.jpg" title=\"'+ row.mc +'\" /></a>'+
+							'<p class="scpro-title">'+'<span class="scpro-title-content">'+row.mc+'</span></p>'+dhfs+
+							'<div class="scpro-money2">'+'<label><span class="bisque">'+row.qbjf+'</span> 积分</label></div>'+
+							'</li>';
 					$("#rmdh").append(str);
 				});
 			};
@@ -291,7 +341,7 @@
 						</div>
 						<div class="indexjf">
 							<div class="indexjf-title">
-								你获得的积分<a class="center" href="sp!base.do">去商城看看>></a><a class="right" href="jf!source.do">更多&gt;&gt;</a>
+								你获得的积分<a class="center" href="sp!base.do">去商城看看&gt;&gt;</a><a class="right" href="jf!source.do">更多&gt;&gt;</a>
 							</div>
 							<ul id="jfhp">
 							</ul>
@@ -329,7 +379,7 @@
 								<div class="tjcp-title">
 									<a href="sp!list.do?param=tjsp">更多&gt;&gt;</a>推荐兑换商品
 								</div>
-								<ul class="tjcplist" id="tjcp">
+								<ul class="scpro" id="tjcp">
 								</ul>
 							</div>
 							<div class="indexjl">
@@ -356,7 +406,7 @@
 								<div class="tjcp-title">
 									<a href="sp!list.do?param=rmdh">更多&gt;&gt;</a>热门兑换
 								</div>
-								<ul id="rmdh">
+								<ul class="scpro" id="rmdh">
 								</ul>
 							</div>
 						</div>

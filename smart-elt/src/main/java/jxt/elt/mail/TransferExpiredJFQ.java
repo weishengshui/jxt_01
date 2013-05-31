@@ -42,15 +42,15 @@ public class TransferExpiredJFQ {
 
 			ResultSet rs = statement.executeQuery();
 
-			PreparedStatement creationst = connection
-					.prepareStatement("insert into tbl_jfffmc (qy,hqr,ffjf,ffsj,sfff,ffly,sflq,bz,ffyy,ref) values (?,?,?,?,?,?,1,?,?,?)");
 			PreparedStatement updatest = connection
 					.prepareStatement("update tbl_jfqmc set zt=7 where nid =?");
 
 			PreparedStatement queryAccount = connection
 					.prepareStatement("select nid,jf from tbl_qyyg where nid =?");
-			PreparedStatement updateAccount = connection
-					.prepareStatement("update tbl_qyyg set jf= ? where nid =?");
+
+			PreparedStatement createRebates = this.connection
+					.prepareStatement("insert into tbl_jfqfdmc (qyyg,jf,jfq,ffsj) values (?,?,?,now())");
+
 			while (rs.next()) {
 
 				//System.out.println("###staffJfq nid :" + rs.getInt("nid"));
@@ -58,19 +58,6 @@ public class TransferExpiredJFQ {
 				// update disable
 				updatest.setInt(1, rs.getInt("nid"));
 
-				// insert transfer jfq to jf
-				creationst.setInt(1, rs.getInt("qy"));
-				creationst.setInt(2, rs.getInt("qyyg"));
-				creationst.setInt(3, rs.getInt("jf"));
-				creationst.setDate(4, new java.sql.Date(new Date().getTime()));
-				creationst.setInt(5, 1);
-				creationst.setString(6, rs.getString("ffly"));// rs.getString("ffly")
-				
-				creationst.setString(7, "福利券  \""+rs.getString("mc")+"\" 过期转换成积分");// 备注
-				creationst.setString(8, rs.getString("ffyy"));// 名目
-				creationst.setString(9, rs.getString("nid"));// 转入积分券明细Id
-				
-				//库存回收
 				int jfqnid = rs.getInt("jfq");
 				Statement stmt = connection.createStatement();
 				String strsql="update tbl_sp set kcsl=kcsl+1,wcdsl=wcdsl+1 where nid in (select sp from tbl_jfqspref where jfq="+jfqnid+")";
@@ -90,12 +77,13 @@ public class TransferExpiredJFQ {
 					//System.out.println("###staffJfq jf :" + jf);
 				}
 
-				updateAccount.setInt(1, jf + rs.getInt("jf"));
-				updateAccount.setInt(2, rs.getInt("qyyg"));
+				createRebates.setInt(1, rs.getInt("qyyg"));
+				createRebates.setInt(2, rs.getInt("jf"));
+				createRebates.setInt(3, rs.getInt("jfq"));
 
 				updatest.executeUpdate();
-				creationst.execute();
-				updateAccount.executeUpdate();
+
+				createRebates.execute();
 			}
 
 		} catch (SQLException e) {

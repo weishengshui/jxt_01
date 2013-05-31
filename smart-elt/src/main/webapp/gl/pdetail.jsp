@@ -32,7 +32,7 @@ if (sp==null) sp="";
 				alert("成功添加到购物篮。");
 			}
 			var nowpay=function(){
-				openLayer("<div style=\"background-color: #FFFFFF\"><div>温馨提示：实物类商品不能线上发放给员工</div><div>请选择</div><div><input type='radio' name='buytype' id='buytype' value='1' /> 购买该商品，配送到您的地址</div><div>付款成功后，你能通过物流收到你购买的商品</div><div><input type='radio' name='buytype' id='buytype' value='2' /> 购买能兑换该商品的积分券，方便发放奖励给员工</div><div>付款成功后，你将获得相同数量的，能兑换该商品的积分券</div><div><a href='#' onclick='gopay()'>确认下单</a> <a hef='#' onclick='closeLyayer()'>取消</a></div></div>");
+				openLayer("<div style=\"background-color: #FFFFFF\"><div>温馨提示：实物类商品不能线上发放给员工</div><div>请选择</div><div><input type='radio' name='buytype' id='buytype' value='1' /> 购买该商品，配送到您的地址</div><div>付款成功后，你能通过物流收到你购买的商品</div><div><input type='radio' name='buytype' id='buytype' value='2' /> 购买能兑换该商品的福利券，方便发放奖励给员工</div><div>付款成功后，你将获得相同数量的，能兑换该商品的福利券</div><div><a href='#' onclick='gopay()'>确认下单</a> <a hef='#' onclick='closeLyayer()'>取消</a></div></div>");
 				
 			}
 			
@@ -100,7 +100,7 @@ if (sp==null) sp="";
 					
 					$("#spnr").append(decodeURIComponent(row.spnr).replace(/\+/g,' '));
 					
-					if(row.cxjf!=''&&row.csjf!=0){
+					if(row.cxjf!=''&&row.cxjf!=0){
 						$("#cxjf").html('<strong class="bisque">'+row.cxjf+'</strong>积分');
 					}
 					$("#wcdsl").html(row.wcdsl);

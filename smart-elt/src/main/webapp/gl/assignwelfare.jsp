@@ -16,6 +16,7 @@ SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd"); %>
 <title>IRewards 领先的员工奖励，弹性福利，忠诚度管理平台</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
  <link href="css/style.css" type="text/css" rel="stylesheet" />
+ <link rel="shortcut icon" href="<%=request.getContextPath() %>/images/favicon.ico" type="image/x-icon" />
 <script type="text/javascript" src="js/common.js"></script>
 <script type="text/javascript" src="js/calendar3.js"></script>
 <script type="text/javascript">
@@ -25,12 +26,16 @@ SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd"); %>
 	var thisp=1;
 	var havejf=0;
 	var ifsubmit=1;
-	function showmm(id)
+	function showmm(id, number)
 	{
 		var timeParam = Math.round(new Date().getTime()/1000);
 		var url = "selectitem.jsp?mid="+id+"&time="+timeParam;	
 		xmlHttp.open("GET", url, true);
-		xmlHttp.onreadystatechange=mmshow;
+		if (number == 0) {
+			xmlHttp.onreadystatechange=mmshow;
+		} else if (number == 1) {
+			xmlHttp.onreadystatechange=batchmmshow;
+		}
 		xmlHttp.send(null);
 	}
 	function mmshow()
@@ -40,9 +45,24 @@ SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd"); %>
 			var response = xmlHttp.responseText;
 			try
 			{	
-				document.getElementById("mm2span").innerHTML="";
-				document.getElementById("mm2span").innerHTML=response;
-				
+				var mm2spans = document.getElementsByName("mm2span");
+				mm2spans[0].innerHTML="";
+				mm2spans[0].innerHTML=response;
+			}
+			catch(exception){}
+		}
+	}
+	
+	function batchmmshow()
+	{
+		if (xmlHttp.readyState == 4)
+		{
+			var response = xmlHttp.responseText;
+			try
+			{	
+				var mm2spans = document.getElementsByName("mm2span");
+				mm2spans[1].innerHTML="";
+				mm2spans[1].innerHTML=response;
 			}
 			catch(exception){}
 		}
@@ -166,6 +186,10 @@ SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd"); %>
 		{
 			alert("福利数格式不对！");
 			return;
+		}
+		if (document.getElementById("ojf"+p).value=="")
+		{
+			document.getElementById("ojf"+p).value="0";
 		}
 		if (t==4)
 			document.getElementById("tjf"+p).innerHTML=parseInt(staffn)*parseInt(document.getElementById("ojf"+p).value);
@@ -319,7 +343,7 @@ SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd"); %>
 	{
 		var addDiv = document.createElement("div");
 		addDiv.setAttribute("id","xlist"+listn);		
-		addDiv.innerHTML="<div class=\"hjrwrap\"><div class=\"hjrbox\"><div class=\"hjrbox1\">发放对象：[可选择全体员工或个别指定的员工进行积分券发放]</div><div class=\"hjrbox2\"><h1><input type=\"radio\" name=\"fflx"+listn+"\" id=\"fflx"+listn+"\" value=\"4\"  onclick=\"showcc(4,"+listn+")\"/></h1><h2>全体员工</h2><h1><input type=\"radio\" name=\"fflx"+listn+"\" id=\"fflx"+listn+"\" value=\"3\" onclick=\"showcc(3,"+listn+")\"/></h1><h2>个别员工</h2></div><div class=\"hjrbox3\"  id=\"xxchild"+listn+"\"></div></div><div class=\"hjrbox\"><div class=\"hjrbox1\">发放授权：[用于发放给部门或项目组，由其对内部成员进行积分券发放]</div><div class=\"hjrbox2\"><h1><input type=\"radio\" name=\"fflx"+listn+"\" id=\"fflx"+listn+"\" value=\"1\" onclick=\"showcc(1,"+listn+")\" /></h1><h2>部门</h2><h1><input type=\"radio\" name=\"fflx"+listn+"\" id=\"fflx"+listn+"\" value=\"2\"  onclick=\"showcc(2,"+listn+")\" /></h1><h2>项目组</h2></div><div class=\"hjrbox3\"  id=\"xxbchild"+listn+"\"></div></div><div class=\"hjrbox4\" id=\"xchild"+listn+"\"></div></div><a href=\"javascript:void(0);\" class=\"deltxt\" onclick=\"delitem("+listn+")\">&times;删除</a><div class=\"clear\"></div>";
+		addDiv.innerHTML="<div class=\"hjrwrap\"><div class=\"hjrbox\"><div class=\"hjrbox1\">发放对象：[可选择全体员工或个别指定的员工进行福利券发放]</div><div class=\"hjrbox2\"><h1><input type=\"radio\" name=\"fflx"+listn+"\" id=\"fflx"+listn+"\" value=\"4\"  onclick=\"showcc(4,"+listn+")\"/></h1><h2>全体员工</h2><h1><input type=\"radio\" name=\"fflx"+listn+"\" id=\"fflx"+listn+"\" value=\"3\" onclick=\"showcc(3,"+listn+")\"/></h1><h2>个别员工</h2></div><div class=\"hjrbox3\"  id=\"xxchild"+listn+"\"></div></div><div class=\"hjrbox\"><div class=\"hjrbox1\">发放授权：[用于发放给部门或项目组，由其对内部成员进行福利券发放]</div><div class=\"hjrbox2\"><h1><input type=\"radio\" name=\"fflx"+listn+"\" id=\"fflx"+listn+"\" value=\"1\" onclick=\"showcc(1,"+listn+")\" /></h1><h2>部门</h2><h1><input type=\"radio\" name=\"fflx"+listn+"\" id=\"fflx"+listn+"\" value=\"2\"  onclick=\"showcc(2,"+listn+")\" /></h1><h2>项目组</h2></div><div class=\"hjrbox3\"  id=\"xxbchild"+listn+"\"></div></div><div class=\"hjrbox4\" id=\"xchild"+listn+"\"></div></div><a href=\"javascript:void(0);\" class=\"deltxt\" onclick=\"delitem("+listn+")\">&times;删除</a><div class=\"clear\"></div>";
 		document.getElementById("xxlist").appendChild(addDiv);
 		listn++;
 	}
@@ -360,7 +384,7 @@ SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd"); %>
 				{
 					if (document.getElementById("xzid"+i).value=="")
 					{
-						alert("请选择要发放积分券的项目组！");
+						alert("请选择要发放福利券的项目组！");
 						return;
 					}					
 				}
@@ -372,7 +396,7 @@ SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd"); %>
 				{
 					if (parseInt(document.getElementById("tjf"+i).innerHTML)==0)
 					{
-						alert("发放积分券数量不能为零！");
+						alert("发放福利券数量不能为零！");
 						return;
 					}					
 				}
@@ -470,15 +494,21 @@ SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd"); %>
 		}
 	}
 	
-	function addmm()
+	function addmm(id)
 	{
-		if (document.getElementById("mmmcadd").value=="")
+		var itemId = "";
+		if (id) {
+			itemId = id;
+		} else {
+			itemId = "mmmcadd"
+		}
+		if (document.getElementById(itemId).value=="")
 		{
 			alert("请填写要自定义的名目!");
 			return;
 		}
 		var timeParam = Math.round(new Date().getTime()/1000);
-		var url = "itemsave.jsp?mmmc="+encodeURI(escape(document.getElementById("mmmcadd").value))+"&time="+timeParam;
+		var url = "itemsave.jsp?mmmc="+encodeURI(escape(document.getElementById(itemId).value))+"&time="+timeParam;
 		xmlHttp.open("GET", url, true);
 		xmlHttp.onreadystatechange=newmm;
 		xmlHttp.send(null);
@@ -490,20 +520,27 @@ SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd"); %>
 		{
 			var response = xmlHttp.responseText;
 			try
-			{	response=response.replace(new RegExp("","g"),"");
+			{	response=response.replace(new RegExp("\n","g"),"");
 				if (response=="")
 				{
 				alert("添加出错！");
 				return;
 				}
-				if (response=="0")
+				if (response==0)
 				{
 					alert("此名目已经存在，请不要重复添加！");
 					return;
 				}
-				document.getElementById("mm1span").innerHTML=response;
-				document.getElementById("mm2span").innerHTML="";
 				document.getElementById("mmmcadd").value="";
+				
+				document.getElementById("batchmmmcadd").value="";
+				
+				var mm1s = document.getElementsByName("mm1");
+				mm1s[0].innerHTML=response;
+				mm1s[1].innerHTML=response;
+				var mm2spans = document.getElementsByName("mm2span");
+				mm2spans[0].innerHTML="";
+				mm2spans[1].innerHTML="";
 			}
 			catch(exception){}
 		}
@@ -555,8 +592,54 @@ SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd"); %>
 			    }
 		}
    }
+	
+function down(){
+	document.getElementById("batchTemplate").submit();
+}; 
+
+function batchImport(){
+	var ffmc = document.getElementsByName("mm1")[1].value;
+	if (null == ffmc || "" == ffmc) {
+		alert("请选择发放名目!");
+		return;
+	};
+	var ffwj = document.getElementById("pldr").value;
+	if (null == ffwj || "" == ffwj) {
+		alert("请选择上传的文件!");
+		return;
+	};
+	
+	var bathcfssj = document.getElementById("batchffsj").value;
+	if (null == bathcfssj || "" == bathcfssj) {
+		alert("请选择发放的时间!");
+		return;
+	};
+	if (document.getElementById("batchbz").value=="您可以在这里输入发放的备注内容,比如[ELT项目最佳完成奖]")
+		document.getElementById("batchbz").value="";
+	document.getElementById("batchawconfirm").submit();
+}
+window.onload=function() { 
+	  var tag=document.getElementById("tag").children;
+	  var content=document.getElementById("tagContent").children;
+	  content[0].style.display = "block";
+	  var len= tag.length; 
+	  for(var i=0; i<len; i++)
+	    {
+	    tag[i].index=i;
+	    tag[i].onclick = function() {
+	               for(var n=0; n<len; n++)
+	               {
+	                  tag[n].className="";
+	                  content[n].style.display="none"; 
+	                }
+	            tag[this.index].className = "off2"; 
+	            content[this.index].style.display = "block"; 
+	      }
+	   }
+
+	}
 </script> 
-<link rel="shortcut icon" href="<%=request.getContextPath() %>/images/favicon.ico" type="image/x-icon" /></head>
+</head>
 
 <body>
 <div id="bodybackdiv" style="display:none"></div>
@@ -593,6 +676,11 @@ int listn=0;
 try
 {
 	strsql="select sum(sl-ffsl) as haven from tbl_jfqddmc  where qy="+session.getAttribute("qy")+" and zt=1 and sl<>ffsl and jfq="+qid;
+	if (session.getAttribute("glqx").toString().indexOf(",13,")!=-1) {
+		strsql+=" and ddtype=0";
+	} else if (isLeader) {
+		strsql+=" and ddtype>0 and xdr="+session.getAttribute("ygid");
+	}
 	rs=stmt.executeQuery(strsql);
 	if (rs.next())
 	{
@@ -613,7 +701,7 @@ try
 	  	<div class="main2">
   		  <div class="box">
 				<ul class="local2">
-					<li class="local2-ico1"><h1>选择积分券</h1><h2><%=sf.format(Calendar.getInstance().getTime())%></h2></li>
+					<li class="local2-ico1"><h1>选择福利券</h1><h2><%=sf.format(Calendar.getInstance().getTime())%></h2></li>
 					<li class="local2-ico2"><h1 class="current-local">选择发放对象</h1><h2><%=sf.format(Calendar.getInstance().getTime())%></h2></li>
 					<li class="local2-ico3"><h1>确认发放信息</h1></li>
 					<li><h1>确认发放</h1></li>
@@ -624,7 +712,7 @@ try
 				if (rs.next())
 				{
 				%>
-				<div class="confirm-t">您选择的积分券</div>
+				<div class="confirm-t">您选择的福利券</div>
 				<div class="confirm-states">
 					<h1><img src="../hdimg/<%=rs.getString("hdtp")%>" width="121" height="88" /></h1>
 					<dl>
@@ -642,6 +730,12 @@ try
 				<%}
 				rs.close();
 				%>
+				<div id="tag">
+			    <h2 id="barh1" class="off2">普通发放</h2>
+			    <h2 id="barh2" class="">批量发放</h2>
+			    </div>
+			    <div id="tagContent">
+			    <div>
 				<form action="awconfirm.jsp" name="awform" id="awform" method="post">
 				<input type="hidden" name="jfq" id="jfq" value="<%=qid%>"  />
 				<input type="hidden" name="listn" id="listn"/>
@@ -650,7 +744,7 @@ try
 						<tr>
 							<td width="90" height="30" class="tdtitle"><span class="star">*</span> 发放名目</td>
 							<td width="350"><span id="mm1span">
-								<select name="mm1" id="mm1" onchange="showmm(this.value)" style="height: 30px;"><option value="">请选择</option>
+								<select name="mm1" id="mm1" onchange="showmm(this.value,0)" style="height: 30px;"><option value="">请选择</option>
 									<%
 									strsql="select nid,mmmc from tbl_jfmm where (qy="+session.getAttribute("qy")+" or qy=0) and fmm=0";
 							  		rs=stmt.executeQuery(strsql);
@@ -663,7 +757,7 @@ try
 							  		}
 							  		rs.close();
 									%>
-								</select>&nbsp;<span style="font-size: 20px;" title="可在”账户设置“栏目中的”发放名目管理“项进行设置">？</span></span><span id="mm2span">
+								</select>&nbsp;<span style="font-size: 20px;" title="可在”账户设置“栏目中的”发放名目管理“项进行设置">？</span></span><span id="mm2span" name="mm2span">
 								<%
 								if (mm2!=null && !mm2.equals("0") && !mm2.equals(""))
 								{
@@ -718,12 +812,12 @@ try
 							out.print("<div class=\"delbox\" id=\"xlist"+i+"\">");
 							out.print("<div class=\"hjrwrap\">");
 							out.print("<div class=\"hjrbox\">");
-							out.print("<div class=\"hjrbox1\">发放对象：[可选择全体员工或个别指定的员工进行积分券发放]</div>");
+							out.print("<div class=\"hjrbox1\">发放对象：[可选择全体员工或个别指定的员工进行福利券发放]</div>");
 							out.print("<div class=\"hjrbox2\"><h1><input type=\"radio\" name=\"fflx"+i+"\" id=\"fflx"+i+"\" value=\"4\"  onclick=\"showcc(4,"+i+")\"/></h1><h2>全体员工</h2><h1><input type=\"radio\" name=\"fflx"+i+"\" id=\"fflx"+i+"\" value=\"3\" onclick=\"showcc(3,"+i+")\"/></h1><h2>个别员工</h2></div>");
 							out.print("<div class=\"hjrbox3\"  id=\"xxchild"+i+"\"></div>");
 							out.print("</div>");
 							out.print("<div class=\"hjrbox\">");
-							out.print("<div class=\"hjrbox1\">发放授权：[用于发放给部门或项目组，由其对内部成员进行积分券发放]</div>");
+							out.print("<div class=\"hjrbox1\">发放授权：[用于发放给部门或项目组，由其对内部成员进行福利券发放]</div>");
 							out.print("<div class=\"hjrbox2\"><h1><input type=\"radio\" name=\"fflx"+i+"\" id=\"fflx"+i+"\" value=\"1\" onclick=\"showcc(1,"+i+")\" checked='checked' /></h1><h2>部门</h2><h1><input type=\"radio\" name=\"fflx"+i+"\" id=\"fflx"+i+"\" value=\"2\"  onclick=\"showcc(2,"+i+")\" /></h1><h2>项目组</h2></div>");
 							out.print("<div class=\"hjrbox3\"  id=\"xxbchild"+i+"\">");
 							
@@ -743,7 +837,7 @@ try
 							out.print("</div>	");						
 							out.print("</div>");
 							out.print("<div class=\"hjrbox4\" id=\"xchild"+i+"\">");
-							out.print("<h1>发放积分券：每部门</h1><span class=\"floatleft\">&nbsp;<input type=\"text\" class=\"input7\" name='ojf"+i+"' id='ojf"+i+"' onblur='changetjf("+i+",1)' value='"+ojfs[i]+"' />&nbsp;</span> <h1>积分券</h1><h2>共 <span class=\"yellowtxt\"  id='tjf"+i+"'>"+String.valueOf(Integer.valueOf(ojfs[i])*bmarr.length)+"</span> 积分券</h2>");
+							out.print("<h1>发放福利券：每部门</h1><span class=\"floatleft\">&nbsp;<input type=\"text\" class=\"input7\" name='ojf"+i+"' id='ojf"+i+"' onblur='changetjf("+i+",1)' value='"+ojfs[i]+"' />&nbsp;</span> <h1>福利券</h1><h2>共 <span class=\"yellowtxt\"  id='tjf"+i+"'>"+String.valueOf(Integer.valueOf(ojfs[i])*bmarr.length)+"</span> 福利券</h2>");
 							out.print("</div>");										
 							out.print("</div>");
 							out.print("<a href=\"javascript:void(0);\" class=\"deltxt\" onclick=\"delitem("+i+")\">&times;删除</a>");
@@ -759,12 +853,12 @@ try
 							out.print("<div class=\"delbox\" id=\"xlist"+i+"\">");
 							out.print("<div class=\"hjrwrap\">");
 							out.print("<div class=\"hjrbox\">");
-							out.print("<div class=\"hjrbox1\">发放对象：[可选择全体员工或个别指定的员工进行积分券发放]</div>");
+							out.print("<div class=\"hjrbox1\">发放对象：[可选择全体员工或个别指定的员工进行福利券发放]</div>");
 							out.print("<div class=\"hjrbox2\"><h1><input type=\"radio\" name=\"fflx"+i+"\" id=\"fflx"+i+"\" value=\"4\"  onclick=\"showcc(4,"+i+")\"/></h1><h2>全体员工</h2><h1><input type=\"radio\" name=\"fflx"+i+"\" id=\"fflx"+i+"\" value=\"3\" onclick=\"showcc(3,"+i+")\"/></h1><h2>个别员工</h2></div>");
 							out.print("<div class=\"hjrbox3\"  id=\"xxchild"+i+"\"></div>");
 							out.print("</div>");
 							out.print("<div class=\"hjrbox\">");
-							out.print("<div class=\"hjrbox1\">发放授权：[用于发放给部门或项目组，由其对内部成员进行积分券发放]</div>");
+							out.print("<div class=\"hjrbox1\">发放授权：[用于发放给部门或项目组，由其对内部成员进行福利券发放]</div>");
 							out.print("<div class=\"hjrbox2\"><h1><input type=\"radio\" name=\"fflx"+i+"\" id=\"fflx"+i+"\" value=\"1\" onclick=\"showcc(1,"+i+")\" /></h1><h2>部门</h2><h1><input type=\"radio\" name=\"fflx"+i+"\" id=\"fflx"+i+"\" value=\"2\"  onclick=\"showcc(2,"+i+")\"  checked='checked' /></h1><h2>项目组</h2></div>");
 							out.print("<div class=\"hjrbox3\"  id=\"xxbchild"+i+"\">");								
 							out.print("<input type='hidden' name='xzid"+i+"' id='xzid"+i+"'  value='"+lxvalue[i]+",' />");
@@ -785,7 +879,7 @@ try
 							out.print("</div>	");						
 							out.print("</div>");
 							out.print("<div class=\"hjrbox4\" id=\"xchild"+i+"\">");
-							out.print("<h1>发放积分券：每小组</h1><span class=\"floatleft\">&nbsp;<input type=\"text\" class=\"input7\" name='ojf"+i+"' id='ojf"+i+"' onblur='changetjf("+i+",2)' value='"+ojfs[i]+"' />&nbsp;</span> <h1>积分券</h1><h2>共 <span class=\"yellowtxt\"  id='tjf"+i+"'>"+String.valueOf(Integer.valueOf(ojfs[i])*xzarr.length)+"</span> 积分券</h2>");						
+							out.print("<h1>发放福利券：每小组</h1><span class=\"floatleft\">&nbsp;<input type=\"text\" class=\"input7\" name='ojf"+i+"' id='ojf"+i+"' onblur='changetjf("+i+",2)' value='"+ojfs[i]+"' />&nbsp;</span> <h1>福利券</h1><h2>共 <span class=\"yellowtxt\"  id='tjf"+i+"'>"+String.valueOf(Integer.valueOf(ojfs[i])*xzarr.length)+"</span> 福利券</h2>");						
 							out.print("</div>");										
 							out.print("</div>");
 							out.print("<a href=\"javascript:void(0);\" class=\"deltxt\" onclick=\"delitem("+i+")\">&times;删除</a>");
@@ -801,7 +895,7 @@ try
 							out.print("<div class=\"delbox\" id=\"xlist"+i+"\">");
 							out.print("<div class=\"hjrwrap\">");
 							out.print("<div class=\"hjrbox\">");
-							out.print("<div class=\"hjrbox1\">发放对象：[可选择全体员工或个别指定的员工进行积分券发放]</div>");
+							out.print("<div class=\"hjrbox1\">发放对象：[可选择全体员工或个别指定的员工进行福利券发放]</div>");
 							out.print("<div class=\"hjrbox2\"><h1><input type=\"radio\" name=\"fflx"+i+"\" id=\"fflx"+i+"\" value=\"4\"  onclick=\"showcc(4,"+i+")\"/></h1><h2>全体员工</h2><h1><input type=\"radio\" name=\"fflx"+i+"\" id=\"fflx"+i+"\" value=\"3\" onclick=\"showcc(3,"+i+")\"  checked='checked' /></h1><h2>个别员工</h2></div>");
 							out.print("<div class=\"hjrbox3\"  id=\"xxchild"+i+"\">");								
 
@@ -820,13 +914,13 @@ try
 							out.print("</div>");
 							out.print("</div>");
 							out.print("<div class=\"hjrbox\">");
-							out.print("<div class=\"hjrbox1\">发放授权：[用于发放给部门或项目组，由其对内部成员进行积分券发放]</div>");
+							out.print("<div class=\"hjrbox1\">发放授权：[用于发放给部门或项目组，由其对内部成员进行福利券发放]</div>");
 							out.print("<div class=\"hjrbox2\"><h1><input type=\"radio\" name=\"fflx"+i+"\" id=\"fflx"+i+"\" value=\"1\" onclick=\"showcc(1,"+i+")\" /></h1><h2>部门</h2><h1><input type=\"radio\" name=\"fflx"+i+"\" id=\"fflx"+i+"\" value=\"2\"  onclick=\"showcc(2,"+i+")\" /></h1><h2>项目组</h2></div>");
 							out.print("<div class=\"hjrbox3\"  id=\"xxbchild"+i+"\">");								
 							out.print("</div>	");						
 							out.print("</div>");
 							out.print("<div class=\"hjrbox4\" id=\"xchild"+i+"\">");								
-							out.print("<h1>发放积分券：每人</h1><span class=\"floatleft\">&nbsp;<input type=\"text\" class=\"input7\" name='ojf"+i+"' id='ojf"+i+"' onblur='changetjf("+i+",3)' value='"+ojfs[i]+"' />&nbsp;</span> <h1>积分券</h1><h2>共 <span class=\"yellowtxt\"  id='tjf"+i+"'>"+String.valueOf(Integer.valueOf(ojfs[i])*ygarr.length)+"</span> 积分券</h2>");
+							out.print("<h1>发放福利券：每人</h1><span class=\"floatleft\">&nbsp;<input type=\"text\" class=\"input7\" name='ojf"+i+"' id='ojf"+i+"' onblur='changetjf("+i+",3)' value='"+ojfs[i]+"' />&nbsp;</span> <h1>福利券</h1><h2>共 <span class=\"yellowtxt\"  id='tjf"+i+"'>"+String.valueOf(Integer.valueOf(ojfs[i])*ygarr.length)+"</span> 福利券</h2>");
 							out.print("</div>");										
 							out.print("</div>");
 							out.print("<a href=\"javascript:void(0);\" class=\"deltxt\" onclick=\"delitem("+i+")\">&times;删除</a>");
@@ -839,20 +933,20 @@ try
 							out.print("<div class=\"delbox\" id=\"xlist"+i+"\">");
 							out.print("<div class=\"hjrwrap\">");
 							out.print("<div class=\"hjrbox\">");
-							out.print("<div class=\"hjrbox1\">发放对象：[可选择全体员工或个别指定的员工进行积分券发放]</div>");
+							out.print("<div class=\"hjrbox1\">发放对象：[可选择全体员工或个别指定的员工进行福利券发放]</div>");
 							out.print("<div class=\"hjrbox2\"><h1><input type=\"radio\" name=\"fflx"+i+"\" id=\"fflx"+i+"\" value=\"4\"  onclick=\"showcc(4,"+i+")\"  checked='checked' /></h1><h2>全体员工</h2><h1><input type=\"radio\" name=\"fflx"+i+"\" id=\"fflx"+i+"\" value=\"3\" onclick=\"showcc(3,"+i+")\"/></h1><h2>个别员工</h2></div>");
 							out.print("<div class=\"hjrbox3\"  id=\"xxchild"+i+"\">");								
 
 							out.print("</div>");
 							out.print("</div>");
 							out.print("<div class=\"hjrbox\">");
-							out.print("<div class=\"hjrbox1\">发放授权：[用于发放给部门或项目组，由其对内部成员进行积分券发放]</div>");
+							out.print("<div class=\"hjrbox1\">发放授权：[用于发放给部门或项目组，由其对内部成员进行福利券发放]</div>");
 							out.print("<div class=\"hjrbox2\"><h1><input type=\"radio\" name=\"fflx"+i+"\" id=\"fflx"+i+"\" value=\"1\" onclick=\"showcc(1,"+i+")\" /></h1><h2>部门</h2><h1><input type=\"radio\" name=\"fflx"+i+"\" id=\"fflx"+i+"\" value=\"2\"  onclick=\"showcc(2,"+i+")\" /></h1><h2>项目组</h2></div>");
 							out.print("<div class=\"hjrbox3\"  id=\"xxbchild"+i+"\">");								
 							out.print("</div>	");						
 							out.print("</div>");
 							out.print("<div class=\"hjrbox4\" id=\"xchild"+i+"\">");								
-							out.print("<h1>发放积分券：每人</h1><span class=\"floatleft\">&nbsp;<input type=\"text\" class=\"input7\" name='ojf"+i+"' id='ojf"+i+"' onblur='changetjf("+i+",4)' value='"+ojfs[i]+"' />&nbsp;</span> <h1>积分券</h1><h2>共 <span class=\"yellowtxt\"  id='tjf"+i+"'>"+String.valueOf(Integer.valueOf(ojfs[i])*staffn)+"</span> 积分券</h2>");								
+							out.print("<h1>发放福利券：每人</h1><span class=\"floatleft\">&nbsp;<input type=\"text\" class=\"input7\" name='ojf"+i+"' id='ojf"+i+"' onblur='changetjf("+i+",4)' value='"+ojfs[i]+"' />&nbsp;</span> <h1>福利券</h1><h2>共 <span class=\"yellowtxt\"  id='tjf"+i+"'>"+String.valueOf(Integer.valueOf(ojfs[i])*staffn)+"</span> 福利券</h2>");								
 							out.print("</div>");										
 							out.print("</div>");
 							out.print("<a href=\"javascript:void(0);\" class=\"deltxt\" onclick=\"delitem("+i+")\">&times;删除</a>");
@@ -870,13 +964,13 @@ try
 					<div class="delbox" id="xlist1">
 						<div class="hjrwrap">
 							<div class="hjrbox">
-								<div class="hjrbox1">发放对象：[可选择全体员工或个别指定的员工进行积分券发放]</div>
+								<div class="hjrbox1">发放对象：[可选择全体员工或个别指定的员工进行福利券发放]</div>
 						  		<div class="hjrbox2"><h1><input type="radio" name="fflx1" id="fflx1" value="4"  onclick="showcc(4,1)"/></h1><h2>全体员工</h2><h1><input type="radio" name="fflx1" id="fflx1" value="3" onclick="showcc(3,1)"/></h1><h2>个别员工</h2></div>
 								<div class="hjrbox3"  id="xxchild1"></div>
 							</div>
 							
 							<div class="hjrbox">
-								<div class="hjrbox1">发放授权：[用于发放给部门或项目组，由其对内部成员进行积分券发放]</div>
+								<div class="hjrbox1">发放授权：[用于发放给部门或项目组，由其对内部成员进行福利券发放]</div>
 						  		<div class="hjrbox2"><h1><input type="radio" name="fflx1" id="fflx1" value="1" onclick="showcc(1,1)" /></h1><h2>部门</h2><h1><input type="radio" name="fflx1" id="fflx1" value="2"  onclick="showcc(2,1)" /></h1><h2>项目组</h2></div>
 								<div class="hjrbox3"  id="xxbchild1">
 								</div>							
@@ -890,14 +984,14 @@ try
 				</div>
 				
 				
-				<div class="hjr-tishi">您选择发放积分券共 <span class="yellowtxt" id="ajf"><%=tjf%></span> 张 ，您拥有该积分券 <span class="yellowtxt"><%=haven%></span> 张 <span  style="font-size:14px;" id="ajfalert"></span></div>			
+				<div class="hjr-tishi">您选择发放福利券共 <span class="yellowtxt" id="ajf"><%=tjf%></span> 张 ，您拥有该福利券 <span class="yellowtxt"><%=haven%></span> 张 <span  style="font-size:14px;" id="ajfalert"></span></div>			
 				<div class="hjr-box1" style="border-bottom:1px #cccccc dashed; padding-bottom:8px">
 					<table width="100%" border="0" cellspacing="0" cellpadding="0">
 					  <tr>
 						<td width="20" height="30"><span class="star">*</span></td>
 						<td width="70" class="tdtitle">发放日期</td>
 						<td width="100"><input type="text" class="input7" name="ffsj" id="ffsj" value="<%=ffsj==null?sf.format(Calendar.getInstance().getTime()):ffsj%>"  onclick="new Calendar().show(this);" readonly="readonly" /></td>
-						<td class="grey2">发放的时间也可自行设置，系统会根据您设置的时间将积分券发放到指定账户中,该时间前积分券暂时处于冻结状态</td>
+						<td class="grey2">发放的时间也可自行设置，系统会根据您设置的时间将福利券发放到指定账户中,该时间前福利券暂时处于冻结状态</td>
 					  </tr>
 					</table>
 				</div>
@@ -915,11 +1009,102 @@ try
 					  <tr>
 						<td width="20" height="30"></td>
 						<td width="70" valign="top"></td>
-						<td><a  id="aisave" href="javascript:void(0);"  class="submit" onclick="saveit()" /></a><a href="assignwelfare.jsp?qid=<%=qid%>" class="reset"></a></td>
+						<td><a  id="aisave" href="javascript:void(0);"  class="submit" onclick="saveit()" ></a><a href="assignwelfare.jsp?qid=<%=qid%>" class="reset"></a></td>
 					  </tr>
 					</table>
 				</div>
 				</form>
+				</div>
+				<div style="display:none">
+				<form name="batchawconfirm" id="batchawconfirm" action="batchawconfirm.jsp" method="post" enctype="multipart/form-data">
+					<input type="text" style="display:none" name="jfq" id="batchjfq" value="<%=qid%>"/>
+					<div class="hjr-ffmm" style="border-bottom:1px #cccccc dashed; padding-bottom:8px">
+					<table width="100%" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td width="90" height="30" class="tdtitle"><span class="star">*</span> 发放名目</td>
+							<td width="350">
+							<span id="batchmm1span">
+								<select name="mm1" id="mm1" onchange="showmm(this.value,1)" style="height: 30px;"><option value="">请选择</option>
+									<%
+									strsql="select nid,mmmc from tbl_jfmm where (qy="+session.getAttribute("qy")+" or qy=0) and fmm=0";
+							  		rs=stmt.executeQuery(strsql);
+							  		while (rs.next())
+							  		{
+							  			if (mm1!=null && mm1.equals(rs.getString("nid")))
+							  				out.print("<option value='"+rs.getString("nid")+"' selected='selected'>"+rs.getString("mmmc")+"</option>");
+							  			else
+							  				out.print("<option value='"+rs.getString("nid")+"'>"+rs.getString("mmmc")+"</option>");
+							  		}
+							  		rs.close();
+									%>
+								</select>&nbsp;<span style="font-size: 20px;" title="可在”账户设置“栏目中的”发放名目管理“项进行设置">？</span></span><span id="mm2span" name="mm2span">
+								<%
+								if (mm2!=null && !mm2.equals("0") && !mm2.equals(""))
+								{
+									out.print("<select name=\"mm2\" id=\"mm2\" style=\"height: 30px;\"><option value=\"\">请选择</option>");
+									strsql="select nid,mmmc from tbl_jfmm where (qy="+session.getAttribute("qy")+" or qy=0) and fmm="+mm1;
+							  		rs=stmt.executeQuery(strsql);
+							  		while (rs.next())
+							  		{
+							  			if (mm2!=null && mm2.equals(rs.getString("nid")))
+							  				out.print("<option value='"+rs.getString("nid")+"' selected='selected'>"+rs.getString("mmmc")+"</option>");
+							  			else
+							  				out.print("<option value='"+rs.getString("nid")+"'>"+rs.getString("mmmc")+"</option>");
+							  		}
+							  		rs.close();
+							  		out.print("</select>");
+								}
+								%>
+								</span></td>
+							<td width="163">没有适合的名目?新增</td>
+							<td width="114"><span class="floatleft">
+							  <input name="batchmmmcadd" id="batchmmmcadd" type="text" class="input7"  maxlength="25" style="margin-top:0; width:90px"/>
+							</span></td>
+							<td><div class="floatleft"><span onclick="addmm('batchmmmcadd')" class="caxun" style="margin:3px;">保 存</span></div></td>
+					  </tr>
+					</table>
+				</div>
+				<div class="hjr-box1" >
+					<table width="100%" border="0" cellspacing="0" cellpadding="0">
+					  <tr>
+						<td width="20" height="30"><span class="star">*</span></td>
+						<td width="70" valign="top" class="tdtitle">导入</td>
+						<td><input type="file" name="pldr" id="pldr" />
+						<a href="batchTemplate.jsp?type=flq&jfqid=<%=qid%>" class="" style="text-decoration: underline;color: #3399CC;">模板下载</a>
+						</td>
+					  </tr>
+					</table>
+				</div>
+				<div class="hjr-box1" style="border-bottom:1px #cccccc dashed; padding-bottom:8px">
+					<table width="100%" border="0" cellspacing="0" cellpadding="0">
+					  <tr>
+						<td width="20" height="30"><span class="star">*</span></td>
+						<td width="70" class="tdtitle">发放日期</td>
+						<td width="100"><input type="text" class="input7" name="ffsj" id="batchffsj" value="<%=ffsj==null?sf.format(Calendar.getInstance().getTime()):ffsj%>"  onclick="new Calendar().show(this);" readonly="readonly"  /></td>
+						<td class="grey2">发放的时间也可自行设置，系统会根据您设置的时间将福利券发放到指定账户中,该时间前福利券暂时处于冻结状态</td>
+					  </tr>
+					</table>
+				</div>
+				<div class="hjr-box1">
+					<table width="100%" border="0" cellspacing="0" cellpadding="0">
+					  <tr>
+						<td width="20" height="30"></td>
+						<td width="70" valign="top" class="tdtitle">备注信息</td>
+						<td><textarea cols="" rows="" class="inputarea1" name="bz" id="batchbz"  onFocus="javascript:if(this.value=='您可以在这里输入发放的备注内容,比如[ELT项目最佳完成奖]') this.value='';" onBlur="javascript:if(this.value=='') this.value='您可以在这里输入发放的备注内容,比如[ELT项目最佳完成奖]';"><%if (bz!=null && bz.length()>0) out.print(bz); else out.print("您可以在这里输入发放的备注内容,比如[ELT项目最佳完成奖]"); %></textarea></td>
+					  </tr>
+					</table>
+				</div>
+				<div class="hjr-box1" >
+					<table width="100%" border="0" cellspacing="0" cellpadding="0">
+					  <tr>
+					  	<td width="20" height="30"></td>
+						<td width="70" valign="top"></td>
+						<td><a id="batchImport" href="javascript:void(0);" class="submit" onclick="batchImport()" /><a href="assignwelfare.jsp?qid=<%=qid%>" class="reset"></a></td>
+					  </tr>
+					</table>
+				</div>
+				</form>
+				</div>
 				<%out.print("<script type='text/javascript'>staffn="+staffn+";havejf="+haven+";");
 				if (ffsj!=null && ffsj.length()>0)
 				{					
@@ -930,7 +1115,7 @@ try
 				<div class="hjr-box2">
 					<table width="100%" border="0" cellspacing="0" cellpadding="0">
 					  <tr>
-						<td width="125" height="30" align="center"><strong>积分券发放记录</strong></td>
+						<td width="125" height="30" align="center"><strong>福利券发放记录</strong></td>
 						<td width="86" align="center">设置日期：</td>
 						<td width="90"><input type="text" class="input7" style="margin-top:0" name="ssrsj" id="ssrsj" onclick="new Calendar().show(this);" readonly="readonly" /></td>
 						<td width="20" height="30" align="center">-</td>
@@ -956,7 +1141,7 @@ try
 					<div class="jfqffjl-t">
 						<div class="jfqffjl1">设置日期</div>
 						<div class="jfqffjl2">发放名目</div>
-						<div class="jfqffjl3">积分券名称</div>
+						<div class="jfqffjl3">福利券名称</div>
 						<div class="jfqffjl4">张数</div>
 						<div class="jfqffjl5">状态</div>
 						<div class="jfqffjl6">发放日期</div>
@@ -966,6 +1151,11 @@ try
 					<%
 					int ln=0,pages=1;
 					strsql="select count(nid) as hn from tbl_jfqff where qy="+session.getAttribute("qy")+" and ffxx=0";
+					if (session.getAttribute("glqx").toString().indexOf(",13,")!=-1) {
+						strsql+=" and fftype=0";
+					} else if (isLeader) {
+						strsql+=" and fftype>0 and ffr="+session.getAttribute("ygid");
+					}
 					rs=stmt.executeQuery(strsql);
 					if (rs.next())
 					{
@@ -974,7 +1164,11 @@ try
 					rs.close();
 					pages=(ln-1)/10+1;
 					
-					strsql="select f.nid,f.ffsj,m1.mmmc as mc1,m2.mmmc as mc2,f.hjr,ffjf,ffzt,f.srsj,q.mc from tbl_jfqff f left join tbl_jfq q on f.jfq=q.nid left join tbl_jfmm m1 on f.mm1=m1.nid left join tbl_jfmm m2 on f.mm2=m2.nid where f.qy="+session.getAttribute("qy")+"  and ffxx=0 order by f.nid desc limit 10";
+					if (session.getAttribute("glqx").toString().indexOf(",13,")!=-1) {
+						strsql="select f.nid,f.ffsj,m1.mmmc as mc1,m2.mmmc as mc2,f.hjr,ffjf,ffzt,f.srsj,q.mc from tbl_jfqff f left join tbl_jfq q on f.jfq=q.nid left join tbl_jfmm m1 on f.mm1=m1.nid left join tbl_jfmm m2 on f.mm2=m2.nid where f.qy="+session.getAttribute("qy")+" and f.fftype=0 and ffxx=0 order by f.nid desc limit 10";
+					} else if (isLeader) {
+						strsql="select f.nid,f.ffsj,m1.mmmc as mc1,m2.mmmc as mc2,f.hjr,ffjf,ffzt,f.srsj,q.mc from tbl_jfqff f left join tbl_jfq q on f.jfq=q.nid left join tbl_jfmm m1 on f.mm1=m1.nid left join tbl_jfmm m2 on f.mm2=m2.nid where f.qy="+session.getAttribute("qy")+" and f.fftype>0 and f.ffr="+session.getAttribute("ygid")+" and ffxx=0 order by f.nid desc limit 10";
+					}
 					rs=stmt.executeQuery(strsql);
 					while (rs.next())
 					{

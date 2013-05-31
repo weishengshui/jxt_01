@@ -42,18 +42,28 @@
 			var gopay = function(){
 				$("#form1").submit();
 			}
+			var changePromptInfo = function() {
+				$("#zfdd").hide();
+				$("#qrdd").show();
+				$("#confirmpay").removeClass("gopay2");
+				$("#confirmpay").addClass("confirmbtn");
+			}
 			$(function(){
 				var zjf = parseInt('<s:property value="zjf"/>');
 				var zjfqsl = parseInt('<s:property value="zjfqsl"/>');
 				var zje = parseFloat('<s:property value="zje"/>');
 				var zjfhtml = "";
 				if(zjf>0)zjfhtml+='<span>使用积分账户余额支付 <strong class="bisque">'+zjf+'</strong> 积分</span>';
-				if(zjfqsl>0)zjfhtml+='<span>使用积分券 <strong class="bisque">'+zjfqsl+'</strong> 张</span>';
+				if(zjfqsl>0)zjfhtml+='<span>使用福利券 <strong class="bisque">'+zjfqsl+'</strong> 张</span>';
 				$("#jfqjf").html(zjfhtml);
 				if(zje>0){
 					$("#je").html(zje+"元");
 					$("#zfdiv").show();
 				}
+				if(zjf<=0&&zje<=0&&zjfqsl>0){
+					changePromptInfo();
+				}
+				
 				if('<s:property value="crdid"/>'!='0'){
 					removeShopCar();
 					var timeParam = Math.round(new Date().getTime()/1000);				
@@ -64,7 +74,7 @@
 							var dhfs = '';
 							if(row.jf!='')dhfs+=row.jf+' 积分';
 							if(row.je!='')dhfs+=' + '+row.je+' 元';
-							if(row.jfq!='')dhfs+='积分券 '+row.sl+' 张';
+							if(row.jfq!='')dhfs+='福利券 '+row.sl+' 张';
 							var str='<p><h2>'+dhfs+'</h2><h1>'+row.sl+'份</h1>'+row.spmc+'</p>';
 							$("#ddsplist").append(str);
 						});
@@ -97,7 +107,8 @@
         <div id="ddsplist" class="pay-states">
 		</div>
 		<div class="order">
-			<h1 class="order-title">您的订单 <span class="blue"><s:property value="crddh"/></span> 已经生成，请即时支付</h1>
+			<h1 id="zfdd" class="order-title">您的订单 <span class="blue"><s:property value="crddh"/></span> 已经生成，请即时支付</h1>
+			<h1 id="qrdd" style="display:none" class="order-title">您的福利券订单号为 <span class="blue"><s:property value="crddh"/></span> ，请确认</h1>
 			<div class="orderin">
 				<h1 id="jfqjf" class="yu-e">
 				</h1>
@@ -120,7 +131,7 @@
 					<input name="alibody" type="hidden" value='积分商城现金支付' />
 					<input name="total_fee" type="hidden" value='<s:property value="zje"/>' />
 				</form>
-				<a onclick="pay();" style="margin-top:12px" href="#" class="gopay2"></a>
+				<a id="confirmpay" onclick="pay();" style="margin-top:12px" href="#" class="gopay2"></a>
 			</div>
 		</div>
       </div>	  

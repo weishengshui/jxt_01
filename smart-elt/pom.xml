@@ -201,6 +201,25 @@
 				<version>1.1</version>
 			</plugin>
 			
+			<!-- Uncomment this to allow quick development. 
+			<plugin>
+				<groupId>org.zeroturnaround</groupId>
+				<artifactId>javarebel-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>generate-rebel-xml</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<downloadJavadocs>true</downloadJavadocs>
+				</configuration>
+				<version>1.0.5</version>
+			</plugin>
+			-->
 		</plugins>
     </build>
   

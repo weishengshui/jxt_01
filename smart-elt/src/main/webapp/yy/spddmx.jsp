@@ -115,7 +115,7 @@ try{
 					}
 					rs.close();
 					%>
-					<tr><td colspan="11" align="right">产品数量总计：<%=spn%>件&nbsp;&nbsp;消耗积分券总计：<%=jfqsl==null?"0":jfqsl%>&nbsp;&nbsp;消耗积分总计：<%=zjf==null?"0":zjf%>&nbsp;&nbsp;商品金额总额：￥<%=zje==null?"0":zje%>&nbsp;&nbsp;</td></tr>
+					<tr><td colspan="11" align="right">产品数量总计：<%=spn%>件&nbsp;&nbsp;消耗福利券总计：<%=jfqsl==null?"0":jfqsl%>&nbsp;&nbsp;消耗积分总计：<%=zjf==null?"0":zjf%>&nbsp;&nbsp;商品金额总额：￥<%=zje==null?"0":zje%>&nbsp;&nbsp;</td></tr>
 				</table>
 			</td></tr>
 		</table>

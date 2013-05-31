@@ -6,16 +6,18 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.springframework.stereotype.Controller;
-
 import net.sf.json.JSON;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+
+import org.springframework.stereotype.Controller;
 
 import com.ssh.entity.TblQyyg;
 import com.ssh.service.DdService;
 import com.ssh.service.LljlService;
 import com.ssh.service.QyygService;
 import com.ssh.service.SpService;
+import com.ssh.service.SplmService;
 @Controller
 public class SpjAction extends PageAction {
 
@@ -294,6 +296,21 @@ public class SpjAction extends PageAction {
 	public String sptp(){
 		Map<String, Object> map = new HashMap<String,Object>();
 		map.put("rows", sp.getSpTp(getParam()));
+		JSON res = JSONObject.fromObject(map);
+		setResult(res);
+		return SUCCESS;
+	}
+
+	public String splmList() {
+		List list = SplmService.listSplm();
+		JSON res = JSONArray.fromObject(list);
+		setResult(res);
+		return "success";
+	}
+	
+	public String checkInQyList(){
+		Map map = new HashMap();
+		map.put("result", sp.checkInQyList(getParam()));
 		JSON res = JSONObject.fromObject(map);
 		setResult(res);
 		return SUCCESS;

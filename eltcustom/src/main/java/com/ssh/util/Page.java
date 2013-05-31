@@ -12,10 +12,13 @@ public class Page {
 		if(tal>pz*cp){
 			to = pz*cp;
 		}
-		if(!sql.equals("")){
-			result +=" select * from ( "+
-			sql.replaceFirst("(?i)select", "select rownum as finalpagenum,")
-			+") where finalpagenum >="+from +" and finalpagenum <="+to;
+		if (!sql.equals("")) {
+			result = result
+					+ " select * from ( "
+					+ sql.replaceFirst("(?i)select",
+							"select rownum as finalpagenum,")
+					+ ") where finalpagenum >=" + from + " and finalpagenum <="
+					+ to;
 		}
 		return result;
 	}

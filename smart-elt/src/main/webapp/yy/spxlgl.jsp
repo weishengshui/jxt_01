@@ -199,17 +199,18 @@ try{
               <tr>
                 <td><table width="100%" border="0" cellspacing="1" cellpadding="1" class="maintable">
                   <tr>                   
-                   <th width="25%">系列名称</th>
+                   <th width="22%">系列名称</th>
                    <th width="10%">类目1</th>
                    <th width="10%">类目2</th>
                    <th width="10%">类目3</th>
-                   <th width="25%">默认商品</th>
+                   <th width="23%">默认商品</th>
+                   <th width="5%">显示位置</th>
                    <th width="5%">大类推荐</th>
                    <th width="5%">热门兑换</th>
                    <th>操作</th>
                  </tr>
                   <%
-                  strsql="select m1.nid pid,l.rm,l.nid,l.mc as lmc,l.zt,l.sftj,s.spmc as spmc,m1.mc as lmmc1,m2.mc as lmmc2,m3.mc as lmmc3 from tbl_spl l left join tbl_sp s on l.sp=s.nid left join tbl_splm m1 on l.lb1=m1.nid left join tbl_splm m2 on l.lb2=m2.nid left join tbl_splm m3 on l.lb3=m3.nid where l.zt>=0";
+                  strsql="select m1.nid pid,l.rm,l.nid,l.mc as lmc,l.zt,l.xswz,l.sftj,s.spmc as spmc,m1.mc as lmmc1,m2.mc as lmmc2,m3.mc as lmmc3 from tbl_spl l left join tbl_sp s on l.sp=s.nid left join tbl_splm m1 on l.lb1=m1.nid left join tbl_splm m2 on l.lb2=m2.nid left join tbl_splm m3 on l.lb3=m3.nid where l.zt>=0";
                   if (lmc!=null && lmc.length()>0)
             		strsql+=" and l.mc like '%"+lmc+"%'";
 	           	  if (lb1!=null && lb1.length()>0)
@@ -218,10 +219,11 @@ try{
 	           			strsql+=" and l.lb2="+lb2;
 	           	  if (lb3!=null && lb3.length()>0)
            			   strsql+=" and l.lb3="+lb3;
-                  strsql+=" order by l.sftj desc,l.nid desc limit " + (Integer.valueOf(pno)-1)*psize+","+psize;
+                  strsql+=" order by l.xswz desc, l.sftj desc,l.nid desc limit " + (Integer.valueOf(pno)-1)*psize+","+psize;
                   rs=stmt.executeQuery(strsql);
                   while(rs.next())
                   {
+                	  String aa = request.getParameter("lb1") == null ?"":request.getParameter("lb1");
                   %>
                   <tr>                  	
                     <td class="textbreak"><%=rs.getString("lmc")%></td>
@@ -229,9 +231,9 @@ try{
                     <td><%=rs.getString("lmmc2")==null?"":rs.getString("lmmc2")%></td>
                     <td><%=rs.getString("lmmc3")==null?"":rs.getString("lmmc3")%></td>
                     <td class="textbreak"><%=rs.getString("spmc")==null?"":rs.getString("spmc")%></td>
+                    <td><%=rs.getString("xswz")==null?"":rs.getString("xswz")%></td>
                     <td>
                     	<%
-                    		String aa = request.getParameter("lb1") == null ?"":request.getParameter("lb1");
                     		if(rs.getInt("rm")==1){
 						%>
 							<a href="spxlgl.jsp?naction=dltj&nid=<%=rs.getString("nid") %>&rm=0&lb1=<%=aa%>&pid=<%=rs.getString("pid") %>&pno=${param.pno}" class="blue">否</a>
@@ -242,7 +244,7 @@ try{
 							}
                     	%>
                     </td>
-                    <td> <%if (rs.getInt("sftj")==0) out.print("<a href='spxlgl.jsp?naction=tj&lb1="+aa+"&pno="+(request.getParameter("pno")==null?"1":request.getParameter("pno"))+"&lid="+rs.getString("nid")+"' class='blue'>是</a>"); else out.print("<a href='spxlgl.jsp?naction=notj&lb1="+aa+"&pno="+(request.getParameter("pno")==null?"1":request.getParameter("pno"))+"&lid="+rs.getString("nid")+"' class='blue'>否</a>"); %></td>
+                    <td><%if (rs.getInt("sftj")==0) out.print("<a href='spxlgl.jsp?naction=tj&lb1="+aa+"&pno="+(request.getParameter("pno")==null?"1":request.getParameter("pno"))+"&lid="+rs.getString("nid")+"' class='blue'>是</a>"); else out.print("<a href='spxlgl.jsp?naction=notj&lb1="+aa+"&pno="+(request.getParameter("pno")==null?"1":request.getParameter("pno"))+"&lid="+rs.getString("nid")+"' class='blue'>否</a>"); %></td>
                     <td>                   
                     <a href="spxlbianji.jsp?lb1=<%=aa %>&lid=<%=rs.getString("nid")%>&pno=${param.pno}" class="blue">修改</a>
                     &nbsp;&nbsp;&nbsp;&nbsp;<%if (rs.getInt("zt")==1) out.print("<a href='spxlgl.jsp?naction=xiajia&lb1="+aa+"&pno="+(request.getParameter("pno")==null?"1":request.getParameter("pno"))+"&lb1="+aa+"&lid="+rs.getString("nid")+"' class='blue'>下架</a>"); else out.print("<a href='spxlgl.jsp?naction=shangjia&lb1="+aa+"&pno="+(request.getParameter("pno")==null?"1":request.getParameter("pno"))+"&lid="+rs.getString("nid")+"' class='blue'>上架</a>"); %></td>

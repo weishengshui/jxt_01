@@ -40,7 +40,15 @@ try
 {
 	
 	SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
-	strsql="select count(f.nid) as hn from tbl_jfff f inner join tbl_jfffxx x on f.ffxx=x.nid where f.ffxx<>0 and ((x.fflx=1 and x.lxbh in ("+session.getAttribute("ffbm")+")) or (x.fflx=2 and x.lxbh in ("+session.getAttribute("ffxz")+")))";	
+	String ffbm = session.getAttribute("ffbm").toString();
+    if ("''".equals(ffbm)) {
+    	ffbm = "-1";
+    }
+    String ffxz = session.getAttribute("ffxz").toString();
+    if ("''".equals(ffxz)) {
+    	ffxz = "-1";
+    }
+	strsql="select count(f.nid) as hn from tbl_jfff f inner join tbl_jfffxx x on f.ffxx=x.nid where f.ffxx<>0 and ((x.fflx=1 and x.lxbh in ("+ffbm+")) or (x.fflx=2 and x.lxbh in ("+ffxz+")))";	
 	
 	if (sffsj!=null && sffsj.length()>0)
 		strsql+=" and ffsj>='"+sffsj+"'";
@@ -52,7 +60,7 @@ try
 	rs.close();
 	pages=(ln-1)/psize+1;
 	
-	strsql="select f.nid,f.ffsj,m1.mmmc as mc1,m2.mmmc as mc2,f.hjr,ffjf,ffzt,f.srsj,x.jsmc,f.bz from tbl_jfff f inner join tbl_jfffxx x on f.ffxx=x.nid left join tbl_jfmm m1 on f.mm1=m1.nid left join tbl_jfmm m2 on f.mm2=m2.nid where f.ffxx<>0 and ((x.fflx=1 and x.lxbh in ("+session.getAttribute("ffbm")+")) or (x.fflx=2 and x.lxbh in ("+session.getAttribute("ffxz")+")))";
+	strsql="select f.nid,f.ffsj,m1.mmmc as mc1,m2.mmmc as mc2,f.hjr,ffjf,ffzt,f.srsj,x.jsmc,f.bz from tbl_jfff f inner join tbl_jfffxx x on f.ffxx=x.nid left join tbl_jfmm m1 on f.mm1=m1.nid left join tbl_jfmm m2 on f.mm2=m2.nid where f.ffxx<>0 and ((x.fflx=1 and x.lxbh in ("+ffbm+")) or (x.fflx=2 and x.lxbh in ("+ffxz+")))";
 	
 	if (sffsj!=null && sffsj.length()>0)
 		strsql+=" and f.ffsj>='"+sffsj+"'";
@@ -60,14 +68,21 @@ try
 		strsql+=" and f.ffsj<='"+effsj+" 23:59:59'";
 	
 	strsql+=" order by f.nid desc limit " + (Integer.valueOf(pno)-1)*psize+","+psize;	
-	//out.print(strsql);
 	rs=stmt.executeQuery(strsql);
+	String mmmc="";
 	while (rs.next())
 	{
+		if (rs.getString("mc2")!=null) {
+			mmmc=rs.getString("mc2");
+		} else if (rs.getString("mc1")!=null) {
+			mmmc=rs.getString("mc1");
+		} else {
+			mmmc="部门或项目组奖励";
+		}
 	 %>
 	<li>
 		<div class="jfqffjlin1"><%=sf.format(rs.getDate("ffsj"))%></div>
-		<div class="jfqffjlin2"><a href="aiorder.jsp?ffid=<%=rs.getString("nid")%>"><%if (rs.getString("mc2")!=null && rs.getString("mc2").length()>0) out.print(rs.getString("mc2")); else out.print(rs.getString("mc1")); %></a></div>
+		<div class="jfqffjlin2"><a href="aiorder.jsp?ffid=<%=rs.getString("nid")%>"><%=mmmc %></a></div>
 		<div class="jfqffjlin3"><%if (rs.getString("hjr")!=null && rs.getString("hjr").length()>20) out.print(rs.getString("hjr").substring(0,20)+"..."); else out.print(rs.getString("hjr"));%></div>
 		<div class="jfqffjlin4"><%=rs.getString("ffjf")%></div>
 		<div class="jfqffjlin5"><%=rs.getString("jsmc")%></div>

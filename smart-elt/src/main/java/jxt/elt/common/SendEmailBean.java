@@ -1,24 +1,17 @@
 package jxt.elt.common;
 
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
-import javax.mail.Message.RecipientType;
-import javax.mail.internet.MimeMessage;
+import java.util.Properties;
+
 import javax.mail.Message;
 import javax.mail.Session;
-import java.util.Properties;
-import java.util.concurrent.ExecutionException;
-
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.Multipart;
-import javax.mail.internet.MimeMultipart;
-import javax.activation.*;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 
 
@@ -34,53 +27,59 @@ public class SendEmailBean
 	String szpassword="";
 	String szfrom="";
 	
-	public SendEmailBean()
-	{
-		Connection conn=DbPool.getInstance().getConnection();
-		try
-		{
-			Statement stmt=conn.createStatement();
-			ResultSet rs=null;
-			String strsql="select pvalue from tbl_config where pname='sendemailsmtp'";
-			rs=stmt.executeQuery(strsql);
-			if (rs.next())
-			{
-				szsmtp=rs.getString("pvalue");
-			}
-			rs.close();
-			
-			strsql="select pvalue from tbl_config where pname='sendemail'";
-			rs=stmt.executeQuery(strsql);
-			if (rs.next())
-			{
-				szusername=rs.getString("pvalue");
-				szfrom=szusername;
-			}
-			rs.close();
-			
-			strsql="select pvalue from tbl_config where pname='sendemailpwd'";
-			rs=stmt.executeQuery(strsql);
-			if (rs.next())
-			{
-				szpassword=rs.getString("pvalue");				
-			}
-			rs.close();
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-		finally{
-			try{
-			if (!conn.isClosed())
-				conn.close();
-			}
-			catch(SQLException se)
-			{
-				se.printStackTrace();
-			}
-		}
-	}
+  public SendEmailBean(int qy)
+  {
+    Connection conn = DbPool.getInstance().getConnection();
+    try
+    {
+      Statement stmt = conn.createStatement();
+      ResultSet rs = null;
+      String strsql = null;
+      boolean entMailExist = false;
+      if (qy > 0)
+      {
+        strsql = "select username, AES_DECRYPT(password, 'e1t') as password, smtpaddress from tbl_emailconfig where status = '1' and qy=" + qy;
+        rs = stmt.executeQuery(strsql);
+        if (rs.next())
+        {
+          this.szusername = rs.getString("username");
+          this.szfrom = this.szusername;
+          this.szpassword = rs.getString("password");
+          this.szsmtp = rs.getString("smtpaddress");
+          entMailExist = true;
+        }
+        rs.close();
+      }
+
+      if (!entMailExist)
+      {
+        strsql = "select username, AES_DECRYPT(password, 'e1t') as password, smtpaddress from tbl_emailconfig where (qy is null or qy=0 or qy='') and status='1' ORDER BY RAND() limit 1";
+        rs = stmt.executeQuery(strsql);
+        if (rs.next())
+        {
+          this.szusername = rs.getString("username");
+          this.szfrom = this.szusername;
+          this.szpassword = rs.getString("password");
+          this.szsmtp = rs.getString("smtpaddress");
+        }
+        rs.close();
+      }
+    }
+    catch (Exception se)
+    {
+      se.printStackTrace();
+    }
+    finally {
+      try {
+        if (!conn.isClosed())
+          conn.close();
+      }
+      catch (SQLException se)
+      {
+        se.printStackTrace();
+      }
+    }
+  }
 	
 	/**
 	 * Email发送方法

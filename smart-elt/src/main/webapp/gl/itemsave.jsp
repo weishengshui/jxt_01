@@ -47,7 +47,8 @@ try
 	strsql="insert into tbl_jfmm (qy,mmmc,fmm,bz) values("+session.getAttribute("qy")+",'"+mmmc+"',0,'')";
 	stmt.executeUpdate(strsql);	
 	
-	out.print("<select name=\"mm1\" id=\"mm1\" onchange=\"showmm(this.value)\" style=\"height: 30px;\"><option value=''>请选择</option>");	
+// 	out.print("<select name=\"mm1\" id=\"mm1\" onchange=\"showmm(this.value)\" style=\"height: 30px;\"><option value=''>请选择</option>");	
+	out.print("<option value=''>请选择</option>");	
 	strsql="select nid,mmmc from tbl_jfmm where (qy="+session.getAttribute("qy")+" or qy=0) and fmm=0";
 		rs=stmt.executeQuery(strsql);
 		while (rs.next())
@@ -58,7 +59,6 @@ try
 				out.print("<option value='"+rs.getString("nid")+"'>"+rs.getString("mmmc")+"</option>");	
 		}
 		rs.close();
-	out.print("</select>");
 }
 catch(Exception e)
 {			

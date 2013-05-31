@@ -123,7 +123,7 @@
 				if(subtotaljfq == 0){					
 					$("#xj"+sp).html("积分："+subtotaljf+"<br />现金：￥"+subtotalje);
 				}
-				else $("#xj"+sp).html("积分券 × "+subtotaljfq);
+				else $("#xj"+sp).html("福利券 × "+subtotaljfq);
 			}
 			var listdhl = function(sps){
 				var timeParam = Math.round(new Date().getTime()/1000);				

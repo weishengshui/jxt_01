@@ -203,6 +203,7 @@ if (!fun.sqlStrCheck(gpid) || !fun.sqlStrCheck(xzmc) || !fun.sqlStrCheck(bz) || 
 	return;
 }
 
+boolean is_redirect = false;
 try
 {
 		if (naction!=null && naction.equals("save"))
@@ -247,7 +248,8 @@ try
 				}
 			}
 			//out.print(strsql);
-			response.sendRedirect("group.jsp");
+// 			response.sendRedirect("group.jsp");return;
+			is_redirect = true;
 		}
 		else if (gpid!=null && !gpid.equals(""))
 		{
@@ -281,6 +283,8 @@ try
 		  	}
 		  	rs.close();
 		}
+		
+	if(is_redirect == false){
 %>
 
 
@@ -342,6 +346,8 @@ try
 			</div>
 	  	</div>
 	</div>
+	<%} %>
+	
 	<%@ include file="footer.jsp" %> 
   	<%
 	
@@ -351,6 +357,7 @@ try
 	e.printStackTrace();
 	conn.rollback();
 	conncommit=0;
+	is_redirect = false;
 }
 finally
 {
@@ -362,5 +369,16 @@ finally
 	}
 }
    %>
+   
+   <%
+   		if(is_redirect == true){
+	%>
+			<script type="text/javascript">
+				window.location.href='group.jsp';
+			</script>
+	<%
+   		}
+	%>
+   
     </body>
 </html>

@@ -94,6 +94,35 @@ function saveit()
 		return false;
 	}
 	
+	if(document.getElementById("entmailusername").value=="" && (document.getElementById("entmailpassword").value!="" || document.getElementById("entmailsmtp").value!=""))
+	{
+		alert("发送邮件用户不可为空");
+		return false;
+	}
+	
+	if(document.getElementById("entmailpassword").value=="" && (document.getElementById("entmailusername").value!="" || document.getElementById("entmailsmtp").value!=""))
+	{
+		alert("发送邮件密码不可为空");
+		return false;
+	}
+	
+	if(document.getElementById("entmailsmtp").value=="" && (document.getElementById("entmailpassword").value!="" || document.getElementById("entmailusername").value!=""))
+	{
+		alert("发送邮件SMTP不可为空");
+		return false;
+	}
+	
+	if(document.getElementById("entmailsmtp").value=="" 
+			&& document.getElementById("entmailpassword").value=="" 
+			&& document.getElementById("entmailusername").value=="")
+	{
+		if (document.getElementById("entmailstatus").checked == true)
+	    {
+			alert("启用自定义企业邮箱需填写用户，密码和SMTP地址");
+			return false;
+		}
+	}
+	
 	document.getElementById("cform").submit();
 }
 
@@ -222,6 +251,7 @@ Statement stmt=conn.createStatement();
 ResultSet rs=null;
 Fun fun=new Fun();
 String qymc="",qybh="",qydz="",qh="",dh="",yb="",yyzz="",swdj="",zzjg="",qylog="",bz="",strsql="",lxr="",lxremail="";
+String entmailusername="",entmailpassword="",entmailsmtp="",entmailstatus="0";
 try
 {
 		
@@ -247,7 +277,22 @@ try
 		
 		if (lxr==null) lxr="";
 		if (lxremail==null) lxremail="";
-
+		
+		strsql="select username, AES_DECRYPT(password, 'e1t') as password, smtpaddress, status from tbl_emailconfig where qy="+session.getAttribute("qy");	
+		rs=stmt.executeQuery(strsql);
+		if (rs.next())
+		{
+			entmailusername=rs.getString("username");
+			entmailpassword=rs.getString("password");
+			entmailsmtp=rs.getString("smtpaddress");
+			entmailstatus=rs.getString("status");
+		}
+		rs.close();
+		
+		if (entmailusername=="" || entmailpassword=="" || entmailsmtp=="")
+		{
+			entmailstatus="0";
+		}
 %>
 	
 	<div id="main">
@@ -301,12 +346,31 @@ try
                           <td>企业联系人：</td>
                           <td><input type="text" class="input3" name="lxr" id="lxr"  value="<%=lxr%>" maxlength="25" /></td>
                         </tr>
-                         <tr>
+                        <tr>
                           <td align="center"><span class="star">*</span></td>
                           <td>联系人信箱：</td>
                           <td><input type="text" class="input3" name="lxremail" id="lxremail"  value="<%=lxremail%>" maxlength="50" /></td>
                         </tr>
-                       
+                        <tr>
+                          <td>&nbsp;</td>
+                          <td>企业邮件用户：</td>
+                          <td><input type="text" class="input3" name="entmailusername" id="entmailusername" value="<%=entmailusername%>" maxlength="50" autocomplete="off"/></td>
+                        </tr>
+                        <tr>
+                          <td>&nbsp;</td>
+                          <td>企业邮件密码：</td>
+                          <td><input type="password" class="input3" name="entmailpassword" id="entmailpassword" value="<%=entmailpassword%>" maxlength="50" autocomplete="off" /></td>
+                        </tr>
+                        <tr>
+                          <td>&nbsp;</td>
+                          <td>企业邮件SMTP：</td>
+                          <td><input type="text" class="input3" name="entmailsmtp" id="entmailsmtp" value="<%=entmailsmtp%>" maxlength="50" /></td>
+                        </tr>
+                        <tr>
+                          <td>&nbsp;</td>
+                          <td>启用企业邮件：</td>
+                          <td><input type="radio" name="entmailstatus" id="entmailstatus" value="1" <%if (entmailstatus.equals("1")) out.print("checked='checked'"); %> />是 　　<input type="radio" name="entmailstatus" id="entmailstatus" value="0" <%if (entmailstatus.equals("0")) out.print("checked='checked'"); %> />否</td>
+                        </tr>                                        
                         <tr>
                           <td align="center" valign="top"><span class="star">*</span></td>
                           <td valign="top">营 业 执 照：</td>
@@ -351,7 +415,7 @@ try
 							<td width="400">日期：<input type="text" name="soutdate" id="soutdate" onclick="new Calendar().show(this);" />--<input type="text" name="eoutdate" id="eoutdate" onclick="new Calendar().show(this);" /></td>
 							<td><a href="#" onclick="outdata()"><img src="images/bbdc.jpg"/></a></td>
 							</tr>
-							<tr><td><strong>报表名称：</strong></td><td colspan="11">《积分购买明细报表》，《积分发放明细报表》，《积分券购买明细报表》，《积分券发放明细报表》</td></tr>
+							<tr><td><strong>报表名称：</strong></td><td colspan="11">《积分购买明细报表》，《积分发放明细报表》，《福利券购买明细报表》，《福利券发放明细报表》</td></tr>
 							<tr><td>&nbsp;</td><td colspan="11">《发放名目统计分析报表》，《员工账户状况报表》，《员工账户获得明细报表》</td></tr>
 						</table>
 						</form>
@@ -378,7 +442,7 @@ try
                           <td>********&nbsp;<a href="javascript:void(0);" style="color: blue;" onclick="editpwd()">修改密码</a></td>
                         </tr>
                       </table>
-                    </div>
+                    </div>            
 				</div>
 			</div>
 	  	</div>

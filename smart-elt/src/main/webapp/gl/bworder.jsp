@@ -7,7 +7,7 @@
 <%@ include file="../common/hrlogcheck.jsp" %>
 <%@page import="jxt.elt.common.DbPool"%>
 <%
-if (session.getAttribute("glqx").toString().indexOf(",12,")==-1) 
+if (session.getAttribute("glqx").toString().indexOf(",12,")==-1 && !isLeader)
 	response.sendRedirect("main.jsp");
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -68,14 +68,13 @@ try{
 						<div class="local3-3"><h1>交易成功</h1><%if (ztsj!=null && ztsj.length()>0) out.print("<h2>"+ztsj+"</h2>"); %></div>
 					</li>
 				</ul>
+				<%if (session.getAttribute("glqx").toString().indexOf(",12,")!=-1) {%>
 				<div class="gsjf-states">尊敬的<%=session.getAttribute("qymc")%>，您目前公司账户积分：<em class="yellowtxt txtsize16"><%=session.getAttribute("qyjf")%></em><%if (session.getAttribute("djjf")!=null && !session.getAttribute("djjf").equals("0")) {%>，冻结积分：<em class="yellowtxt txtsize16"><%=session.getAttribute("djjf")%></em><%} %><a href="buyintegral.jsp" class="ljcztxt">立即充值&gt;&gt;</a></div>
+				<%} %>
 				
-				
-	
-	
 				<div class="jfqlist">
 					<div class="jfq-th">
-						<div class="jfq1">积分券名称</div>
+						<div class="jfq1">福利券名称</div>
 						<div class="jfq2">需支付积分</div>
 						<div class="jfq3">数量</div>
 						<div class="jfq4">小计</div>

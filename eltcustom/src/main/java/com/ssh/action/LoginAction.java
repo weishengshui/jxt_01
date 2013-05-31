@@ -1,6 +1,8 @@
 package com.ssh.action;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -9,10 +11,11 @@ import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
 import org.springframework.stereotype.Controller;
 
-import com.ssh.util.SecurityUtil;
 import com.ssh.base.BaseAction;
+import com.ssh.entity.TblQy;
 import com.ssh.entity.TblQyyg;
 import com.ssh.service.QyygService;
+import com.ssh.util.SecurityUtil;
 
 @Controller
 @Results( { @Result(name = "success", location = "/jsp/base/index.jsp"),
@@ -86,8 +89,20 @@ public class LoginAction extends BaseAction {
 			logger.error("LoginAction:", e);
 		}
 		if (user.getDlmm()!=null&&user.getDlmm().equals(md5pwd)) {
+			this.session.clear();
 			this.session.put("user", user);
 			this.setUser(user);
+			
+			List temp = qyygService.getQyinfo(user.getQy().intValue());
+			if (temp != null) {
+				Map tmp = (Map) temp.get(0);
+				TblQy qy = new TblQy();
+				qy.setNid((Integer) tmp.get("nid"));
+				qy.setQymc((String) tmp.get("qymc"));
+				qy.setLogo((String) tmp.get("log"));
+				qy.setZt((Integer) tmp.get("zt"));
+				this.session.put("userQy", qy);
+			}
 			return SUCCESS;
 		}
 		this.setFailedinfo("登录失败");

@@ -51,7 +51,13 @@
 						str+='&nbsp;+&nbsp;<strong class="bisque">'+row.je+'</strong>元';
 						subtotalje += parseFloat(row.je);
 					}
-					str+='</td><td>'+row.sl+'</td><td>已兑换 （订单号<span class="blue"><a href="dd!detail.do?crddh='+row.ddh+'">'+row.ddh+'</a></span>）</td></tr>';
+					str+='</td><td>'+row.sl+'</td><td>已兑换 （订单号<span class="blue">';
+					if(row.spbh != 'CP_001'){
+						str += '<a href="dd!detail.do?crddh='+row.ddh+'">'+row.ddh+'</a>'; 
+					} else {
+						str += row.ddh;
+					}
+					str += '</span>）</td></tr>';
 					subtotal += parseInt(row.sl);
 					subtotaljf += parseInt(row.jf);
 					$("#jflist").append(str);
@@ -86,8 +92,8 @@
 					<div class="wrap-right">
 						<div class="list">
 							<div class="list-title"><h1>积分兑换明细</h1>
-								<div class="list-title-r">最近三个月共收到积分 <span class="bisque"><strong id="sdjf"></strong></span>
-								，已经使用 <span class="bisque"><strong id="ysyjf"></strong></span>
+								<div class="list-title-r">最近三个月共收到积分 <span class="bisque"><strong id="sdjf">0</strong></span>
+								，已经使用 <span class="bisque"><strong id="ysyjf">0</strong></span>
 								 <span class="bisque" style="display:none"><strong id="syjf"></strong></span>分</div>
 							</div>
 							<div class="shanxuan">

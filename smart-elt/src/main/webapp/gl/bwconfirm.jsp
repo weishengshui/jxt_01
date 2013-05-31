@@ -7,7 +7,7 @@
 <%@ include file="../common/hrlogcheck.jsp" %>
 <%@page import="jxt.elt.common.DbPool"%>
 <%
-if (session.getAttribute("glqx").toString().indexOf(",12,")==-1) 
+if (session.getAttribute("glqx").toString().indexOf(",12,")==-1 && !isLeader) 
 	response.sendRedirect("main.jsp");
 
 %>
@@ -99,6 +99,18 @@ function changesl(j,n,l,t,kc)
 	}
 	changejf(j,n,l,kc);
 }
+
+function addbuycar(id)
+{
+	var bwcarp=readCookie("bwcarp");
+	var tempstr=","+bwcarp;
+	if (tempstr.indexOf(","+id+",")==-1)
+	{
+		writeCookie("bwcarp",bwcarp+id+",",24);
+		writeCookie("bwcarn",readCookie("bwcarn")+"1,",24);
+		showjfqcar();
+	}	
+}
 </script>
 <link rel="shortcut icon" href="<%=request.getContextPath() %>/images/favicon.ico" type="image/x-icon" /></head>
 <body>
@@ -131,8 +143,9 @@ try{
 						<div class="local3-3"><h1>交易成功</h1></div>
 					</li>
 				</ul>
+				<%if (session.getAttribute("glqx").toString().indexOf(",12,")!=-1) {%>
 				<div class="gsjf-states">尊敬的<%=session.getAttribute("qymc")%>，您目前公司账户积分：<em class="yellowtxt txtsize16"><%=session.getAttribute("qyjf")%></em><%if (session.getAttribute("djjf")!=null && !session.getAttribute("djjf").equals("0")) {%>，冻结积分：<em class="yellowtxt txtsize16"><%=session.getAttribute("djjf")%></em><%} %><a href="buyintegral.jsp" class="ljcztxt">立即充值&gt;&gt;</a></div>
-				
+				<%} %>
 				
 	<%
 	
@@ -158,17 +171,35 @@ try{
 		}
 	}
 	
-	
-	if (bwcarp!=null && bwcarp.length()>0)
+	//员工端生成福利券
+	String flqid = request.getParameter("flqid");
+	String scflq = request.getParameter("scflq");
+	if (flqid != null && "1".equals(scflq)) {
+		%>
+		<script type="text/javascript">addbuycar('<%=flqid%>');</script>
+		<%
+	}
+	String[] bw=null;
+	String[] bwn=null;
+	if ((bwcarp!=null && bwcarp.length()>0) || (flqid != null && "1".equals(scflq)))
 	{
-	//bwcarp=bwcarp.substring(0,bwcarp.length()-1);
-	String[] bw=bwcarp.split(",");
-	String[] bwn=bwcarn.split(",");
+		if ((bwcarp!=null && bwcarp.length()>0) && (flqid != null && "1".equals(scflq))) {
+			bwcarp+=flqid;
+			bwcarn+="1";
+			bw=bwcarp.split(",");
+			bwn=bwcarn.split(",");
+		} else if (bwcarp!=null && bwcarp.length()>0){
+			bw=bwcarp.split(",");
+			bwn=bwcarn.split(",");
+		} else if (flqid != null && "1".equals(scflq)){
+			bw = new String[]{flqid};
+			bwn = new String[]{"1"};
+		}
 	%>	
 	
 				<div class="jfqlist">
 					<div class="jfq-th">
-						<div class="jfq1">积分券名称</div>
+						<div class="jfq1">福利券名称</div>
 						<div class="jfq2">需支付积分</div>
 						<div class="jfq3">数量</div>
 						<div class="jfq4">小计</div>
@@ -184,7 +215,8 @@ try{
 							rs=stmt.executeQuery(strsql);
 							if (rs.next())
 							{
-								wjt=wjt+rs.getInt("jf")*Integer.valueOf(bwn[i]);
+								String num = "自选福利".equals(rs.getString("hdmc")) ? "" + rs.getInt("kcsl") : bwn[i];
+								wjt=wjt+rs.getInt("jf")*Integer.valueOf(num);
 								%>
 								<div class="jfqin-up">
 									<div class="jfqin-up1">
@@ -196,7 +228,19 @@ try{
 										</dl>
 									</div>
 									<div class="jfqin-up2"><span class="yellow2"><%=rs.getString("jf")%></span> 积分</div>
-									<div class="jfqin-up3"><span class="addbtn"><a href="javascript:void(0);" onclick="changesl(<%=rs.getString("jf")%>,<%=i%>,<%=bw.length%>,0,<%=rs.getInt("kcsl")%>)"><img src="images/ico4.jpg" /></a></span><span class="floatleft"><input type="text" onchange="changejf(<%=rs.getString("jf")%>,<%=i%>,<%=bw.length%>,<%=rs.getInt("kcsl")%>)" name="wn<%=i%>" id="wn<%=i%>" value="<%=bwn[i]%>" class="input5" /></span><span class="addbtn"><a href="javascript:void(0);" onclick="changesl(<%=rs.getString("jf")%>,<%=i%>,<%=bw.length%>,1,<%=rs.getInt("kcsl")%>)"><img src="images/ico5.jpg" /></a></span></div>
+									<div class="jfqin-up3">
+										<span class="addbtn">
+											<a href="javascript:void(0);" onclick="changesl(<%=rs.getString("jf")%>,<%=i%>,<%=bw.length%>,0,<%=rs.getInt("kcsl")%>)">
+											<img src="images/ico4.jpg" /></a></span>
+										<span class="floatleft">
+											<input type="text" onchange="changejf(<%=rs.getString("jf")%>,<%=i%>,<%=bw.length%>,<%=rs.getInt("kcsl")%>)" name="wn<%=i%>" id="wn<%=i%>" value="<%=num%>" class="input5" />
+										</span>
+										<span class="addbtn">
+											<a href="javascript:void(0);" onclick="changesl(<%=rs.getString("jf")%>,<%=i%>,<%=bw.length%>,1,<%=rs.getInt("kcsl")%>)">
+											<img src="images/ico5.jpg" />
+											</a>
+										</span>
+									</div>
 									<div class="jfqin-up4"><span class="yellow2" id="wj<%=i%>"><%=rs.getInt("jf")*Integer.valueOf(bwn[i]) %></span> 积分</div>
 									<div class="jfqin-up2"><span class="yellow2"><%=rs.getInt("kcsl")%></div>
 									<div class="jfqin-up5"><a href="javascript:void(0);" class="deltxt" onclick="delone(<%=i%>,<%=bw.length%>)">&times;删除</a></div>
@@ -208,9 +252,9 @@ try{
 									while (rs2.next())
 									{
 										if (!rs2.isLast())
-											out.print("<li><a href=\"/eltcustom/sp!detail.do?sp="+rs2.getString("nid")+"\" target=\"_blank\"><img src='../"+rs2.getString("lj")+"' /><span>"+rs2.getString("spmc")+"</span></a></li>");
+											out.print("<li><a href=\"/eltcustom/sp!detail.do?sp="+rs2.getString("nid")+"\" target=\"_blank\"><img src='../"+rs2.getString("lj")+"' /><p class='jfqpro-title'><span class='jfqpro-title-content'>"+rs2.getString("spmc")+"</span></p></a></li>");
 										else
-											out.print("<li class='jfqprolast'><a href=\"pdetail.jsp?sp="+rs2.getString("nid")+"\" target=\"_blank\"><img src='../"+rs2.getString("lj")+"' /><span>"+rs2.getString("spmc")+"</span></a></li>");
+											out.print("<li class='jfqprolast'><a href=\"pdetail.jsp?sp="+rs2.getString("nid")+"\" target=\"_blank\"><img src='../"+rs2.getString("lj")+"' /><p class='jfqpro-title'><span class='jfqpro-title-content'>"+rs2.getString("spmc")+"</span></p></a></li>");
 										
 									}
 									rs2.close();

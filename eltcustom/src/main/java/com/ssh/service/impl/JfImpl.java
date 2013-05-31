@@ -14,8 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ssh.dao.JfDao;
 import com.ssh.dao.JfffmcDao;
 import com.ssh.dao.QyygDao;
+import com.ssh.dao.SyqyjfDao;
 import com.ssh.entity.TblJfffmc;
 import com.ssh.entity.TblQyyg;
+import com.ssh.entity.TblSyqyjf;
 import com.ssh.service.JfService;
 import com.ssh.util.SecurityUtil;
 
@@ -28,12 +30,16 @@ public class JfImpl implements JfService{
 	private QyygDao qyygDao;
 	@Resource
 	private JfffmcDao jfffmcDao;
-	private static Logger logger = Logger.getLogger(JfImpl.class
-			.getName());
-	public List<Map<String, Object>> getJfbyUid(String userid, int limit){
-		if(SecurityUtil.sqlCheck(userid)) return null;
-		return jfDao.getJfbyUid(userid, limit);
-	};
+
+	@Resource
+	private SyqyjfDao syqyjfDao;
+	private static Logger logger = Logger.getLogger(JfImpl.class.getName());
+
+	public List<Map<String, Object>> getJfbyUid(String userid, int limit) {
+		if (SecurityUtil.sqlCheck(userid))
+			return null;
+		return this.jfDao.getJfbyUid(userid, limit);
+	}
 
 	public List<Map<String,Object>> page(String param,String page,String rp) {
 		if(SecurityUtil.sqlCheck(param)) return null;
@@ -93,5 +99,49 @@ public class JfImpl implements JfService{
 			return false;
 		}
 		return true;
+	}
+
+	public List<Map<String, Object>> getJfbyUidForSy(String userid, int limit) {
+		if (SecurityUtil.sqlCheck(userid))
+			return null;
+		return this.jfDao.getJfByUidForSy(userid, limit);
+	}
+
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public boolean sylq(Integer id) {
+		TblSyqyjf syqyjf = (TblSyqyjf) this.syqyjfDao.find(id);
+		TblQyyg qyyg = (TblQyyg) this.qyygDao.find(syqyjf.getYg());
+		qyyg.setJf(Long.valueOf(qyyg.getJf().longValue()
+				+ syqyjf.getJf().intValue()));
+		syqyjf.setSflq(Integer.valueOf(1));
+		syqyjf.setLqsj(new Timestamp(System.currentTimeMillis()));
+		try {
+			this.syqyjfDao.save(syqyjf);
+			this.qyygDao.save(qyyg);
+		} catch (Exception e) {
+			logger.error("SyqyjfImpl--sylq", e);
+			return false;
+		}
+		return true;
+	}
+
+	public List<Map<String, Object>> getJfLjsjForSy(String yg) {
+		if (SecurityUtil.sqlCheck(yg))
+			return null;
+		return this.jfDao.getJfLjsjForSy(yg);
+	}
+
+	public List<Map<String, Object>> pagelyForSy(String param, String page,
+			String rp) {
+		if (SecurityUtil.sqlCheck(param))
+			return null;
+		return this.jfDao.page(this.jfDao.pagelySqlForSy(param), page, rp,
+				countlyForSy(param));
+	}
+
+	public String countlyForSy(String param) {
+		if (SecurityUtil.sqlCheck(param))
+			return null;
+		return this.jfDao.getCount(this.jfDao.countlySqlForSy(param));
 	}
 }

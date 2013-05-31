@@ -133,6 +133,9 @@ if (adid!=null && !adid.equals(""))
 					  		
 					  		if (rs.getString("glqx")!=null && rs.getString("glqx").indexOf(",13,")>-1)
 						  		out.print("[发放福利]");
+					  		
+					  		if (rs.getString("glqx")!=null && rs.getString("glqx").indexOf(",14,")>-1)
+						  		out.print("[福利商城]");
 					  	 %>
                     </td>
                     <td>

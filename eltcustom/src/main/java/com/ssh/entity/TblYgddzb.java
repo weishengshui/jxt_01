@@ -1,61 +1,47 @@
 package com.ssh.entity;
 
+import com.ssh.base.BaseEntity;
 import java.sql.Timestamp;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/**
- * TblYgddzb entity. @author MyEclipse Persistence Tools
- */
-/**
- * 员工订单总表
- */
 @Entity
 @Table(name = "tbl_ygddzb")
-public class TblYgddzb extends com.ssh.base.BaseEntity {
-
-	
-
-	/**
-	 * 
-	 */
+public class TblYgddzb extends BaseEntity {
 	private static final long serialVersionUID = 5034749148211193871L;
 	private Integer nid;
-	private String ddh; //订单号
-	private Integer state; //状态
-	private Timestamp cjrq; //创建日期
-	private Timestamp jsrq; //付款日期
-	private String ydh; //运单号
-	private Timestamp shrq; //收货日期
-	private Timestamp fhrq; //发货日期
-	private Integer zjf; //总积分
-	private Double zje; //总金额
-	private Integer jfqsl; //积分券数量
-	private String fhr; //发货人
-	private String fhrdh; //发货人电话
-	private Integer yg; //员工编号
-	private Integer shdz; //收货地址
-	private String ddbz; //订单备注
-	private String shdzxx; //收货地址内容
-	private Timestamp qsrq; //签收日期
-	private Integer gys; //供应商
+	private String ddh;
+	private Integer state;
+	private Timestamp cjrq;
+	private Timestamp jsrq;
+	private String ydh;
+	private Timestamp shrq;
+	private Timestamp fhrq;
+	private Integer zjf;
+	private Double zje;
+	private Integer jfqsl;
+	private String fhr;
+	private String fhrdh;
+	private Integer yg;
+	private Integer shdz;
+	private String ddbz;
+	private String shdzxx;
+	private Timestamp qsrq;
+	private Integer gys;
+	private Integer ddtype;
 
-	
-
-	/** default constructor */
 	public TblYgddzb() {
 	}
 
-	/** full constructor */
 	public TblYgddzb(String ddh, Integer state, Timestamp cjrq, Timestamp jsrq,
 			String ydh, Timestamp shrq, Timestamp fhrq, Integer zjf,
 			Double zje, Integer jfqsl, String fhr, String fhrdh, Integer yg,
 			Integer shdz, String ddbz, String shdzxx, Timestamp qsrq,
-			Integer gys) {
+			Integer gys, Integer ddtype) {
 		this.ddh = ddh;
 		this.state = state;
 		this.cjrq = cjrq;
@@ -74,11 +60,11 @@ public class TblYgddzb extends com.ssh.base.BaseEntity {
 		this.shdzxx = shdzxx;
 		this.qsrq = qsrq;
 		this.gys = gys;
+		this.ddtype = ddtype;
 	}
 
-	
 	@Id
-	@GeneratedValue(strategy = IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "nid", unique = true, nullable = false)
 	public Integer getNid() {
 		return this.nid;
@@ -250,4 +236,12 @@ public class TblYgddzb extends com.ssh.base.BaseEntity {
 		this.gys = gys;
 	}
 
+	@Column(name = "ddtype")
+	public Integer getDdtype() {
+		return this.ddtype;
+	}
+
+	public void setDdtype(Integer ddtype) {
+		this.ddtype = ddtype;
+	}
 }

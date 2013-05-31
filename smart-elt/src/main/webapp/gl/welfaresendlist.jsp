@@ -72,7 +72,7 @@ try{%>
 				<div class="hjr-box3">
 					<table width="100%" border="0" cellspacing="0" cellpadding="0">
 					  <tr>
-						<td width="125" height="30" align="center"><strong>积分券发放记录</strong></td>
+						<td width="125" height="30" align="center"><strong>福利券发放记录</strong></td>
 						<td width="86" align="center"></td>
 						<td width="90"></td>
 						<td width="20" height="30" align="center"></td>
@@ -98,7 +98,7 @@ try{%>
 				<div class="jfqffjl" id="wslist">
 					<div class="jfqffjl-t">
 						<div class="jfqffjl1">发放时间</div>
-						<div class="jfqffjl22">积分券名称</div>
+						<div class="jfqffjl22">福利券名称</div>
 						<div class="jfqffjl33">发放名目</div>						
 						<div class="jfqffjl44">发放对象/发放授权</div>
 						<div class="jfqffjl55">状态</div>		
@@ -107,6 +107,11 @@ try{%>
 					<%
 					int ln=0,pages=1;
 					strsql="select count(nid) as hn from tbl_jfqff where qy="+session.getAttribute("qy")+" and ffxx=0";
+					if (session.getAttribute("glqx").toString().indexOf(",13,")!=-1) {
+						strsql+=" and fftype=0";
+					} else if (isLeader) {
+						strsql+=" and fftype>0 and ffr="+session.getAttribute("ygid");
+					}
 					if (ffzt!=null && ffzt.length()>0)
 						strsql+=" and ffzt="+ffzt;
 					rs=stmt.executeQuery(strsql);
@@ -117,7 +122,12 @@ try{%>
 					rs.close();
 					pages=(ln-1)/10+1;
 					
-					strsql="select f.nid,f.ffsj,m1.mmmc as mc1,m2.mmmc as mc2,f.hjr,ffjf,ffzt,f.srsj,q.mc,q.hd from tbl_jfqff f left join tbl_jfq q on f.jfq=q.nid left join tbl_jfmm m1 on f.mm1=m1.nid left join tbl_jfmm m2 on f.mm2=m2.nid where f.qy="+session.getAttribute("qy")+"  and f.ffxx=0";
+					strsql="select f.nid,f.ffsj,m1.mmmc as mc1,m2.mmmc as mc2,f.hjr,ffjf,ffzt,f.srsj,q.mc,q.hd,q.nid sid from tbl_jfqff f left join tbl_jfq q on f.jfq=q.nid left join tbl_jfmm m1 on f.mm1=m1.nid left join tbl_jfmm m2 on f.mm2=m2.nid where f.qy="+session.getAttribute("qy")+"  and f.ffxx=0";
+					if (session.getAttribute("glqx").toString().indexOf(",13,")!=-1) {
+						strsql+=" and f.fftype=0";
+					} else if (isLeader) {
+						strsql+=" and f.fftype>0 and f.ffr="+session.getAttribute("ygid");
+					}
 					if (ffzt!=null && ffzt.length()>0)
 						strsql+=" and f.ffzt="+ffzt;
 					strsql+=" order by f.nid desc limit 10";
@@ -127,7 +137,7 @@ try{%>
 					%>
 						<li>
 							<div class="jfqffjlin1"><%=sf.format(rs.getDate("ffsj"))%></div>							
-							<div class="jfqffjlin22"><a href="welfare2.jsp?hid=<%=rs.getString("hd")%>"><%=rs.getString("mc")%></a></div>
+							<div class="jfqffjlin22"><a href="welfare2.jsp?hid=<%=rs.getString("hd")%>&sid=<%=rs.getString("sid")%>"><%=rs.getString("mc")%></a></div>
 							<div class="jfqffjlin33"><a href="aworder.jsp?ffid=<%=rs.getString("nid")%>&backurl=myw"><%if (rs.getString("mc2")!=null && rs.getString("mc2").length()>0) out.print(rs.getString("mc2")); else out.print(rs.getString("mc1")); %></a></div>							
 							<div class="jfqffjlin44">&nbsp;
 							<%

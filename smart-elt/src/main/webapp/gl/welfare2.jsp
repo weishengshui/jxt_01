@@ -62,6 +62,7 @@ try{%>
 				rs=stmt.executeQuery(strsql);
 				int qn=1;
 				int n = 0;
+				boolean isSingle = false;
 				while(rs.next())
 				{
 					if (rs.isFirst())
@@ -75,13 +76,17 @@ try{%>
 			<div class="bannerbox3" style="margin-top: 10px;">
 			<%} 
 
-				String css = "quan quanbg-";
-				if(rs.isLast() && n==0){
-					css += "0";
-				}else{
-					css += + qn;
+// 				String css = "quan quanbg-";
+// 				if(rs.isLast() && n==0){
+// 					css += "0";
+// 				}else{
+// 					css += + qn;
+// 				}
+				String css = "quan";
+				if (rs.isLast() && n==0) {
+				    isSingle = true;
 				}
-				n++;
+                n++;
 				
 				String strsqls="select sum(m.sl-m.ffsl) as sys from tbl_jfqddmc m inner join tbl_jfq q on m.jfq=q.nid where q.nid="+ request.getParameter("sid")+" and m.qy="+session.getAttribute("qy")+" and m.zt=1 and m.sl<>m.ffsl group by m.jfq,q.mc,q.jf";
 				ResultSet ress =  stmt2.executeQuery(strsqls);
@@ -93,7 +98,8 @@ try{%>
 			
 				if(request.getParameter("sid") == null){
 			%>
-				<div class="<%=css %>" <%if (qn>1) out.print(" style='margin-top:0px'"); %>>
+				<div class="<%=css %>" <%if (qn>1) out.print(" style='margin-top:50px'"); %>>
+				    <%if (!isSingle) { %><div class="quanorderbg"><span class="quanorder"><%=qn %></span></div><%} %>
 					<div class="quanbuy">
 						<span class="quan-name" style="font-size=20px;">[<%=rs.getString("mc").length()>15?rs.getString("mc").substring(0,15):rs.getString("mc")%>]</span><span class="quan-num"  style="margin-left:210px"><%=rs.getString("jf")%></span><span class="quan-jifeng">积分</span><span class="floatleft"></span><span class="floatleft"></span></div>
 					<div class="quan-main">
@@ -110,7 +116,7 @@ try{%>
 						while (rs2.next())
 						{m++;
 						%>
-						<li><a href="pdetail.jsp?sp=<%=rs2.getString("nid")%>" target="_blank"><img src="../<%=rs2.getString("lj")%>" /></a><span><%=rs2.getString("spmc")%></span></li>						
+						<li><a href="pdetail.jsp?sp=<%=rs2.getString("nid")%>" target="_blank"><img src="../<%=rs2.getString("lj")%>" /></a><p><span><%=rs2.getString("spmc")%></span></p></li>						
 						<%
 						}
 						rs2.close();
@@ -132,7 +138,7 @@ try{%>
 				}else{
 					if(rs.getString("nid").equals(request.getParameter("sid"))){
 			%>
-						<div class="quan quanbg-0" <%if (qn>1) out.print(" style='margin-top:0px'"); %>>
+						<div class="quan" <%if (qn>1) out.print(" style='margin-top:0px'"); %>>
 							<div class="quanbuy">
 								<span class="quan-name">[<%=rs.getString("mc").length()>15?rs.getString("mc").substring(0,15):rs.getString("mc")%>]</span>
 								<span class="quan-num"  style="margin-left:210px"><%=rs.getString("jf")%></span>
@@ -165,7 +171,7 @@ try{%>
 								while (rs2.next())
 								{m++;
 								%>
-								<li><a href="pdetail.jsp?sp=<%=rs2.getString("nid")%>" target="_blank"><img src="../<%=rs2.getString("lj")%>" /></a><span><%=rs2.getString("spmc")%></span></li>						
+								<li><a href="pdetail.jsp?sp=<%=rs2.getString("nid")%>" target="_blank"><img src="../<%=rs2.getString("lj")%>" /></a><p><span><%=rs2.getString("spmc")%></span></p></li>						
 								<%
 								}
 								rs2.close();
@@ -205,7 +211,7 @@ try{%>
 						
 			  	<div class="main2">
 			  		<div class="box">	
-			  		<%out.print("<div class=\"jfqbtnbox\"><span class=\"cancletxt\"><a href=\"buywelfare.jsp\" >&gt;&gt;积分券暂时为空，请选择其他积分券</a></span></div>"); %>			
+			  		<%out.print("<div class=\"jfqbtnbox\"><span class=\"cancletxt\"><a href=\"buywelfare.jsp\" >&gt;&gt;福利券暂时为空，请选择其他福利券</a></span></div>"); %>			
 					</div>
 				</div>
 					

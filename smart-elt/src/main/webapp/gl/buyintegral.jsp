@@ -7,8 +7,9 @@
 <%@ include file="../common/hrlogcheck.jsp" %>
 <%@page import="jxt.elt.common.DbPool"%>
 <%
-if (session.getAttribute("glqx").toString().indexOf(",10,")==-1) 
+if (!isAuth && !isLeader) {
 	response.sendRedirect("main.jsp");
+}
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -151,18 +152,20 @@ Statement stmt=conn.createStatement();
 ResultSet rs=null;
 String strsql="";
 String ygdh="";
+boolean isgly = false;
 int ln=0;
 
 
 try
 {
 	SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
-	strsql="select lxdh from tbl_qyyg where nid="+session.getAttribute("ygid");
+	strsql="select lxdh, gly from tbl_qyyg where nid="+session.getAttribute("ygid");
 	rs=stmt.executeQuery(strsql);
 	if (rs.next())
 	{
 		ygdh=rs.getString("lxdh");
 		if (ygdh==null) ygdh="";
+		isgly=rs.getBoolean("gly");
 	}
 	rs.close();
  %>
@@ -182,7 +185,9 @@ try
 					</li>
 				</ul>
 				<form name="buyform" id="buyform" action="biconfirm.jsp" method="post">
+				<%if (isAuth) {%>
 				<div class="gsjf-states">尊敬的<%=session.getAttribute("qymc")%>，您目前公司账户积分：<em class="yellowtxt txtsize16"><%=session.getAttribute("qyjf")%></em><%if (session.getAttribute("djjf")!=null && !session.getAttribute("djjf").equals("0")) {%>，冻结积分：<em class="yellowtxt txtsize16"><%=session.getAttribute("djjf")%></em><%} %></div>
+				<%} %>
 				<ul class="buyscores">
 					<li>
 						<dl>
@@ -203,7 +208,7 @@ try
 					<li>
 						<dl style="width:900px">
 							<dt><span class="star">*</span> 购买积分：</dt>
-							<dd><span class="floatleft"><input type="text" class="input3" name="zzjf" id="zzjf" value="" /></span></dd>
+							<dd><span class="floatleft"><input type="text" class="input3" name="zzjf" id="zzjf" value="" <%if (!isgly) {%>readonly="readonly"<%} %> /></span></dd>
 						</dl>
 					</li>
 					
@@ -271,15 +276,30 @@ try
 					</div>
 					<ul class="scoresjiluin">
 						<%
-						strsql="select count(nid) as hn from tbl_jfzz  where qy="+session.getAttribute("qy");
+						String ffbm = session.getAttribute("ffbm").toString();
+					    if ("''".equals(ffbm)) {
+					    	ffbm = "-1";
+					    }
+					    String ffxz = session.getAttribute("ffxz").toString();
+					    if ("''".equals(ffxz)) {
+					    	ffxz = "-1";
+					    }
+						if (isAuth) {
+							strsql="select count(nid) as hn from tbl_jfzz where qy="+session.getAttribute("qy")+" and zztype=0";
+						} else if (isLeader) {
+							strsql="select count(nid) as hn from tbl_jfzz where zztype>0 and ((zztype=1 and bmxz in ("+ffbm+")) or (zztype=2 and bmxz in ("+ffxz+")) or (zztype=3 and zzr="+session.getAttribute("ygid")+"))";
+						}
 						rs=stmt.executeQuery(strsql);
 						if (rs.next())
 						{ln=rs.getInt("hn");}
 						rs.close();
 						int pages=(ln-1)/10+1;
 						
-						
-						strsql="select nid,zzsj,zzbh,zzjf,zzje,dzjf, zzzt from tbl_jfzz where qy="+session.getAttribute("qy")+" order by nid desc limit 10";
+						if (isAuth) {
+							strsql="select nid,zzsj,zzbh,zzjf,zzje,dzjf, zzzt from tbl_jfzz where qy="+session.getAttribute("qy")+" and zztype=0 order by nid desc limit 10";
+						} else if (isLeader) {
+							strsql="select nid,zzsj,zzbh,zzjf,zzje,dzjf, zzzt from tbl_jfzz where zztype>0 and ((zztype=1 and bmxz in ("+ffbm+")) or (zztype=2 and bmxz in ("+ffxz+")) or (zztype=3 and zzr="+session.getAttribute("ygid")+")) order by nid desc limit 10";
+						}
 						rs=stmt.executeQuery(strsql);
 						while (rs.next())
 						{

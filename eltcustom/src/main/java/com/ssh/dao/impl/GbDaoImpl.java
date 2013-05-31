@@ -21,8 +21,9 @@ public class GbDaoImpl extends PageDaoImpl implements GbDao{
 			.getName());
 
 	public List<Map<String, Object>> getGbbyQy(String param, int limit) {
-		String sql = " SELECT t.nid,t.bt,DATE_FORMAT(t.fbsj,'%Y.%m.%d') fbsj,m.sfyd  FROM tbl_hrgb t " +
-				" LEFT JOIN tbl_ygmsg m ON t.nid = m.lynid AND m.lylx = 0  WHERE 1=1 "+ param +" ORDER BY m.sfyd asc , t.fbsj DESC LIMIT "+limit;
+		String sql = " SELECT t.nid,t.bt,DATE_FORMAT(t.fbsj,'%Y.%m.%d') fbsj,m.sfyd  FROM tbl_hrgb t  LEFT JOIN tbl_ygmsg m ON t.nid = m.lynid AND m.lylx = 0  WHERE 1=1 "
+				+ param + " ORDER BY m.sfyd asc , t.fbsj DESC LIMIT " + limit;
+
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		try {
 			list = sqldao.query(sql);
@@ -33,8 +34,8 @@ public class GbDaoImpl extends PageDaoImpl implements GbDao{
 	}
 
 	public List<Map<String, Object>> getYgGbwd(String param) {
-		String sql = " SELECT COUNT(t.nid) AS count  FROM tbl_hrgb t  LEFT JOIN tbl_ygmsg m " +
-				" ON t.nid = m.lynid AND m.lylx = 0  WHERE 1=1 AND m.sfyd = 0 "+param;
+		String sql = " SELECT COUNT(t.nid) AS count  FROM tbl_hrgb t  LEFT JOIN tbl_ygmsg m  ON t.nid = m.lynid AND m.lylx = 0  WHERE 1=1 AND m.sfyd = 0 "
+				+ param;
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		try {
 			list = sqldao.query(sql);
@@ -44,21 +45,21 @@ public class GbDaoImpl extends PageDaoImpl implements GbDao{
 		return list;
 	}
 	public String pageSql(String param) {
-		String sql = "SELECT t.nid,t.bt,t.nr,DATE_FORMAT(t.fbsj,'%Y.%m.%d') fbsj,m.sfyd FROM tbl_hrgb t" +
-				" LEFT JOIN tbl_ygmsg m ON t.nid = m.lynid AND m.lylx = 0" +
-				" WHERE 1=1 "+param+" ORDER BY m.sfyd asc , t.fbsj DESC ";
+		String sql = "SELECT t.nid,t.bt,t.nr,DATE_FORMAT(t.fbsj,'%Y.%m.%d') fbsj,m.sfyd FROM tbl_hrgb t LEFT JOIN tbl_ygmsg m ON t.nid = m.lynid AND m.lylx = 0 WHERE 1=1 "
+				+ param + " ORDER BY m.sfyd asc , t.fbsj DESC ";
 		return sql;
 	}
 	public String countSql(String param) {
-		String sql = "SELECT count(t.nid) as count FROM tbl_hrgb t " +
-				" left join tbl_ygmsg m on t.nid = m.lynid and m.lylx = 0 WHERE 1=1 "+param;
+		String sql = "SELECT count(t.nid) as count FROM tbl_hrgb t  left join tbl_ygmsg m on t.nid = m.lynid and m.lylx = 0 WHERE 1=1 "
+				+ param;
 		return sql;
 	}
 
 	
 	public int setYgGbyd(String param) {
 		int rs = 0;
-		String sql = "update tbl_ygmsg t set t.sfyd = 1 where t.lylx = 0 "+ param;
+		String sql = "update tbl_ygmsg t set t.sfyd = 1 where t.lylx = 0 "
+				+ param;
 		try {
 			rs = sqldao.update(sql);
 		} catch (Exception e) {

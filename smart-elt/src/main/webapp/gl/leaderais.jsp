@@ -1,6 +1,7 @@
 <%@page import="org.apache.velocity.Template"%>
 <%@page import="org.apache.velocity.VelocityContext"%>
 <%@page import="org.apache.velocity.app.Velocity"%>
+<%@page import="jxt.elt.common.EmailTemplate"%>
 <%@page import="java.io.StringWriter"%>
 <%@page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@page import="java.sql.Connection"%>
@@ -279,7 +280,8 @@ try
 							context.put("catagoryName", jfmm);
 							context.put("quantity",ojfs[i]);
 							
-							Template template = Velocity.getTemplate("templates/mail/jfreceive.vm");
+// 							Template template = Velocity.getTemplate("templates/mail/jfreceive.vm");
+							Template template = EmailTemplate.getTemplate("jfreceive.vm");
 							StringWriter sw = new StringWriter();
 							template.merge(context, sw);
 							String mailContent = sw.toString();
@@ -343,7 +345,8 @@ try
 							context.put("catagoryName", jfmm);
 							context.put("quantity",ojfs[i]);
 							
-							Template template = Velocity.getTemplate("templates/mail/jfreceive.vm");
+// 							Template template = Velocity.getTemplate("templates/mail/jfreceive.vm");
+							Template template = EmailTemplate.getTemplate("jfreceive.vm");
 							StringWriter sw = new StringWriter();
 							template.merge(context, sw);
 							String mailContent = sw.toString();
@@ -410,6 +413,10 @@ try
 			
 			Integer jfye=Integer.valueOf(session.getAttribute("qyjf").toString())-Integer.valueOf(tjf);
 			session.setAttribute("qyjf",String.valueOf(jfye));
+			
+			getjfxx(stmt, session);
+			out.print("<script type='text/javascript'>reftopjfxx('"+session.getAttribute("hrffjf")+"', '"+session.getAttribute("gmjf")+"');</script>");
+			
 			//冻结积分
 			if (ffzt==0)
 			{
@@ -423,14 +430,14 @@ try
 	  	<div class="main2">
 	  		<div class="box">				
 				<ul class="local">
-					<li class="local-ico2">
-						<div class="local3-1"><h1>填写发放积分信息</h1><h2><%=sf.format(Calendar.getInstance().getTime())%></h2></div>
-					</li>
 					<li class="local-ico3">
-						<div class="local3-2"><h1>确认发放信息</h1><h2><%=sf.format(Calendar.getInstance().getTime())%></h2></div>
+						<div class="local2-1"><h1>填写发放积分信息</h1><h2><%=sf.format(Calendar.getInstance().getTime())%></h2></div>
+					</li>
+					<li class="local-ico1">
+						<div class="local2-2"><h1>确认发放信息</h1><h2><%=sf.format(Calendar.getInstance().getTime())%></h2></div>
 					</li>
 					<li>
-						<div class="local3-3"><h1>确认发放</h1><h2><%=ffsj%></h2></div>
+						<div class="local2-3"><h1>确认发放</h1><h2><%=ffsj%></h2></div>
 					</li>
 				</ul>
 				<div class="ffcg-states">

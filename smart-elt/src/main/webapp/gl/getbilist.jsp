@@ -22,7 +22,9 @@ String ezzsj=request.getParameter("ezzsj");
 String zzzt=request.getParameter("zzzt");
 String pno=request.getParameter("pno");
 if (pno==null || pno.equals(""))
+{
 	pno="1";
+}
 
 if (!fun.sqlStrCheck(zzzt) || !fun.sqlStrCheck(szzsj) || !fun.sqlStrCheck(ezzsj) || !fun.sqlStrCheck(zzid) || !fun.sqlStrCheck(pno))
 {	
@@ -67,7 +69,19 @@ try
 	<ul class="scoresjiluin">
 	<%
 	SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd");
-	strsql="select count(nid) as hn from tbl_jfzz  where qy="+session.getAttribute("qy");
+	String ffbm = session.getAttribute("ffbm").toString();
+    if ("''".equals(ffbm)) {
+    	ffbm = "-1";
+    }
+    String ffxz = session.getAttribute("ffxz").toString();
+    if ("''".equals(ffxz)) {
+    	ffxz = "-1";
+    }
+	if (isAuth) {
+		strsql="select count(nid) as hn from tbl_jfzz where qy="+session.getAttribute("qy")+" and zztype=0";
+	} else if (isLeader) {
+		strsql="select count(nid) as hn from tbl_jfzz where zztype>0 and ((zztype=1 and bmxz in ("+ffbm+")) or (zztype=2 and bmxz in ("+ffxz+")) or (zztype=3 and zzr="+session.getAttribute("ygid")+"))";
+	}
 	if (szzsj!=null && szzsj.length()>0)
 		strsql+=" and zzsj>='"+szzsj+"'";
 	if (ezzsj!=null  && ezzsj.length()>0)
@@ -82,7 +96,11 @@ try
 	pages=(ln-1)/psize+1;
 	
 	
-	strsql="select nid,zzsj,zzbh,zzjf,zzje,dzjf, zzzt from tbl_jfzz where qy="+session.getAttribute("qy");
+	if (isAuth) {
+		strsql="select nid,zzsj,zzbh,zzjf,zzje,dzjf, zzzt from tbl_jfzz where qy="+session.getAttribute("qy")+" and zztype=0";
+	} else if (isLeader) {
+		strsql="select nid,zzsj,zzbh,zzjf,zzje,dzjf, zzzt from tbl_jfzz where zztype>0 and ((zztype=1 and bmxz in ("+ffbm+")) or (zztype=2 and bmxz in ("+ffxz+")) or (zztype=3 and zzr="+session.getAttribute("ygid")+"))";
+	}
 	if (szzsj!=null && szzsj.length()>0)
 		strsql+=" and zzsj>='"+szzsj+"'";
 	if (ezzsj!=null  && ezzsj.length()>0)

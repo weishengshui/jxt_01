@@ -257,12 +257,42 @@
 		<artifactId>common-web</artifactId>
 		<version>2.3.0</version>
 	</dependency>
+	
+	<dependency>
+	  <groupId>org.springframework</groupId>
+	  <artifactId>org.springframework.jdbc</artifactId>
+	  <version>3.1.2.RELEASE</version>
+	</dependency>
+	
+	<dependency>
+		<groupId>com.chinarewards</groupId>
+		<artifactId>utils</artifactId>
+		<version>2.3.0</version>
+	</dependency>
+	
+	<dependency>
+		<groupId>oro</groupId>
+		<artifactId>oro</artifactId>
+		<version>2.0.8</version>
+	</dependency>
+	
+	<dependency>
+	  <groupId>commons-net</groupId>
+	  <artifactId>commons-net</artifactId>
+	  <version>1.4.0</version>
+	</dependency>
+	
+	<dependency>
+	  <groupId>org.aopalliance</groupId>
+	  <artifactId>com.springsource.org.aopalliance</artifactId>
+	  <version>1.0.0</version>
+	</dependency>
 
   </dependencies>
   
 	<build>
         <plugins>
-        	<plugin>
+        	<!-- <plugin>
 				<groupId>com.chinarewards.maven.plugins</groupId>
 				<artifactId>maven-appinfo-plugin</artifactId>
 				<version>0.1.0</version>
@@ -273,7 +303,7 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin> -->
         	<plugin>
 	            <artifactId>maven-compiler-plugin</artifactId>
 	            <version>2.3.2</version>
@@ -296,6 +326,25 @@
 				<version>1.1</version>
 			</plugin>
 			
+			<!-- Uncomment this to allow quick development. 
+			<plugin>
+				<groupId>org.zeroturnaround</groupId>
+				<artifactId>javarebel-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>generate-rebel-xml</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<downloadJavadocs>true</downloadJavadocs>
+				</configuration>
+				<version>1.0.5</version>
+			</plugin>
+			-->
 		</plugins>
     </build>
 </project>

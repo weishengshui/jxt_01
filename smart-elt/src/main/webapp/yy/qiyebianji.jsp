@@ -1,6 +1,7 @@
 <%@page import="org.apache.velocity.Template"%>
 <%@page import="org.apache.velocity.VelocityContext"%>
 <%@page import="org.apache.velocity.app.Velocity"%>
+<%@page import="jxt.elt.common.EmailTemplate"%>
 <%@page import="java.io.StringWriter"%>
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@page import="java.sql.Connection"%>
@@ -267,7 +268,7 @@ try{
 			Random rand=new Random();
 			int dlmm=rand.nextInt(999999);
 			if (dlmm<100000) dlmm=100000+dlmm;
-			strsql="insert into tbl_qyyg (qy,ygxm,email,dlmm,gly,glqx,zt) values("+qyid+",'"+lxr+"','"+lxremail+"','"+su.md5(String.valueOf(dlmm))+"',1,',1,2,3,4,5,6,7,10,11,12,13,',1)";
+			strsql="insert into tbl_qyyg (qy,ygxm,email,dlmm,gly,glqx,zt) values("+qyid+",'"+lxr+"','"+lxremail+"','"+su.md5(String.valueOf(dlmm))+"',1,',1,2,3,4,5,6,7,10,11,12,13,14,',1)";
 			stmt.executeUpdate(strsql);
 			//邮件发送
 			//SendEmailBean sendemail=new SendEmailBean();
@@ -287,7 +288,8 @@ try{
 			context.put("loginAccount", lxremail);
 			context.put("loginPassword", dlmm);
 			
-			Template template = Velocity.getTemplate("templates/mail/qymanageraccount.vm");
+// 			Template template = Velocity.getTemplate("templates/mail/qymanageraccount.vm");
+			Template template = EmailTemplate.getTemplate("qymanageraccount.vm");
 			StringWriter sw = new StringWriter();
 			template.merge(context, sw);
 			String mailContent = sw.toString();

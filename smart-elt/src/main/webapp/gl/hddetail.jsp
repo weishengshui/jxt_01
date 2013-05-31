@@ -109,7 +109,7 @@ try{%>
 						
 			  	<div class="main2">
 			  		<div class="box">	
-			  		<%out.print("<div class=\"jfqbtnbox\"><span class=\"cancletxt\"><a href=\"buywelfare.jsp\" >&gt;&gt;积分券暂时为空，请选择其他积分券</a></span></div>"); %>			
+			  		<%out.print("<div class=\"jfqbtnbox\"><span class=\"cancletxt\"><a href=\"buywelfare.jsp\" >&gt;&gt;福利券暂时为空，请选择其他福利券</a></span></div>"); %>			
 					</div>
 				</div>
 					
