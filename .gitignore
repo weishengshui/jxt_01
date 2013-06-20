@@ -63,3 +63,6 @@ target
 /myapp/bin/
 /myapp2/
 bin/
+.#.*
+eltcustom_fixbug
+smart-elt_fixbug
